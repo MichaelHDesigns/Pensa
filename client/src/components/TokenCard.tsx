@@ -143,10 +143,6 @@ const TokenCard = ({
       });
   };
 
-  const shortenAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-5)}`;
-  };
-
   return (
     <div className="bg-white rounded-xl overflow-hidden neumorphic">
       <div className="bg-white text-black p-5 border-b border-gray-100">
