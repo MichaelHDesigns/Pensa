@@ -229,15 +229,6 @@ const Transactions = () => {
             </Button>
             <Button 
               variant="outline"
-              className={currentFilter === "received" 
-                ? "neumorphic bg-white text-[rgba(169,0,232,1)] border-[rgba(169,0,232,0.3)]" 
-                : "neumorphic bg-white text-gray-700"}
-              onClick={() => setCurrentFilter("received")}
-            >
-              Received
-            </Button>
-            <Button 
-              variant="outline"
               className={currentFilter === "sent" 
                 ? "neumorphic bg-white text-[rgba(169,0,232,1)] border-[rgba(169,0,232,0.3)]" 
                 : "neumorphic bg-white text-gray-700"}
