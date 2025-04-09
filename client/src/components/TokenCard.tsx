@@ -212,9 +212,11 @@ const TokenCard = ({
                                 const keypair = solanaWeb3.Keypair.fromSecretKey(
                                   new Uint8Array(JSON.parse(walletItem.privateKey))
                                 );
-                                return shortenAddress(keypair.publicKey.toString());
+                                const address = keypair.publicKey.toString();
+                                return shortenAddress(address);
                               } catch (error) {
-                                return shortenAddress(walletItem.id);
+                                console.error("Error getting wallet address:", error);
+                                return "Error";
                               }
                             })()}
                           </span>
