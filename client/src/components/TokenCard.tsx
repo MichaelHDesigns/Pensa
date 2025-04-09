@@ -158,9 +158,7 @@ const TokenCard = ({
     }
   };
 
-  const shortenAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-5)}`;
-  };
+  // Using shortenAddress from WalletContext
 
   return (
     <div className="bg-white rounded-xl overflow-hidden neumorphic">
