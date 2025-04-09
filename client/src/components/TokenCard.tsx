@@ -19,7 +19,6 @@ interface TokenCardProps {
   pensaValue?: string;
   solPrice?: number;
   pensaPrice?: number;
-  walletId: string; // Added walletId
 }
 
 const TokenCard = ({ 
@@ -181,9 +180,9 @@ const TokenCard = ({
                 onCheckedChange={() => setShowInNative(!showInNative)}
               />
             </div>
-            <button onClick={() => switchWallet(walletId)} className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
-                <Wallet className="h-4 w-4 mr-1"/>  {/* Added wallet switcher icon */}
-              </button>
+            <Link href="/settings" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm flex items-center">
+                <Wallet className="h-4 w-4"/>
+            </Link>
             <Link href="/send" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
               <i className="fas fa-paper-plane mr-1"></i> Send
             </Link>
