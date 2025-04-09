@@ -280,8 +280,33 @@ const Settings = () => {
                 <Button variant="outline" onClick={() => {}}>Cancel</Button>
                 <Button 
                   className="gradient-bg hover:opacity-90"
-                  onClick={() => {
-                    // Verify mnemonic logic here
+                  onClick={async () => {
+                    const mnemonicInput = document.getElementById('mnemonic') as HTMLTextAreaElement;
+                    const phrase = mnemonicInput.value.trim();
+                    
+                    if (!phrase) {
+                      toast({
+                        title: "Recovery Phrase Required",
+                        description: "Please enter your recovery phrase",
+                        variant: "destructive",
+                      });
+                      return;
+                    }
+
+                    try {
+                      // Try to import wallet with the phrase
+                      await importFromMnemonic(phrase, "Recovered Wallet");
+                      toast({
+                        title: "Verification Successful",
+                        description: "Your recovery phrase is correct and can be used to recover your wallet.",
+                      });
+                    } catch (error) {
+                      toast({
+                        title: "Verification Failed",
+                        description: "Invalid recovery phrase. Please check and try again.",
+                        variant: "destructive",
+                      });
+                    }
                   }}
                 >
                   Verify Phrase
