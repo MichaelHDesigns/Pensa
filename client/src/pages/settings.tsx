@@ -107,7 +107,7 @@ const Settings = () => {
         </div>
         <div className="text-center">
           <h1 className="text-2xl font-semibold text-[rgba(169,0,232,1)]">Wallet Settings</h1>
-          <p className="text-gray-600 mt-1">Manage your wallet and account preferences.</p>
+          <p className="text-gray-600 mt-1">Wallet and Account Preferences.</p>
         </div>
       </header>
 
@@ -136,7 +136,7 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Management</CardTitle>
-          <CardDescription className="text-gray-700">Create, import, or remove wallets</CardDescription>
+          <CardDescription className="text-gray-700">Create, Import, Switch or Remove Wallets</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
@@ -245,7 +245,7 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Application Settings</CardTitle>
-          <CardDescription className="text-gray-700">Customize app behavior</CardDescription>
+          <CardDescription className="text-gray-700">Customize App Behavior</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {/* Currency Dialog */}
