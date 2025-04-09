@@ -150,7 +150,7 @@ const TokenCard = ({
               >
                 <Wallet className="h-4 w-4"/>
               </button>
-              
+
               {showWalletList && walletList.length > 1 && (
                 <>
                   <div 
@@ -191,13 +191,13 @@ const TokenCard = ({
         <div className="mt-6">
           <div className="text-3xl font-bold text-black">
             {!showInNative 
-              ? `${currencySymbol}${formatCurrencyValue(solValueInCurrency)}` 
+              ? `${currencySymbol}${formatCurrencyValue(solValueUSD)}` 
               : `${balance} SOL`}
           </div>
           <div className="text-sm text-gray-600 mt-1">
             {!showInNative 
-              ? `Total value: ${currencySymbol}${formatCurrencyValue(totalValueInCurrency)}` 
-              : `${currencySymbol}${formatCurrencyValue(solValueInCurrency)}`}
+              ? `Total value: ${currencySymbol}${formatCurrencyValue(totalValueUSD)}` 
+              : `${currencySymbol}${formatCurrencyValue(solValueUSD)}`}
           </div>
         </div>
       </div>
@@ -244,7 +244,7 @@ const TokenCard = ({
               <div className="text-right">
                 <div className="text-sm text-black font-medium">
                   {!showInNative
-                    ? `${currencySymbol}${formatCurrencyValue(pensaValueInCurrency)}` 
+                    ? `${currencySymbol}${formatCurrencyValue(pensaValueUSD)}` 
                     : `${pensaValueInSOL} SOL`}
                 </div>
               </div>
