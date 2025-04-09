@@ -38,17 +38,17 @@ const Transactions = () => {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const transactionsPerPage = 10;
-  
+
   // Fetch transaction history
   useEffect(() => {
     const fetchTransactions = async () => {
       if (!wallet) return;
-      
+
       setIsLoading(true);
       try {
         // Use our improved getTransactionHistory function
         const txHistory = await getTransactionHistory(wallet.publicKey, 20);
-        
+
         if (txHistory.length > 0) {
           // Process and format the transactions
           const processedTxs = txHistory.map((tx) => processTransaction(tx));
@@ -60,10 +60,10 @@ const Transactions = () => {
         setIsLoading(false);
       }
     };
-    
+
     fetchTransactions();
   }, [wallet]);
-  
+
   // Process a transaction into our format
   const processTransaction = (tx: solanaWeb3.ParsedTransactionWithMeta): TransactionData => {
     // Default to "send" type, will determine actual type based on transaction data
@@ -73,7 +73,7 @@ const Transactions = () => {
     let value: string | undefined;
     let fromAddress;
     let toAddress;
-    
+
     // Format the date
     const timestamp = tx.blockTime ? new Date(tx.blockTime * 1000) : new Date();
     const date = timestamp.toLocaleDateString("en-US", {
@@ -83,35 +83,35 @@ const Transactions = () => {
       minute: "numeric",
       hour12: true
     });
-    
+
     // Process transaction instructions
     if (tx.meta && tx.transaction.message.instructions) {
       const instructions = tx.transaction.message.instructions;
-      
+
       try {
         // This logic is a simplified version since the full parsing of Solana txs is complex
         // In a production app, we'd want more robust logic here
-        
+
         // For SOL transfers
         if (tx.meta.preBalances && tx.meta.postBalances && tx.transaction.message.accountKeys) {
           const walletIndex = tx.transaction.message.accountKeys.findIndex(
             key => key.toString() === wallet!.publicKey.toString()
           );
-          
+
           if (walletIndex >= 0) {
             const preBalance = tx.meta.preBalances[walletIndex];
             const postBalance = tx.meta.postBalances[walletIndex];
             const balanceDiff = (postBalance - preBalance) / solanaWeb3.LAMPORTS_PER_SOL;
-            
+
             if (balanceDiff > 0) {
               type = "receive";
               title = "Received SOL";
               amount = `+${balanceDiff.toFixed(4)} SOL`;
-              
+
               // Calculate value in USD
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
               value = `$${valueInUsd.toFixed(2)}`;
-              
+
               // Try to find the sender (simplified)
               for (let i = 0; i < tx.transaction.message.accountKeys.length; i++) {
                 if (i !== walletIndex && tx.meta.preBalances[i] > tx.meta.postBalances[i]) {
@@ -123,11 +123,11 @@ const Transactions = () => {
               type = "send";
               title = "Sent SOL";
               amount = `${balanceDiff.toFixed(4)} SOL`; // Already negative
-              
+
               // Calculate value in USD
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
               value = `$${valueInUsd.toFixed(2)}`;
-              
+
               // Try to find the recipient (simplified)
               for (let i = 0; i < tx.transaction.message.accountKeys.length; i++) {
                 if (i !== walletIndex && tx.meta.preBalances[i] < tx.meta.postBalances[i]) {
@@ -138,13 +138,13 @@ const Transactions = () => {
             }
           }
         }
-        
+
         // Simplified swap detection (in a real app this would be more robust)
         if (instructions.length > 2) {
           const programIds = instructions.map((ix: any) => 
             ix.programId ? ix.programId.toString() : ''
           );
-          
+
           // If transaction involves token program, it might be a swap/token transfer
           if (programIds.includes('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')) {
             type = "swap";
@@ -156,7 +156,7 @@ const Transactions = () => {
         console.error("Error processing transaction:", error);
       }
     }
-    
+
     // Calculate an estimated confirmation count
     let confirmations = 0;
     if (tx.slot && tx.blockTime) {
@@ -165,7 +165,7 @@ const Transactions = () => {
       const secondsElapsed = Math.floor(Date.now() / 1000) - tx.blockTime;
       confirmations = Math.max(1, Math.min(Math.floor(secondsElapsed / 0.4), 1000));
     }
-    
+
     return {
       type,
       title,
@@ -178,7 +178,7 @@ const Transactions = () => {
       confirmations: confirmations
     };
   };
-  
+
   // Filter transactions based on selected filter
   const filteredTransactions = transactions.filter(transaction => {
     if (currentFilter === "all") return true;
@@ -187,13 +187,13 @@ const Transactions = () => {
     if (currentFilter === "swaps") return transaction.type === "swap";
     return true;
   });
-  
+
   // Pagination logic
   const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
   const startIndex = (page - 1) * transactionsPerPage;
   const endIndex = startIndex + transactionsPerPage;
   const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
-  
+
   return (
     <div className="max-w-4xl mx-auto">
       <header className="mb-6">
@@ -205,11 +205,10 @@ const Transactions = () => {
           </Link>
         </div>
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-black">Transaction History</h1>
-          <p className="text-gray-600 mt-1">View all your transaction activities.</p>
+          <h1 className="text-2xl font-semibold text-black">Transactions</h1>
         </div>
       </header>
-      
+
       <Card className="mb-6 neumorphic bg-white">
         <CardContent className="pt-4">
           {/* Filters */}
@@ -251,7 +250,7 @@ const Transactions = () => {
               Swaps
             </Button>
           </div>
-          
+
           {/* Transaction List */}
           <div className="divide-y divide-gray-100">
             {isLoading ? (
@@ -285,7 +284,7 @@ const Transactions = () => {
               </div>
             )}
           </div>
-          
+
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex justify-between items-center mt-6">
