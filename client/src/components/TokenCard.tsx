@@ -207,7 +207,7 @@ const TokenCard = ({
                         <div className="flex flex-col overflow-hidden">
                           <span className="text-sm font-medium truncate">{walletItem.name}</span>
                           <span className="text-xs text-gray-500 font-mono">
-                            {shortenAddress(walletItem.id)}
+                            {walletItem.id}
                           </span>
                         </div>
                         {activeWalletId === walletItem.id && (
