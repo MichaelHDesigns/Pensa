@@ -34,14 +34,16 @@ const CreateWallet = () => {
     setIsCreating(true);
     
     try {
-      // Create wallet and get mnemonic
-      const { wallet, mnemonic: generatedMnemonic } = await createWallet(walletName);
-      if (generatedMnemonic) {
-        setMnemonic(generatedMnemonic);
+      // Create wallet with name
+      await createWallet(walletName);
+      const savedMnemonic = localStorage.getItem("walletMnemonic");
+      
+      if (savedMnemonic) {
+        setMnemonic(savedMnemonic);
         // Move to backup step
         setStep("backup");
       } else {
-        throw new Error("Failed to generate mnemonic");
+        throw new Error("Failed to retrieve mnemonic");
       }
     } catch (error) {
       console.error("Error creating wallet:", error);

@@ -245,35 +245,14 @@ const Settings = () => {
           <CardDescription className="text-gray-700">Manage security settings</CardDescription>
         </CardHeader>
         <CardContent>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="w-full neumorphic bg-white text-gray-700">
-                Backup Recovery Phrase
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Recovery Phrase</DialogTitle>
-                <DialogDescription>
-                  Write down these words in order and keep them safe. They're the only way to recover your wallet if you lose access.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 my-4">
-                <div className="font-mono text-amber-900 break-all">
-                  {localStorage.getItem("walletMnemonic") || "No recovery phrase found for this wallet"}
-                </div>
-              </div>
-              <div className="bg-red-50 text-red-800 p-3 rounded-md text-sm">
-                <div className="flex items-start">
-                  <AlertTriangle className="text-red-600 mr-2 flex-shrink-0" size={18} />
-                  <p>Never share your recovery phrase with anyone. Anyone with these words can access your wallet.</p>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => {}}>Close</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button variant="outline" className="w-full neumorphic bg-white text-gray-700" onClick={() => {
+            toast({
+              title: "Feature Coming Soon",
+              description: "This feature will be available in a future update.",
+            });
+          }}>
+            Backup Recovery Phrase
+          </Button>
         </CardContent>
       </Card>
       

@@ -38,7 +38,7 @@ export function updateNetwork(newNetwork: string) {
 }
 
 // Create a new wallet with a random seed phrase
-export async function createNewWallet(): Promise<{ wallet: solanaWeb3.Keypair, mnemonic: string }> {
+export async function createNewWallet(): Promise<solanaWeb3.Keypair> {
   // Generate a random mnemonic (12 words)
   const mnemonic = bip39.generateMnemonic();
   
@@ -48,8 +48,10 @@ export async function createNewWallet(): Promise<{ wallet: solanaWeb3.Keypair, m
   // Use the first 32 bytes as the secret key
   const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
   
-  // Return both the wallet and mnemonic
-  return { wallet: keypair, mnemonic };
+  // Save the mnemonic (In a real app, encrypt this before saving)
+  localStorage.setItem("walletMnemonic", mnemonic);
+  
+  return keypair;
 }
 
 // Import wallet from mnemonic phrase
