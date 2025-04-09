@@ -105,7 +105,7 @@ const Settings = () => {
           </Link>
         </div>
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-black">Wallet Settings</h1>
+          <h1 className="text-2xl font-semibold text-[rgba(169,0,232,1)]">Wallet Settings</h1>
           <p className="text-gray-600 mt-1">Manage your wallet and account preferences.</p>
         </div>
       </header>
