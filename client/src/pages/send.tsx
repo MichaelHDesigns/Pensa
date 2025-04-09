@@ -164,12 +164,12 @@ const Send = () => {
             </Button>
           </Link>
         </div>
-        <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] ml-2">Send</h1>
       </header>
       
       <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
+            <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Send</h1>
             <TabsList className="grid w-full grid-cols-2 mb-4 bg-gray-100">
               <TabsTrigger value="sol" className="data-[state=active]:bg-[rgba(169,0,232,1)] data-[state=active]:text-white">Send SOL</TabsTrigger>
               <TabsTrigger value="pensacoin" className="data-[state=active]:bg-[rgba(169,0,232,1)] data-[state=active]:text-white">Send PENSA</TabsTrigger>
