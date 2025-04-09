@@ -103,10 +103,13 @@ const Transactions = () => {
             const postBalance = tx.meta.postBalances[walletIndex];
             const balanceDiff = (postBalance - preBalance) / solanaWeb3.LAMPORTS_PER_SOL;
 
-            if (balanceDiff > 0) {
+            // Check if this wallet is the recipient (received funds)
+            const isRecipient = postBalance > preBalance;
+
+            if (isRecipient) {
               type = "receive";
               title = "Received SOL";
-              amount = `+${balanceDiff.toFixed(4)} SOL`;
+              amount = `+${Math.abs(balanceDiff).toFixed(4)} SOL`;
 
               // Calculate value in USD
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
