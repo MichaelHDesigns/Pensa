@@ -104,13 +104,11 @@ const Settings = () => {
             </Button>
           </Link>
         </div>
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold text-black">Wallet Settings</h1>
-          <p className="text-gray-600 mt-1">Manage your wallet and account preferences.</p>
-        </div>
       </header>
       
-      {/* Wallet Info */}
+      <Card className="mb-6 neumorphic bg-white">
+        <CardContent className="pt-4">
+          <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Settings</h1>
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Information</CardTitle>
