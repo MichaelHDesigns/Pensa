@@ -109,11 +109,11 @@ const Transactions = () => {
             if (isRecipient) {
               type = "receive";
               title = "Received SOL";
-              amount = `+${Math.abs(balanceDiff).toFixed(4)} SOL`;
+              amount = `+${Math.abs(balanceDiff).toFixed(9)} SOL`;
 
-              // Calculate value in USD
+              // Calculate value in USD with more precision
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
-              value = `$${valueInUsd.toFixed(2)}`;
+              value = valueInUsd > 0.01 ? `$${valueInUsd.toFixed(2)}` : `$${valueInUsd.toFixed(4)}`;
 
               // Try to find the sender (simplified)
               for (let i = 0; i < tx.transaction.message.accountKeys.length; i++) {
@@ -125,11 +125,11 @@ const Transactions = () => {
             } else if (balanceDiff < 0) {
               type = "send";
               title = "Sent SOL";
-              amount = `${balanceDiff.toFixed(4)} SOL`; // Already negative
+              amount = `${balanceDiff.toFixed(9)} SOL`; // Keep negative to show outgoing
 
-              // Calculate value in USD
+              // Calculate value in USD with more precision
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
-              value = `$${valueInUsd.toFixed(2)}`;
+              value = valueInUsd > 0.01 ? `$${valueInUsd.toFixed(2)}` : `$${valueInUsd.toFixed(4)}`;
 
               // Try to find the recipient (simplified)
               for (let i = 0; i < tx.transaction.message.accountKeys.length; i++) {
