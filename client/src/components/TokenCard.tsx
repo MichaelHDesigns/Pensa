@@ -67,9 +67,15 @@ const TokenCard = ({
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
 
-  // Format currency value
+  // Format currency value with commas
   const formatCurrencyValue = (value: number): string => {
-    return value.toFixed(2);
+    return value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  // Format token balance with commas
+  const formatTokenBalance = (value: string): string => {
+    const num = parseFloat(value);
+    return num.toLocaleString('en-US', { minimumFractionDigits: 9, maximumFractionDigits: 9 });
   };
 
   const getCurrencySymbol = () => "$";
@@ -238,7 +244,7 @@ const TokenCard = ({
                 />
                 <div>
                   <div className="font-medium text-[rgba(169,0,232,1)]">{tokenMetadata?.name || "Pensacoin"}</div>
-                  <div className="text-sm text-black">{pensaBalance} {tokenMetadata?.symbol || "PENSA"}</div>
+                  <div className="text-sm text-black">{formatTokenBalance(pensaBalance)} {tokenMetadata?.symbol || "PENSA"}</div>
                 </div>
               </div>
               <div className="text-right">
