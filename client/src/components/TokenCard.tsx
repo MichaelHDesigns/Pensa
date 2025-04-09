@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { Switch } from "@/components/ui/switch";
@@ -19,6 +19,7 @@ interface TokenCardProps {
   pensaValue?: string;
   solPrice?: number;
   pensaPrice?: number;
+  walletId: string; // Added walletId
 }
 
 const TokenCard = ({ 
@@ -31,7 +32,8 @@ const TokenCard = ({
   pensaBalance, 
   pensaValue,
   solPrice = 70, 
-  pensaPrice = 0.10 
+  pensaPrice = 0.10,
+  walletId // Added walletId
 }: TokenCardProps) => {
   const { toast } = useToast();
   const { currency, setCurrency, networkType, switchWallet } = useWallet(); // Assuming switchWallet function exists
@@ -179,7 +181,7 @@ const TokenCard = ({
                 onCheckedChange={() => setShowInNative(!showInNative)}
               />
             </div>
-            <button onClick={() => switchWallet()} className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
+            <button onClick={() => switchWallet(walletId)} className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
                 <Wallet className="h-4 w-4 mr-1"/>  {/* Added wallet switcher icon */}
               </button>
             <Link href="/send" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
