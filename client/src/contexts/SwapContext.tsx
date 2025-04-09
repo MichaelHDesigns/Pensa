@@ -41,10 +41,31 @@ export function SwapProvider({ children }: { children: ReactNode }) {
   const [estimatedSwapRoute, setEstimatedSwapRoute] = useState<any>(null);
   
   // Real market data from GeckoTerminal API
-  const swapRate: SwapRate = {
-    solToPensa: 23640708.63, // 1 SOL = 23,640,708.63 PENSA
-    pensaToSol: 0.00000004229991646  // 1 PENSA = 0.00000004229991646 SOL
-  };
+  const [swapRate, setSwapRate] = useState<SwapRate>({
+    solToPensa: 23568641.315163, // Default from latest known rate
+    pensaToSol: 0.00000004242925957 // Default from latest known rate
+  });
+
+  // Fetch real-time rates
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const response = await fetch("https://api.geckoterminal.com/api/v2/networks/solana/pools/2fdrJjBrx2jXCqVF2zTCeFnVmy58YtnrYYhskXXgti6b");
+        const data = await response.json();
+        
+        setSwapRate({
+          solToPensa: parseFloat(data.data.attributes.quote_token_price_base_token),
+          pensaToSol: parseFloat(data.data.attributes.base_token_price_quote_token)
+        });
+      } catch (error) {
+        console.error("Failed to fetch swap rates:", error);
+      }
+    };
+    
+    fetchRates();
+    const interval = setInterval(fetchRates, 30000); // Update every 30 seconds
+    return () => clearInterval(interval);
+  }, []);
   
   const swapFeePercent = 0.5; // 0.5% swap fee
   
