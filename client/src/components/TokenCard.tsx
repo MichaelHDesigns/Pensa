@@ -8,6 +8,8 @@ import { getTokenMetadata, PENSACOIN_MINT_ADDRESS } from "@/lib/solana";
 import pensacoinLogo from "../assets/pensacoin-logo.png";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { WalletIcon } from "lucide-react";
+import { Button } from "./ui/button"; // Added import for Button component
+
 
 interface TokenCardProps {
   type: "sol" | "pensacoin";
