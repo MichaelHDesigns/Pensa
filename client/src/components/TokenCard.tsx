@@ -74,16 +74,13 @@ const TokenCard = ({
 
   const getCurrencySymbol = () => "$";
 
-  // Calculate values in different currencies and SOL - preserve exact values
+  // Calculate values in USD and SOL - preserve exact values
   const solValueUSD = solBalanceNum * solPrice;
   const pensaValueUSD = pensaBalanceNum * pensaPrice;
-  const solValueInCurrency = convertCurrency(solValueUSD);
-  const pensaValueInCurrency = convertCurrency(pensaValueUSD);
   const pensaValueInSOL = (pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
 
   // Total portfolio value - preserve exact values
   const totalValueUSD = solBalanceNum * solPrice + pensaBalanceNum * pensaPrice;
-  const totalValueInCurrency = convertCurrency(totalValueUSD);
   const totalValueSOL = (solBalanceNum + pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
 
   // Current currency symbol
