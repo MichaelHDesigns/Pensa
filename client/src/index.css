@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-white text-black;
+  }
+}
+
+@layer components {
+  .gradient-bg {
+    @apply bg-gradient-to-r from-[rgba(169,0,232,1)] to-[rgba(169,0,232,0.8)];
+  }
+  
+  .dark-gradient-bg {
+    @apply bg-gradient-to-r from-[rgba(169,0,232,0.2)] to-[rgba(169,0,232,0.1)] bg-[#131419];
+  }
+}
+
+/* Custom scrollbar */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-[rgba(169,0,232,1)] rounded-md;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    @apply bg-[rgba(169,0,232,0.8)];
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(169,0,232,1) #f1f1f1;
+}
+
+/* Custom Colors */
+:root {
+  --solana-purple: rgba(169,0,232,1);
+  --solana-green: #14F195;
+  --solana-blue: rgba(169,0,232,0.8);
+  --solana-dark: #131419;
+  --solana-dark-gray: #27272A;
+  --solana-mid-gray: #52525B;
+  --solana-light-gray: #A1A1AA;
+}
+
+/* Neumorphic styles */
+.neumorphic {
+  @apply shadow-[5px_5px_15px_rgba(0,0,0,0.1),-5px_-5px_15px_rgba(255,255,255,0.7)] rounded-xl;
+}
+
+.neumorphic-inset {
+  @apply shadow-[inset_5px_5px_15px_rgba(0,0,0,0.1),inset_-5px_-5px_15px_rgba(255,255,255,0.7)] rounded-xl;
+}
+
+.neumorphic-purple {
+  @apply shadow-[5px_5px_15px_rgba(169,0,232,0.3),-5px_-5px_15px_rgba(255,255,255,0.7)] rounded-xl;
+}
