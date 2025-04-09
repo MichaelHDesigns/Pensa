@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Input, Textarea } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useLocation } from "wouter";
 import { ChevronLeft, AlertTriangle } from "lucide-react";
@@ -24,18 +24,18 @@ const Settings = () => {
   const [showNetworkDialog, setShowNetworkDialog] = useState(false);
   const [showWalletSelectDialog, setShowWalletSelectDialog] = useState(false);
   // No longer need custom RPC
-  
+
   // Handle wallet removal
   const handleRemoveWallet = () => {
     try {
       // Remove wallet from storage and context
       removeWallet();
-      
+
       toast({
         title: "Wallet Removed",
         description: "Your wallet has been successfully removed",
       });
-      
+
       // Navigate back to welcome page after removing wallet
       navigate("/");
     } catch (error) {
@@ -46,13 +46,13 @@ const Settings = () => {
       });
     }
   };
-  
+
   // Handle wallet switching
   const handleSwitchWallet = async (walletId: string) => {
     try {
       await switchWallet(walletId);
       setShowWalletSelectDialog(false);
-      
+
       toast({
         title: "Wallet Switched",
         description: "Successfully switched to the selected wallet",
@@ -65,7 +65,7 @@ const Settings = () => {
       });
     }
   };
-  
+
   // Handle currency change
   const handleCurrencyChange = (newCurrency: string) => {
     try {
@@ -79,7 +79,7 @@ const Settings = () => {
       });
     }
   };
-  
+
   // Handle network change
   const handleNetworkChange = (networkType: "mainnet" | "devnet" | "testnet") => {
     try {
@@ -93,7 +93,7 @@ const Settings = () => {
       });
     }
   };
-  
+
   return (
     <div className="max-w-md mx-auto">
       <header className="mb-6">
@@ -109,7 +109,7 @@ const Settings = () => {
           <p className="text-gray-600 mt-1">Manage your wallet and account preferences.</p>
         </div>
       </header>
-      
+
       {/* Wallet Info */}
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
@@ -130,7 +130,7 @@ const Settings = () => {
           </div>
         </CardContent>
       </Card>
-      
+
       {/* Wallet Management */}
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
@@ -144,14 +144,14 @@ const Settings = () => {
                 Create New Wallet
               </Button>
             </Link>
-            
+
             <Link href="/import-wallet">
               <Button variant="outline" className="w-full neumorphic bg-white text-gray-700">
                 Import Wallet
               </Button>
             </Link>
           </div>
-          
+
           {/* Switch Wallet Dialog */}
           <Dialog open={showWalletSelectDialog} onOpenChange={setShowWalletSelectDialog}>
             <DialogTrigger asChild>
@@ -202,7 +202,7 @@ const Settings = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          
+
           {/* Remove Wallet Dialog */}
           <Dialog open={showRemoveWalletDialog} onOpenChange={setShowRemoveWalletDialog}>
             <DialogTrigger asChild>
@@ -237,7 +237,7 @@ const Settings = () => {
           </Dialog>
         </CardContent>
       </Card>
-      
+
       {/* Security Settings */}
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
@@ -245,17 +245,52 @@ const Settings = () => {
           <CardDescription className="text-gray-700">Manage security settings</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="outline" className="w-full neumorphic bg-white text-gray-700" onClick={() => {
-            toast({
-              title: "Feature Coming Soon",
-              description: "This feature will be available in a future update.",
-            });
-          }}>
-            Backup Recovery Phrase
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="w-full neumorphic bg-white text-gray-700">
+                Verify Recovery Phrase
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Verify Recovery Phrase</DialogTitle>
+                <DialogDescription>
+                  Enter your 12-word recovery phrase to verify you have saved it correctly.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="mnemonic">Recovery Phrase (12 words)</Label>
+                  <Textarea
+                    id="mnemonic"
+                    placeholder="Enter your recovery phrase words separated by spaces"
+                    className="mt-1 font-mono"
+                    rows={3}
+                  />
+                </div>
+                <div className="bg-amber-50 text-amber-800 p-3 rounded-md text-sm">
+                  <div className="flex items-start">
+                    <AlertTriangle className="text-amber-600 mr-2 flex-shrink-0" size={18} />
+                    <p>Never share your recovery phrase with anyone. Anyone with these words can access your wallet.</p>
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => {}}>Cancel</Button>
+                <Button 
+                  className="gradient-bg hover:opacity-90"
+                  onClick={() => {
+                    // Verify mnemonic logic here
+                  }}
+                >
+                  Verify Phrase
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </CardContent>
       </Card>
-      
+
       {/* App Settings */}
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
@@ -313,7 +348,7 @@ const Settings = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          
+
           {/* Network Dialog */}
           <Dialog open={showNetworkDialog} onOpenChange={setShowNetworkDialog}>
             <DialogTrigger asChild>
@@ -338,7 +373,7 @@ const Settings = () => {
                       <div className="text-xs text-gray-500">Production Solana network</div>
                     </Label>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
                     <RadioGroupItem value="devnet" id="devnet" />
                     <Label htmlFor="devnet" className="flex-1 cursor-pointer">
@@ -346,7 +381,7 @@ const Settings = () => {
                       <div className="text-xs text-gray-500">Development Solana network</div>
                     </Label>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
                     <RadioGroupItem value="testnet" id="testnet" />
                     <Label htmlFor="testnet" className="flex-1 cursor-pointer">
