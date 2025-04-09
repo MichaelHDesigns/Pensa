@@ -164,18 +164,31 @@ const TransactionItem = ({
       >
         {/* Transaction info */}
         <div className="flex-grow min-w-0">
-          <div className="flex justify-between">
-            <h4 className="font-medium text-black truncate">{title}</h4>
-            <span className="font-medium text-black">
-              {amount}
-            </span>
-          </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex items-start justify-between mb-1">
             <div className="flex flex-col">
-              <span className="text-gray-600">{date}</span>
-              <span className="text-xs text-gray-500 font-mono truncate">{signature.slice(0, 12)}...</span>
+              <h4 className="font-medium text-black">{title}</h4>
+              <span className="text-sm text-gray-600">{date}</span>
             </div>
-            {formattedValue && <span className="text-gray-600 self-start">{formattedValue}</span>}
+            <div className="flex flex-col items-end">
+              <span className={`font-medium ${type === 'receive' ? 'text-green-600' : type === 'send' ? 'text-red-600' : 'text-black'}`}>
+                {amount}
+              </span>
+              {formattedValue && (
+                <span className="text-sm text-gray-600">
+                  {formattedValue}
+                </span>
+              )}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded font-mono">
+              {signature.slice(0, 16)}...
+            </span>
+            {confirmations && (
+              <span className="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded">
+                {confirmations} confirmations
+              </span>
+            )}
           </div>
         </div>
         

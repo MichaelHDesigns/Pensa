@@ -109,11 +109,22 @@ const Transactions = () => {
             if (isRecipient) {
               type = "receive";
               title = "Received SOL";
-              amount = `+${Math.abs(balanceDiff).toFixed(9)} SOL`;
+              amount = `+${Math.abs(balanceDiff).toLocaleString('en-US', {
+                minimumFractionDigits: 4,
+                maximumFractionDigits: 9
+              })} SOL`;
 
               // Calculate value in USD with more precision
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
-              value = valueInUsd > 0.01 ? `$${valueInUsd.toFixed(2)}` : `$${valueInUsd.toFixed(4)}`;
+              value = valueInUsd > 0.01 
+                ? `$${valueInUsd.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}` 
+                : `$${valueInUsd.toLocaleString('en-US', {
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4
+                  })}`;
 
               // Try to find the sender (simplified)
               for (let i = 0; i < tx.transaction.message.accountKeys.length; i++) {
@@ -125,11 +136,22 @@ const Transactions = () => {
             } else if (balanceDiff < 0) {
               type = "send";
               title = "Sent SOL";
-              amount = `${balanceDiff.toFixed(9)} SOL`; // Keep negative to show outgoing
+              amount = `${balanceDiff.toLocaleString('en-US', {
+                minimumFractionDigits: 4,
+                maximumFractionDigits: 9
+              })} SOL`; // Keep negative to show outgoing
 
               // Calculate value in USD with more precision
               const valueInUsd = Math.abs(balanceDiff) * solPrice;
-              value = valueInUsd > 0.01 ? `$${valueInUsd.toFixed(2)}` : `$${valueInUsd.toFixed(4)}`;
+              value = valueInUsd > 0.01 
+                ? `$${valueInUsd.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                  })}` 
+                : `$${valueInUsd.toLocaleString('en-US', {
+                    minimumFractionDigits: 4,
+                    maximumFractionDigits: 4
+                  })}`;
 
               // Try to find the recipient (simplified)
               for (let i = 0; i < tx.transaction.message.accountKeys.length; i++) {
