@@ -294,11 +294,13 @@ const Settings = () => {
                     }
 
                     try {
-                      // Try to import wallet with the phrase
-                      await importFromMnemonic(phrase, "Recovered Wallet");
+                      // Try to create a wallet from the mnemonic to verify it
+                      const wallet = await importWalletFromMnemonic(phrase);
+                      const address = wallet.publicKey.toString();
+                      
                       toast({
                         title: "Verification Successful",
-                        description: "Your recovery phrase is correct and can be used to recover your wallet.",
+                        description: `Valid recovery phrase for Solana address: ${address.slice(0, 8)}...${address.slice(-8)}`,
                       });
                     } catch (error) {
                       toast({
