@@ -48,7 +48,7 @@ interface WalletContextType {
   disconnect: () => void;
   removeWallet: () => void;
   refreshBalances: () => Promise<void>;
-  shortenAddress: (address: string) => string;
+  shortenAddress: (address: string | undefined | null) => string;
 }
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
@@ -71,11 +71,11 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       ? (savedNetwork as "mainnet" | "devnet" | "testnet") 
       : "mainnet";
   });
-  
+
   // Real market data from the API
   const solPrice = 125.41; // $125.41 per SOL (from API)
   const pensaPrice = 0.00000529917325114103; // $0.00000529917325114103 per PENSA (from API)
-  
+
   // Calculate USD values - using exact values without rounding
   const solValueUsd = `$${(parseFloat(solBalance) * solPrice).toFixed(8)}`;
   const pensacoinValueUsd = `$${(parseFloat(pensacoinBalance) * pensaPrice).toFixed(8)}`;
@@ -89,21 +89,21 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         const savedWallets: StoredWallet[] = savedWalletListStr 
           ? JSON.parse(savedWalletListStr) 
           : [];
-        
+
         setWalletList(savedWallets);
-        
+
         // Get the active wallet ID
         const activeId = localStorage.getItem("activeWalletId");
-        
+
         if (activeId && savedWallets.length > 0) {
           const activeWallet = savedWallets.find(w => w.id === activeId);
-          
+
           if (activeWallet) {
             setActiveWalletId(activeId);
             const privateKeyBytes = new Uint8Array(JSON.parse(activeWallet.privateKey));
             const importedWallet = solanaWeb3.Keypair.fromSecretKey(privateKeyBytes);
             setWallet(importedWallet);
-            
+
             // Fetch initial balances
             await fetchBalances(importedWallet.publicKey);
           }
@@ -124,7 +124,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       // Get SOL balance
       const solBal = await getBalance(publicKey);
       setSolBalance(solBal);
-      
+
       // Get Pensacoin balance
       const pensaBal = await getTokenBalance(publicKey, PENSACOIN_MINT_ADDRESS);
       setPensacoinBalance(pensaBal);
@@ -152,7 +152,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const createWallet = async (name: string): Promise<solanaWeb3.Keypair> => {
     try {
       const newWallet = await createNewWallet();
-      
+
       // Create a wallet record
       const walletId = generateId();
       const walletRecord: StoredWallet = {
@@ -160,24 +160,24 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         name: name,
         id: walletId
       };
-      
+
       // Add to wallet list
       const updatedList = [...walletList, walletRecord];
       setWalletList(updatedList);
       saveWalletList(updatedList);
-      
+
       // Set as active wallet
       setWallet(newWallet);
       setActiveWalletId(walletId);
       localStorage.setItem("activeWalletId", walletId);
-      
+
       await fetchBalances(newWallet.publicKey);
-      
+
       toast({
         title: "Wallet Created",
         description: `Created new wallet: ${name}`,
       });
-      
+
       return newWallet;
     } catch (error) {
       console.error("Error creating wallet:", error);
@@ -194,7 +194,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const importFromMnemonic = async (mnemonic: string, name: string): Promise<solanaWeb3.Keypair> => {
     try {
       const importedWallet = await importWalletFromMnemonic(mnemonic);
-      
+
       // Check if wallet already exists
       const publicKeyStr = importedWallet.publicKey.toString();
       const existingWallet = walletList.find(w => {
@@ -207,13 +207,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           return false;
         }
       });
-      
+
       if (existingWallet) {
         // If wallet exists, just activate it
         setWallet(importedWallet);
         setActiveWalletId(existingWallet.id);
         localStorage.setItem("activeWalletId", existingWallet.id);
-        
+
         toast({
           title: "Wallet Already Exists",
           description: "This wallet is already in your wallet list and has been activated.",
@@ -226,23 +226,23 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           name: name,
           id: walletId
         };
-        
+
         // Add to wallet list
         const updatedList = [...walletList, walletRecord];
         setWalletList(updatedList);
         saveWalletList(updatedList);
-        
+
         // Set as active wallet
         setWallet(importedWallet);
         setActiveWalletId(walletId);
         localStorage.setItem("activeWalletId", walletId);
-        
+
         toast({
           title: "Wallet Imported",
           description: `Imported wallet: ${name}`,
         });
       }
-      
+
       await fetchBalances(importedWallet.publicKey);
       return importedWallet;
     } catch (error) {
@@ -260,7 +260,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const importFromPrivateKey = async (privateKey: string, name: string): Promise<solanaWeb3.Keypair> => {
     try {
       const importedWallet = await importWalletFromPrivateKey(privateKey);
-      
+
       // Check if wallet already exists
       const publicKeyStr = importedWallet.publicKey.toString();
       const existingWallet = walletList.find(w => {
@@ -273,13 +273,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           return false;
         }
       });
-      
+
       if (existingWallet) {
         // If wallet exists, just activate it
         setWallet(importedWallet);
         setActiveWalletId(existingWallet.id);
         localStorage.setItem("activeWalletId", existingWallet.id);
-        
+
         toast({
           title: "Wallet Already Exists",
           description: "This wallet is already in your wallet list and has been activated.",
@@ -292,23 +292,23 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           name: name,
           id: walletId
         };
-        
+
         // Add to wallet list
         const updatedList = [...walletList, walletRecord];
         setWalletList(updatedList);
         saveWalletList(updatedList);
-        
+
         // Set as active wallet
         setWallet(importedWallet);
         setActiveWalletId(walletId);
         localStorage.setItem("activeWalletId", walletId);
-        
+
         toast({
           title: "Wallet Imported",
           description: `Imported wallet: ${name}`,
         });
       }
-      
+
       await fetchBalances(importedWallet.publicKey);
       return importedWallet;
     } catch (error) {
@@ -326,23 +326,23 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const switchWallet = async (walletId: string): Promise<void> => {
     try {
       const targetWallet = walletList.find(w => w.id === walletId);
-      
+
       if (!targetWallet) {
         throw new Error("Wallet not found");
       }
-      
+
       // Load wallet keypair
       const privateKeyBytes = new Uint8Array(JSON.parse(targetWallet.privateKey));
       const importedWallet = solanaWeb3.Keypair.fromSecretKey(privateKeyBytes);
-      
+
       // Set as active wallet
       setWallet(importedWallet);
       setActiveWalletId(walletId);
       localStorage.setItem("activeWalletId", walletId);
-      
+
       // Fetch balances for the new wallet
       await fetchBalances(importedWallet.publicKey);
-      
+
       toast({
         title: "Wallet Switched",
         description: `Switched to wallet: ${targetWallet.name}`,
@@ -362,7 +362,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const setCurrency = (newCurrency: CurrencyCode) => {
     setCurrencyState(newCurrency);
     localStorage.setItem("currency", newCurrency);
-    
+
     toast({
       title: "Currency Updated",
       description: `Currency preference set to ${newCurrency}`,
@@ -373,9 +373,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const setNetwork = (type: "mainnet" | "devnet" | "testnet") => {
     setNetworkType(type);
     localStorage.setItem("networkType", type);
-    
+
     let rpcUrl = "";
-    
+
     switch (type) {
       case "mainnet":
         rpcUrl = SOLANA_MAINNET;
@@ -387,15 +387,15 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         rpcUrl = SOLANA_TESTNET;
         break;
     }
-    
+
     // Update network connection
     updateNetwork(rpcUrl);
-    
+
     toast({
       title: "Network Updated",
       description: `Switched to ${type}`,
     });
-    
+
     // Refresh balances if a wallet is connected
     if (wallet) {
       refreshBalances();
@@ -410,29 +410,29 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     // Don't remove from storage - just log out for the session
     localStorage.removeItem("activeWalletId");
     setActiveWalletId(null);
-    
+
     toast({
       title: "Wallet Disconnected",
       description: "Your wallet has been temporarily disconnected for this session",
     });
   };
-  
+
   // Remove wallet completely
   const removeWallet = () => {
     if (!activeWalletId) return;
-    
+
     // Remove from wallet list
     const updatedList = walletList.filter(w => w.id !== activeWalletId);
     setWalletList(updatedList);
     saveWalletList(updatedList);
-    
+
     // Clear active wallet
     setWallet(null);
     setActiveWalletId(null);
     setSolBalance("0");
     setPensacoinBalance("0");
     localStorage.removeItem("activeWalletId");
-    
+
     toast({
       title: "Wallet Removed",
       description: "The wallet has been permanently removed from this device",
@@ -443,9 +443,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   // Refresh balances with better error handling and retries
   const refreshBalances = async () => {
     if (!wallet) return;
-    
+
     console.log("Starting balance refresh...");
-    
+
     // Try up to 3 times with increasing delay
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
@@ -455,12 +455,12 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           console.log(`Retry ${attempt}: waiting ${delay}ms before refresh`);
           await new Promise(resolve => setTimeout(resolve, delay));
         }
-        
+
         // Get SOL balance
         const solBalanceResult = await getBalance(wallet.publicKey);
         console.log(`SOL balance (attempt ${attempt+1}): ${solBalanceResult}`);
         setSolBalance(solBalanceResult);
-        
+
         try {
           // Get Pensacoin balance (in separate try/catch to not fail everything)
           const pensaBalanceResult = await getTokenBalance(
@@ -477,19 +477,19 @@ export function WalletProvider({ children }: { children: ReactNode }) {
             continue; // Try again
           }
         }
-        
+
         // Calculate USD values and update state
         const solValueInUsd = parseFloat(solBalanceResult) * solPrice;
         setSolBalance(solBalanceResult);
         setSolValueUsd(solValueInUsd.toFixed(2));
-        
+
         // Only update PENSA USD value if we have a balance
         if (pensaBalanceResult !== "0") {
           const pensaValueInUsd = parseFloat(pensaBalanceResult) * pensaPrice;
           setPensacoinBalance(pensaBalanceResult);
           setPensacoinValueUsd(pensaValueInUsd.toFixed(2));
         }
-        
+
         console.log("Balance refresh successful");
         return; // Success, exit the retry loop
       } catch (error) {
@@ -502,7 +502,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   };
 
   // Utility to shorten addresses for display
-  const shortenAddress = (address: string): string => {
+  const shortenAddress = (address: string | undefined | null): string => {
+    if (!address) return 'No Address';
     return `${address.slice(0, 6)}...${address.slice(-5)}`;
   };
 
