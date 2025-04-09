@@ -67,15 +67,47 @@ const TokenCard = ({
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
 
-  // Currency conversion rates relative to USD
-  const exchangeRates: Record<string, number> = {
+  const [rates, setRates] = useState<Record<string, number>>({
     USD: 1,
-    EUR: 0.92, // Euro
-    GBP: 0.78, // British Pound
-    JPY: 153.5, // Japanese Yen
-    CNY: 7.22, // Chinese Yuan
-    KRW: 1370.0, // Korean Won
-  };
+    EUR: 1,
+    GBP: 1,
+    JPY: 1,
+    CNY: 1,
+    KRW: 1
+  });
+
+  // Fetch rates on component mount
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        // Get SOL price from CoinGecko
+        const solResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd,eur,gbp,jpy,cny,krw');
+        const solData = await solResponse.json();
+        
+        // Get PENSA/SOL rate from Raydium pool
+        const pensaResponse = await fetch('https://api.geckoterminal.com/api/v2/networks/solana/pools/2fdrJjBrx2jXCqVF2zTCeFnVmy58YtnrYYhskXXgti6b');
+        const pensaData = await pensaResponse.json();
+        
+        const pensaPriceInSOL = parseFloat(pensaData.data.attributes.base_token_price_native_currency);
+        const pensaPriceInUSD = parseFloat(pensaData.data.attributes.base_token_price_usd);
+
+        setRates({
+          USD: solData.solana.usd,
+          EUR: solData.solana.eur,
+          GBP: solData.solana.gbp,
+          JPY: solData.solana.jpy,
+          CNY: solData.solana.cny,
+          KRW: solData.solana.krw
+        });
+      } catch (error) {
+        console.error('Error fetching rates:', error);
+      }
+    };
+
+    fetchRates();
+    const interval = setInterval(fetchRates, 60000); // Update every minute
+    return () => clearInterval(interval);
+  }, []);
 
   // Get the currency symbol
   const getCurrencySymbol = (curr: string): string => {
@@ -90,10 +122,10 @@ const TokenCard = ({
     }
   };
 
-  // Convert USD to selected currency
-  const convertCurrency = (valueUSD: number): number => {
-    const rate = exchangeRates[currency] || 1;
-    return valueUSD * rate;
+  // Convert SOL value to selected currency
+  const convertCurrency = (solValue: number): number => {
+    const rate = rates[currency] || rates.USD;
+    return solValue * rate;
   };
 
   // Format number based on currency (JPY and KRW don't use decimals)
