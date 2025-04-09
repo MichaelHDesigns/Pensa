@@ -182,8 +182,12 @@ const Transactions = () => {
   // Filter transactions based on selected filter
   const filteredTransactions = transactions.filter(transaction => {
     if (currentFilter === "all") return true;
-    if (currentFilter === "received") return transaction.type === "receive";
-    if (currentFilter === "sent") return transaction.type === "send";
+    if (currentFilter === "received") {
+      return transaction.type === "receive" || 
+             (transaction.amount && transaction.amount.startsWith('+'));
+    }
+    if (currentFilter === "sent") return transaction.type === "send" || 
+           (transaction.amount && transaction.amount.startsWith('-'));
     if (currentFilter === "swaps") return transaction.type === "swap";
     return true;
   });
