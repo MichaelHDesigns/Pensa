@@ -164,7 +164,7 @@ const Send = () => {
             </Button>
           </Link>
         </div>
-        <h1 className="text-2xl font-bold text-black ml-2">Send</h1>
+        <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] ml-2">Send</h1>
       </header>
       
       <Card className="neumorphic bg-white">
