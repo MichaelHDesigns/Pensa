@@ -186,18 +186,23 @@ const TokenCard = ({
               </button>
               
               {showWalletList && walletList.length > 1 && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50">
-                  {walletList.map((walletItem) => (
-                    <button
-                      key={walletItem.id}
-                      onClick={() => {
-                        switchWallet(walletItem.id);
-                        setShowWalletList(false);
-                      }}
-                      className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center justify-between ${
-                        activeWalletId === walletItem.id ? 'bg-gray-50' : ''
-                      }`}
-                    >
+                <>
+                  <div 
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowWalletList(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50">
+                    {walletList.map((walletItem) => (
+                      <button
+                        key={walletItem.id}
+                        onClick={() => {
+                          switchWallet(walletItem.id);
+                          setShowWalletList(false);
+                        }}
+                        className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center justify-between ${
+                          activeWalletId === walletItem.id ? 'bg-gray-50' : ''
+                        }`}
+                      >
                       <div className="flex flex-col">
                         <span className="text-sm font-medium">{walletItem.name}</span>
                         <span className="text-xs text-gray-500">
@@ -208,8 +213,9 @@ const TokenCard = ({
                         <div className="w-2 h-2 rounded-full bg-green-500"></div>
                       )}
                     </button>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
             <Link href="/send" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
