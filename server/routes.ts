@@ -14,51 +14,24 @@ const SOL_ADDRESS = new solanaWeb3.PublicKey("So11111111111111111111111111111111
 const connection = new solanaWeb3.Connection(SOLANA_NETWORK, "confirmed");
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // API endpoint to get current SOL price with real-time rates
+  // API endpoint to get current SOL price
   app.get("/api/price/sol", async (req, res) => {
     try {
-      const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd,eur,gbp,jpy,cny,krw");
-      const data = await response.json();
-      
-      if (!data.solana) {
-        throw new Error("Failed to fetch SOL price data");
-      }
-
-      res.json({ 
-        price: data.solana.usd,
-        eur: data.solana.eur,
-        gbp: data.solana.gbp,
-        jpy: data.solana.jpy,
-        cny: data.solana.cny,
-        krw: data.solana.krw
-      });
+      // In a real app, we would fetch the price from a price oracle or exchange API
+      // For demo purposes, we'll return a fixed price
+      res.json({ price: 70 }); // $70 per SOL
     } catch (error) {
       console.error("Error fetching SOL price:", error);
       res.status(500).json({ error: "Failed to fetch SOL price" });
     }
   });
 
-  // API endpoint to get current Pensacoin price with real-time SOL ratio
+  // API endpoint to get current Pensacoin price
   app.get("/api/price/pensacoin", async (req, res) => {
     try {
-      const response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd,eur,gbp,jpy,cny,krw");
-      const data = await response.json();
-      
-      if (!data.solana) {
-        throw new Error("Failed to fetch price data");
-      }
-
-      // Calculate Pensacoin price based on SOL (assuming 1 PENSA = 0.001 SOL)
-      const pensaToSolRatio = 0.001;
-      
-      res.json({ 
-        price: data.solana.usd * pensaToSolRatio,
-        eur: data.solana.eur * pensaToSolRatio,
-        gbp: data.solana.gbp * pensaToSolRatio,
-        jpy: data.solana.jpy * pensaToSolRatio,
-        cny: data.solana.cny * pensaToSolRatio,
-        krw: data.solana.krw * pensaToSolRatio
-      });
+      // In a real app, we would fetch the price from a price oracle or exchange API
+      // For demo purposes, we'll return a fixed price
+      res.json({ price: 0.10 }); // $0.10 per PENSA
     } catch (error) {
       console.error("Error fetching Pensacoin price:", error);
       res.status(500).json({ error: "Failed to fetch Pensacoin price" });

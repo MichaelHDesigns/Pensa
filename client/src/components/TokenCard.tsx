@@ -67,35 +67,15 @@ const TokenCard = ({
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
 
-  // Get currency rates from API response
-  const [rates, setRates] = useState<Record<string, number>>({
+  // Currency conversion rates relative to USD
+  const exchangeRates: Record<string, number> = {
     USD: 1,
-    EUR: 1,
-    GBP: 1,
-    JPY: 1,
-    CNY: 1,
-    KRW: 1
-  });
-
-  useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const response = await fetch('/api/price/sol');
-        const data = await response.json();
-        setRates({
-          USD: data.price,
-          EUR: data.eur,
-          GBP: data.gbp,
-          JPY: data.jpy,
-          CNY: data.cny,
-          KRW: data.krw
-        });
-      } catch (error) {
-        console.error('Error fetching rates:', error);
-      }
-    };
-    fetchRates();
-  }, []);
+    EUR: 0.92, // Euro
+    GBP: 0.78, // British Pound
+    JPY: 153.5, // Japanese Yen
+    CNY: 7.22, // Chinese Yuan
+    KRW: 1370.0, // Korean Won
+  };
 
   // Get the currency symbol
   const getCurrencySymbol = (curr: string): string => {
@@ -110,10 +90,10 @@ const TokenCard = ({
     }
   };
 
-  // Convert SOL value to selected currency
-  const convertCurrency = (solValue: number): number => {
-    const rate = rates[currency] || rates.USD;
-    return solValue * rate;
+  // Convert USD to selected currency
+  const convertCurrency = (valueUSD: number): number => {
+    const rate = exchangeRates[currency] || 1;
+    return valueUSD * rate;
   };
 
   // Format number based on currency (JPY and KRW don't use decimals)
@@ -125,14 +105,17 @@ const TokenCard = ({
     }
   };
 
-  // Calculate values using real-time rates
-  const solValueInCurrency = solBalanceNum * (rates[currency] || rates.USD);
-  const pensaValueInCurrency = (pensaBalanceNum * (rates[currency] || rates.USD)) * 0.001; // Using 0.001 SOL per PENSA ratio
-  const pensaValueInSOL = (pensaBalanceNum * 0.001).toFixed(10); // Direct SOL conversion
+  // Calculate values in different currencies and SOL - preserve exact values
+  const solValueUSD = solBalanceNum * solPrice;
+  const pensaValueUSD = pensaBalanceNum * pensaPrice;
+  const solValueInCurrency = convertCurrency(solValueUSD);
+  const pensaValueInCurrency = convertCurrency(pensaValueUSD);
+  const pensaValueInSOL = (pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
 
-  // Total portfolio value using real-time rates
-  const totalValueInCurrency = solValueInCurrency + pensaValueInCurrency;
-  const totalValueSOL = (solBalanceNum + parseFloat(pensaValueInSOL)).toFixed(10);
+  // Total portfolio value - preserve exact values
+  const totalValueUSD = solBalanceNum * solPrice + pensaBalanceNum * pensaPrice;
+  const totalValueInCurrency = convertCurrency(totalValueUSD);
+  const totalValueSOL = (solBalanceNum + pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
 
   // Current currency symbol
   const currencySymbol = getCurrencySymbol(currency);
