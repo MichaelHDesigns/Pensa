@@ -35,9 +35,10 @@ const TokenCard = ({
   walletId // Added walletId
 }: TokenCardProps) => {
   const { toast } = useToast();
-  const { currency, setCurrency, networkType, switchWallet } = useWallet(); // Assuming switchWallet function exists
+  const { currency, setCurrency, networkType, switchWallet, walletList, activeWalletId, shortenAddress } = useWallet(); // Assuming switchWallet function exists
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [showInNative, setShowInNative] = useState(false);
+  const [showWalletList, setShowWalletList] = useState(false);
   const [tokenMetadata, setTokenMetadata] = useState<any>(null);
 
   // Fetch token metadata for Pensacoin
@@ -180,9 +181,41 @@ const TokenCard = ({
                 onCheckedChange={() => setShowInNative(!showInNative)}
               />
             </div>
-            <Link href="/settings" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm flex items-center">
+            <div className="relative">
+              <button 
+                onClick={() => setShowWalletList(prev => !prev)} 
+                className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm flex items-center"
+              >
                 <Wallet className="h-4 w-4"/>
-            </Link>
+              </button>
+              
+              {showWalletList && walletList.length > 1 && (
+                <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg py-2 z-50">
+                  {walletList.map((walletItem) => (
+                    <button
+                      key={walletItem.id}
+                      onClick={() => {
+                        switchWallet(walletItem.id);
+                        setShowWalletList(false);
+                      }}
+                      className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center justify-between ${
+                        activeWalletId === walletItem.id ? 'bg-gray-50' : ''
+                      }`}
+                    >
+                      <div className="flex flex-col">
+                        <span className="text-sm font-medium">{walletItem.name}</span>
+                        <span className="text-xs text-gray-500">
+                          {shortenAddress(walletItem.id)}
+                        </span>
+                      </div>
+                      {activeWalletId === walletItem.id && (
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             <Link href="/send" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
               <i className="fas fa-paper-plane mr-1"></i> Send
             </Link>
