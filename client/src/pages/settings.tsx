@@ -109,7 +109,6 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardContent className="pt-4">
           <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Settings</h1>
-      <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Information</CardTitle>
         </CardHeader>
