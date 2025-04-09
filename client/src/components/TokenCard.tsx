@@ -67,15 +67,35 @@ const TokenCard = ({
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
 
-  // Currency conversion rates relative to USD
-  const exchangeRates: Record<string, number> = {
+  // Get currency rates from API response
+  const [rates, setRates] = useState<Record<string, number>>({
     USD: 1,
-    EUR: 0.92, // Euro
-    GBP: 0.78, // British Pound
-    JPY: 153.5, // Japanese Yen
-    CNY: 7.22, // Chinese Yuan
-    KRW: 1370.0, // Korean Won
-  };
+    EUR: 1,
+    GBP: 1,
+    JPY: 1,
+    CNY: 1,
+    KRW: 1
+  });
+
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const response = await fetch('/api/price/sol');
+        const data = await response.json();
+        setRates({
+          USD: data.price,
+          EUR: data.eur,
+          GBP: data.gbp,
+          JPY: data.jpy,
+          CNY: data.cny,
+          KRW: data.krw
+        });
+      } catch (error) {
+        console.error('Error fetching rates:', error);
+      }
+    };
+    fetchRates();
+  }, []);
 
   // Get the currency symbol
   const getCurrencySymbol = (curr: string): string => {
@@ -90,10 +110,10 @@ const TokenCard = ({
     }
   };
 
-  // Convert USD to selected currency
-  const convertCurrency = (valueUSD: number): number => {
-    const rate = exchangeRates[currency] || 1;
-    return valueUSD * rate;
+  // Convert SOL value to selected currency
+  const convertCurrency = (solValue: number): number => {
+    const rate = rates[currency] || rates.USD;
+    return solValue * rate;
   };
 
   // Format number based on currency (JPY and KRW don't use decimals)
