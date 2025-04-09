@@ -204,13 +204,12 @@ const Transactions = () => {
             </Button>
           </Link>
         </div>
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold text-black">Transactions</h1>
         </div>
       </header>
 
       <Card className="mb-6 neumorphic bg-white">
         <CardContent className="pt-4">
+          <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Transactions</h1>
           {/* Filters */}
           <div className="flex flex-wrap gap-3 mb-4 justify-center">
             <Button 
