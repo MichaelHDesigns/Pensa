@@ -125,17 +125,14 @@ const TokenCard = ({
     }
   };
 
-  // Calculate values in different currencies and SOL - preserve exact values
-  const solValueUSD = solBalanceNum * solPrice;
-  const pensaValueUSD = pensaBalanceNum * pensaPrice;
-  const solValueInCurrency = convertCurrency(solValueUSD);
-  const pensaValueInCurrency = convertCurrency(pensaValueUSD);
-  const pensaValueInSOL = (pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
+  // Calculate values using real-time rates
+  const solValueInCurrency = solBalanceNum * (rates[currency] || rates.USD);
+  const pensaValueInCurrency = (pensaBalanceNum * (rates[currency] || rates.USD)) * 0.001; // Using 0.001 SOL per PENSA ratio
+  const pensaValueInSOL = (pensaBalanceNum * 0.001).toFixed(10); // Direct SOL conversion
 
-  // Total portfolio value - preserve exact values
-  const totalValueUSD = solBalanceNum * solPrice + pensaBalanceNum * pensaPrice;
-  const totalValueInCurrency = convertCurrency(totalValueUSD);
-  const totalValueSOL = (solBalanceNum + pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
+  // Total portfolio value using real-time rates
+  const totalValueInCurrency = solValueInCurrency + pensaValueInCurrency;
+  const totalValueSOL = (solBalanceNum + parseFloat(pensaValueInSOL)).toFixed(10);
 
   // Current currency symbol
   const currencySymbol = getCurrencySymbol(currency);
