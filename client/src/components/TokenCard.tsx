@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useWallet } from "@/contexts/WalletContext";
 import { getTokenMetadata, PENSACOIN_MINT_ADDRESS } from "@/lib/solana";
 import pensacoinLogo from "../assets/pensacoin-logo.png";
+import { Copy, Wallet } from "lucide-react"; // Added import for Wallet icon
 
 interface TokenCardProps {
   type: "sol" | "pensacoin";
@@ -33,11 +34,11 @@ const TokenCard = ({
   pensaPrice = 0.10 
 }: TokenCardProps) => {
   const { toast } = useToast();
-  const { currency, setCurrency, networkType } = useWallet();
+  const { currency, setCurrency, networkType, switchWallet } = useWallet(); // Assuming switchWallet function exists
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [showInNative, setShowInNative] = useState(false);
   const [tokenMetadata, setTokenMetadata] = useState<any>(null);
-  
+
   // Fetch token metadata for Pensacoin
   useEffect(() => {
     if (type === "pensacoin") {
@@ -52,18 +53,18 @@ const TokenCard = ({
           console.error("Error fetching token metadata:", error);
         }
       };
-      
+
       fetchMetadata();
     }
   }, [type]);
-  
+
   // Format network type for display
   const formattedNetworkType = networkType.charAt(0).toUpperCase() + networkType.slice(1);
-  
+
   // Extract numeric values from balance strings - preserve exact values
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
-  
+
   // Currency conversion rates relative to USD
   const exchangeRates: Record<string, number> = {
     USD: 1,
@@ -73,7 +74,7 @@ const TokenCard = ({
     CNY: 7.22, // Chinese Yuan
     KRW: 1370.0, // Korean Won
   };
-  
+
   // Get the currency symbol
   const getCurrencySymbol = (curr: string): string => {
     switch (curr) {
@@ -86,13 +87,13 @@ const TokenCard = ({
       default: return "$";
     }
   };
-  
+
   // Convert USD to selected currency
   const convertCurrency = (valueUSD: number): number => {
     const rate = exchangeRates[currency] || 1;
     return valueUSD * rate;
   };
-  
+
   // Format number based on currency (JPY and KRW don't use decimals)
   const formatCurrencyValue = (value: number): string => {
     if (currency === "JPY" || currency === "KRW") {
@@ -101,19 +102,19 @@ const TokenCard = ({
       return value.toFixed(2);
     }
   };
-  
+
   // Calculate values in different currencies and SOL - preserve exact values
   const solValueUSD = solBalanceNum * solPrice;
   const pensaValueUSD = pensaBalanceNum * pensaPrice;
   const solValueInCurrency = convertCurrency(solValueUSD);
   const pensaValueInCurrency = convertCurrency(pensaValueUSD);
   const pensaValueInSOL = (pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
-  
+
   // Total portfolio value - preserve exact values
   const totalValueUSD = solBalanceNum * solPrice + pensaBalanceNum * pensaPrice;
   const totalValueInCurrency = convertCurrency(totalValueUSD);
   const totalValueSOL = (solBalanceNum + pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
-  
+
   // Current currency symbol
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -127,7 +128,7 @@ const TokenCard = ({
           description: `${label} copied to clipboard`,
           duration: 2000,
         });
-        
+
         // Reset the copied state after 2 seconds
         setTimeout(() => setCopiedText(null), 2000);
       })
@@ -178,6 +179,9 @@ const TokenCard = ({
                 onCheckedChange={() => setShowInNative(!showInNative)}
               />
             </div>
+            <button onClick={() => switchWallet()} className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
+                <Wallet className="h-4 w-4 mr-1"/>  {/* Added wallet switcher icon */}
+              </button>
             <Link href="/send" className="bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm">
               <i className="fas fa-paper-plane mr-1"></i> Send
             </Link>
@@ -207,7 +211,7 @@ const TokenCard = ({
                 className={`ml-2 ${copiedText === "Address" ? "text-green-500" : "text-gray-600"}`}
                 onClick={() => copyToClipboard(address, "Address")}
               >
-                <i className={`fas ${copiedText === "Address" ? "fa-check" : "fa-copy"}`}></i>
+                <Copy className={`h-4 w-4 ${copiedText === "Address" ? "text-green-500" : "text-gray-600"}`} />
               </button>
             </div>
           </div>
