@@ -6,10 +6,6 @@ import { Label } from "@/components/ui/label";
 import { useWallet } from "@/contexts/WalletContext";
 import { getTokenMetadata, PENSACOIN_MINT_ADDRESS } from "@/lib/solana";
 import pensacoinLogo from "../assets/pensacoin-logo.png";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { WalletIcon } from "lucide-react";
-import { Button } from "./ui/button"; // Added import for Button component
-
 
 interface TokenCardProps {
   type: "sol" | "pensacoin";
@@ -37,13 +33,11 @@ const TokenCard = ({
   pensaPrice = 0.10 
 }: TokenCardProps) => {
   const { toast } = useToast();
-  const { currency, setCurrency, networkType, shortenAddress, walletList, activeWalletId, switchWallet } = useWallet();
+  const { currency, setCurrency, networkType } = useWallet();
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [showInNative, setShowInNative] = useState(false);
   const [tokenMetadata, setTokenMetadata] = useState<any>(null);
-  const [copied, setCopied] = useState(false);
-  const [showWalletSelectDialog, setShowWalletSelectDialog] = useState(false);
-
+  
   // Fetch token metadata for Pensacoin
   useEffect(() => {
     if (type === "pensacoin") {
@@ -58,18 +52,18 @@ const TokenCard = ({
           console.error("Error fetching token metadata:", error);
         }
       };
-
+      
       fetchMetadata();
     }
   }, [type]);
-
+  
   // Format network type for display
   const formattedNetworkType = networkType.charAt(0).toUpperCase() + networkType.slice(1);
-
+  
   // Extract numeric values from balance strings - preserve exact values
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
-
+  
   // Currency conversion rates relative to USD
   const exchangeRates: Record<string, number> = {
     USD: 1,
@@ -79,7 +73,7 @@ const TokenCard = ({
     CNY: 7.22, // Chinese Yuan
     KRW: 1370.0, // Korean Won
   };
-
+  
   // Get the currency symbol
   const getCurrencySymbol = (curr: string): string => {
     switch (curr) {
@@ -92,13 +86,13 @@ const TokenCard = ({
       default: return "$";
     }
   };
-
+  
   // Convert USD to selected currency
   const convertCurrency = (valueUSD: number): number => {
     const rate = exchangeRates[currency] || 1;
     return valueUSD * rate;
   };
-
+  
   // Format number based on currency (JPY and KRW don't use decimals)
   const formatCurrencyValue = (value: number): string => {
     if (currency === "JPY" || currency === "KRW") {
@@ -107,19 +101,19 @@ const TokenCard = ({
       return value.toFixed(2);
     }
   };
-
+  
   // Calculate values in different currencies and SOL - preserve exact values
   const solValueUSD = solBalanceNum * solPrice;
   const pensaValueUSD = pensaBalanceNum * pensaPrice;
   const solValueInCurrency = convertCurrency(solValueUSD);
   const pensaValueInCurrency = convertCurrency(pensaValueUSD);
   const pensaValueInSOL = (pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
-
+  
   // Total portfolio value - preserve exact values
   const totalValueUSD = solBalanceNum * solPrice + pensaBalanceNum * pensaPrice;
   const totalValueInCurrency = convertCurrency(totalValueUSD);
   const totalValueSOL = (solBalanceNum + pensaBalanceNum * pensaPrice / solPrice).toFixed(10);
-
+  
   // Current currency symbol
   const currencySymbol = getCurrencySymbol(currency);
 
@@ -133,7 +127,7 @@ const TokenCard = ({
           description: `${label} copied to clipboard`,
           duration: 2000,
         });
-
+        
         // Reset the copied state after 2 seconds
         setTimeout(() => setCopiedText(null), 2000);
       })
@@ -146,21 +140,9 @@ const TokenCard = ({
       });
   };
 
-  const handleSwitchWallet = async (walletId: string) => {
-    try {
-      await switchWallet(walletId);
-      setShowWalletSelectDialog(false);
-    } catch (error) {
-      console.error("Error switching wallet:", error);
-      toast({
-        title: "Error",
-        description: "Failed to switch wallet",
-        variant: "destructive",
-      });
-    }
+  const shortenAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-5)}`;
   };
-
-  // Using shortenAddress from WalletContext
 
   return (
     <div className="bg-white rounded-xl overflow-hidden neumorphic">
@@ -219,71 +201,23 @@ const TokenCard = ({
         <div className="flex justify-between text-sm mb-4 bg-white rounded-lg p-3 neumorphic-inset">
           <div>
             <span className="text-[rgba(169,0,232,1)] font-medium">Wallet Address</span>
-            <div className="flex items-center mt-1 gap-2">
+            <div className="flex items-center mt-1">
               <span className="text-black font-medium truncate w-28">{shortenAddress(address)}</span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-6 w-6"
+              <button 
+                className={`ml-2 ${copiedText === "Address" ? "text-green-500" : "text-gray-600"}`}
                 onClick={() => copyToClipboard(address, "Address")}
               >
-                {copiedText === "Address" ? <CheckIcon size={14} /> : <CopyIcon size={14} />}
-              </Button>
+                <i className={`fas ${copiedText === "Address" ? "fa-check" : "fa-copy"}`}></i>
+              </button>
             </div>
           </div>
-          <Dialog open={showWalletSelectDialog} onOpenChange={setShowWalletSelectDialog}>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="text-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.1)]"
-              onClick={() => setShowWalletSelectDialog(true)}
-            >
-              <WalletIcon size={14} className="mr-1" />
-              Switch
-            </Button>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Select Wallet</DialogTitle>
-                <DialogDescription>
-                  Choose a wallet from your wallet list
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-2 my-4">
-                {walletList.length === 0 ? (
-                  <div className="text-center py-4 text-gray-500">
-                    No wallets found. Create or import a wallet first.
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {walletList.map((walletItem) => (
-                      <div 
-                        key={walletItem.id} 
-                        className={`p-3 rounded-lg border flex justify-between items-center cursor-pointer hover:bg-gray-50 ${
-                          activeWalletId === walletItem.id ? 'border-[rgba(169,0,232,1)] bg-[rgba(169,0,232,0.05)]' : 'border-gray-200'
-                        }`}
-                        onClick={() => handleSwitchWallet(walletItem.id)}
-                      >
-                        <div>
-                          <div className="font-medium">{walletItem.name}</div>
-                          <div className="text-xs text-gray-500">
-                            {activeWalletId === walletItem.id ? 'Active' : ''}
-                          </div>
-                        </div>
-                        {activeWalletId === walletItem.id && (
-                          <div className="w-3 h-3 rounded-full bg-[rgba(169,0,232,1)]"></div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setShowWalletSelectDialog(false)}>
-                  Cancel
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <div>
+            <span className="text-[rgba(169,0,232,1)] font-medium">Network</span>
+            <div className="flex items-center mt-1">
+              <span className="text-black font-medium">{formattedNetworkType}</span>
+              <span className="ml-2 w-2 h-2 rounded-full bg-green-500"></span>
+            </div>
+          </div>
         </div>
 
         {/* Token Balances */}
