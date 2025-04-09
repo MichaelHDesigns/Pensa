@@ -14,14 +14,13 @@ import { ChevronLeft, AlertTriangle } from "lucide-react";
 
 const Settings = () => {
   const { 
-    wallet, removeWallet, disconnect, switchWallet, setCurrency, setNetwork,
+    wallet, removeWallet, disconnect, switchWallet, setNetwork,
     solBalance, pensacoinBalance, publicKey, walletList, activeWalletId,
-    currency, networkType
+    networkType
   } = useWallet();
   const { toast } = useToast();
   const [location, navigate] = useLocation();
   const [showRemoveWalletDialog, setShowRemoveWalletDialog] = useState(false);
-  const [showCurrencyDialog, setShowCurrencyDialog] = useState(false);
   const [showNetworkDialog, setShowNetworkDialog] = useState(false);
   const [showWalletSelectDialog, setShowWalletSelectDialog] = useState(false);
   // No longer need custom RPC
@@ -62,20 +61,6 @@ const Settings = () => {
       toast({
         title: "Error",
         description: "Failed to switch wallet",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // Handle currency change
-  const handleCurrencyChange = (newCurrency: string) => {
-    try {
-      setCurrency(newCurrency as "USD" | "EUR" | "GBP" | "JPY" | "CNY" | "KRW");
-      setShowCurrencyDialog(false);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update currency preference",
         variant: "destructive",
       });
     }
@@ -239,8 +224,6 @@ const Settings = () => {
         </CardContent>
       </Card>
 
-      
-
       {/* App Settings */}
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
@@ -248,56 +231,6 @@ const Settings = () => {
           <CardDescription className="text-gray-700">Customize app behavior</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {/* Currency Dialog */}
-          <Dialog open={showCurrencyDialog} onOpenChange={setShowCurrencyDialog}>
-            <DialogTrigger asChild>
-              <Button variant="outline" className="w-full neumorphic bg-white text-gray-700">
-                Currency Preferences
-                <span className="ml-auto bg-[rgba(169,0,232,0.1)] text-[rgba(169,0,232,1)] rounded px-2 py-0.5 text-xs">{currency}</span>
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Currency Preferences</DialogTitle>
-                <DialogDescription>
-                  Select your preferred currency for displaying wallet values
-                </DialogDescription>
-              </DialogHeader>
-              <div className="py-4">
-                <RadioGroup defaultValue={currency} className="space-y-3" onValueChange={handleCurrencyChange}>
-                  <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
-                    <RadioGroupItem value="USD" id="USD" />
-                    <Label htmlFor="USD" className="flex-1 cursor-pointer">US Dollar (USD)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
-                    <RadioGroupItem value="EUR" id="EUR" />
-                    <Label htmlFor="EUR" className="flex-1 cursor-pointer">Euro (EUR)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
-                    <RadioGroupItem value="GBP" id="GBP" />
-                    <Label htmlFor="GBP" className="flex-1 cursor-pointer">British Pound (GBP)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
-                    <RadioGroupItem value="JPY" id="JPY" />
-                    <Label htmlFor="JPY" className="flex-1 cursor-pointer">Japanese Yen (JPY)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
-                    <RadioGroupItem value="CNY" id="CNY" />
-                    <Label htmlFor="CNY" className="flex-1 cursor-pointer">Chinese Yuan (CNY)</Label>
-                  </div>
-                  <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
-                    <RadioGroupItem value="KRW" id="KRW" />
-                    <Label htmlFor="KRW" className="flex-1 cursor-pointer">Korean Won (KRW)</Label>
-                  </div>
-                </RadioGroup>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setShowCurrencyDialog(false)}>
-                  Cancel
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
 
           {/* Network Dialog */}
           <Dialog open={showNetworkDialog} onOpenChange={setShowNetworkDialog}>
