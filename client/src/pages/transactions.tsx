@@ -204,7 +204,6 @@ const Transactions = () => {
             </Button>
           </Link>
         </div>
-        </div>
       </header>
 
       <Card className="mb-6 neumorphic bg-white">
