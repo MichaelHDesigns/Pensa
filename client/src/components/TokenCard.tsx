@@ -67,43 +67,12 @@ const TokenCard = ({
   const solBalanceNum = parseFloat(balance);
   const pensaBalanceNum = pensaBalance ? parseFloat(pensaBalance) : 0;
 
-  // Currency conversion rates relative to USD
-  const exchangeRates: Record<string, number> = {
-    USD: 1,
-    EUR: 0.92, // Euro
-    GBP: 0.78, // British Pound
-    JPY: 153.5, // Japanese Yen
-    CNY: 7.22, // Chinese Yuan
-    KRW: 1370.0, // Korean Won
-  };
-
-  // Get the currency symbol
-  const getCurrencySymbol = (curr: string): string => {
-    switch (curr) {
-      case "USD": return "$";
-      case "EUR": return "€";
-      case "GBP": return "£";
-      case "JPY": return "¥";
-      case "CNY": return "¥";
-      case "KRW": return "₩";
-      default: return "$";
-    }
-  };
-
-  // Convert USD to selected currency
-  const convertCurrency = (valueUSD: number): number => {
-    const rate = exchangeRates[currency] || 1;
-    return valueUSD * rate;
-  };
-
-  // Format number based on currency (JPY and KRW don't use decimals)
+  // Format currency value
   const formatCurrencyValue = (value: number): string => {
-    if (currency === "JPY" || currency === "KRW") {
-      return Math.round(value).toString();
-    } else {
-      return value.toFixed(2);
-    }
+    return value.toFixed(2);
   };
+
+  const getCurrencySymbol = () => "$";
 
   // Calculate values in different currencies and SOL - preserve exact values
   const solValueUSD = solBalanceNum * solPrice;

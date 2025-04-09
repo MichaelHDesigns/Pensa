@@ -72,9 +72,32 @@ export function WalletProvider({ children }: { children: ReactNode }) {
       : "mainnet";
   });
   
-  // Real market data from the API
-  const solPrice = 125.41; // $125.41 per SOL (from API)
-  const pensaPrice = 0.00000529917325114103; // $0.00000529917325114103 per PENSA (from API)
+  // Fetch real-time prices
+  const [solPrice, setSolPrice] = useState(0);
+  const [pensaPrice, setPensaPrice] = useState(0);
+
+  // Fetch prices on component mount and every 30 seconds
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        // Get SOL price from CoinGecko
+        const solResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+        const solData = await solResponse.json();
+        setSolPrice(solData.solana.usd);
+
+        // Get PENSA price from GeckoTerminal
+        const pensaResponse = await fetch('https://api.geckoterminal.com/api/v2/networks/solana/pools/2fdrJjBrx2jXCqVF2zTCeFnVmy58YtnrYYhskXXgti6b');
+        const pensaData = await pensaResponse.json();
+        setPensaPrice(parseFloat(pensaData.data.attributes.base_token_price_usd));
+      } catch (error) {
+        console.error('Error fetching prices:', error);
+      }
+    };
+
+    fetchPrices();
+    const interval = setInterval(fetchPrices, 30000);
+    return () => clearInterval(interval);
+  }, []);
   
   // Calculate USD values - using exact values without rounding
   const solValueUsd = `$${(parseFloat(solBalance) * solPrice).toFixed(8)}`;
