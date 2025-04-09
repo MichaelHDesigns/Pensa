@@ -162,8 +162,6 @@ const TransactionItem = ({
           }
         }}
       >
-        {/* Removed circular icon */}
-        
         {/* Transaction info */}
         <div className="flex-grow min-w-0">
           <div className="flex justify-between">
@@ -173,8 +171,11 @@ const TransactionItem = ({
             </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">{date}</span>
-            {formattedValue && <span className="text-gray-600">{formattedValue}</span>}
+            <div className="flex flex-col">
+              <span className="text-gray-600">{date}</span>
+              <span className="text-xs text-gray-500 font-mono truncate">{signature.slice(0, 12)}...</span>
+            </div>
+            {formattedValue && <span className="text-gray-600 self-start">{formattedValue}</span>}
           </div>
         </div>
         
