@@ -203,15 +203,17 @@ const TokenCard = ({
                           activeWalletId === walletItem.id ? 'bg-gray-50' : ''
                         }`}
                       >
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium">{walletItem.name}</span>
-                        <span className="text-xs text-gray-500">
-                          {shortenAddress(walletItem.id)}
-                        </span>
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex flex-col overflow-hidden">
+                          <span className="text-sm font-medium truncate">{walletItem.name}</span>
+                          <span className="text-xs text-gray-500 font-mono">
+                            {shortenAddress(walletItem.id)}
+                          </span>
+                        </div>
+                        {activeWalletId === walletItem.id && (
+                          <div className="w-2 h-2 rounded-full bg-green-500 ml-2 flex-shrink-0"></div>
+                        )}
                       </div>
-                      {activeWalletId === walletItem.id && (
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      )}
                     </button>
                     ))}
                   </div>
