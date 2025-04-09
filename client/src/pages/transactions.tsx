@@ -195,10 +195,10 @@ const Transactions = () => {
   const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto pt-12">
       <header className="mb-6">
-        <div className="flex justify-center mb-1">
-          <Link href="/wallet-dashboard" className="absolute left-4">
+        <div className="flex justify-start mb-1">
+          <Link href="/wallet-dashboard">
             <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
               <ChevronLeft size={16} /> Back
             </Button>
