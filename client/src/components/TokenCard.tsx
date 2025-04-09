@@ -206,19 +206,6 @@ const TokenCard = ({
                       <div className="flex items-center justify-between w-full">
                         <div className="flex flex-col overflow-hidden">
                           <span className="text-sm font-medium truncate">{walletItem.name}</span>
-                          <span className="text-xs text-gray-500 font-mono">
-                            {(() => {
-                              try {
-                                const keypair = solanaWeb3.Keypair.fromSecretKey(
-                                  new Uint8Array(JSON.parse(walletItem.privateKey))
-                                );
-                                return shortenAddress(keypair.publicKey.toString());
-                              } catch (error) {
-                                console.error("Error getting wallet address:", error);
-                                return "Error";
-                              }
-                            })()}
-                          </span>
                         </div>
                         {activeWalletId === walletItem.id && (
                           <div className="w-2 h-2 rounded-full bg-green-500 ml-2 flex-shrink-0"></div>
