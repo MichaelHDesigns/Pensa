@@ -26,7 +26,7 @@ export default function About() {
           <p className="text-gray-700">
             Pensa Wallet, developed by Pensacola Crypto, is your secure gateway to the Solana blockchain. Our wallet provides a seamless and user-friendly experience for managing digital assets, particularly SOL and PENSA tokens.
           </p>
-        </section>
+        </div>
 
         <div className="neumorphic-inset bg-white p-6 rounded-xl">
           <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">Key Features</h2>
@@ -68,7 +68,7 @@ export default function About() {
               </div>
             </li>
           </ul>
-        </section>
+        </div>
 
         <div className="neumorphic-inset bg-white p-6 rounded-xl">
           <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">Security</h2>
@@ -87,14 +87,14 @@ export default function About() {
               <span>Recovery phrase backup system</span>
             </li>
           </ul>
-        </section>
+        </div>
 
         <div className="neumorphic-inset bg-white p-6 rounded-xl">
           <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">About Us</h2>
           <p className="text-gray-700">
             Developed by Pensacola Crypto, we're committed to making cryptocurrency management accessible and secure for everyone. Our team combines blockchain expertise with user-centered design to deliver a superior wallet experience.
           </p>
-        </section>
+        </div>
       </div>
     </div>
   );
