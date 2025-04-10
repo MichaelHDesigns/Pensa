@@ -288,16 +288,16 @@ const Settings = () => {
       <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">FAQ</CardTitle>
-          <CardDescription className="text-gray-700">For Frequently Asked Questions Please</CardDescription>
         </CardHeader>
         <CardContent>
           <a 
             href="https://www.pensacolacrypto.com/faq#gsc.tab=0" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-[rgba(169,0,232,1)] flex items-center"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
           >
-            Visit Our FAQ page
+            <i className="fa-solid fa-circle-question text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">FAQ</span>
           </a>
         </CardContent>
       </Card>
