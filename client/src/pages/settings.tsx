@@ -313,27 +313,27 @@ const Settings = () => {
             href="https://t.me/+VMaUYNUdirY4MmM5" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
           >
-            <i className="fa-brands fa-telegram text-xl"></i>
-            <span>Telegram</span>
+            <i className="fa-brands fa-telegram text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">Telegram</span>
           </a>
           <a 
             href="https://www.x.com/pensacoin" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
           >
-            <i className="fa-brands fa-x-twitter text-xl"></i>
-            <span>X</span>
+            <i className="fa-brands fa-x-twitter text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">X</span>
           </a>
           <a 
             href="https://facebook.com/pensacolacrypto" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
           >
-            <i className="fa-brands fa-facebook text-xl"></i>
+            <i className="fa-brands fa-facebook text-xl text-[rgba(169,0,232,1)]"></i>
             <span>Facebook</span>
           </a>
         </CardContent>
