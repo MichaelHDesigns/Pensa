@@ -346,15 +346,10 @@ const Settings = () => {
           <CardDescription className="text-gray-700">Help Us Improve Pensa Wallet</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          <a 
-            href="https://www.pensacolacrypto.com/about" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
-          >
+          <Link href="/about" className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group">
             <i className="fa-solid fa-circle-info text-xl text-[rgba(169,0,232,1)]"></i>
             <span className="group-hover:text-[rgba(169,0,232,1)]">About App</span>
-          </a>
+          </Link>
           <a 
             href="https://play.google.com/store/apps/details?id=com.pensawallet.app" 
             target="_blank" 
