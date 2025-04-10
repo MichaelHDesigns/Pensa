@@ -97,7 +97,7 @@ const Settings = () => {
       </header>
 
       {/* Wallet Info */}
-      <Card className="mb-6 neumorphic bg-white">
+      <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Information</CardTitle>
         </CardHeader>
@@ -118,7 +118,7 @@ const Settings = () => {
       </Card>
 
       {/* Wallet Management */}
-      <Card className="mb-6 neumorphic bg-white">
+      <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Management</CardTitle>
           <CardDescription className="text-gray-700">Create, Import, Switch or Remove Wallets</CardDescription>
@@ -225,7 +225,7 @@ const Settings = () => {
       </Card>
 
       {/* App Settings */}
-      <Card className="mb-6 neumorphic bg-white">
+      <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Application Settings</CardTitle>
           <CardDescription className="text-gray-700">Customize App Behavior</CardDescription>
@@ -285,7 +285,7 @@ const Settings = () => {
       </Card>
 
       {/* FAQ Section */}
-      <Card className="mb-6 neumorphic bg-white">
+      <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">FAQ</CardTitle>
           <CardDescription className="text-gray-700">For Frequently Asked Questions Please</CardDescription>
@@ -303,7 +303,7 @@ const Settings = () => {
       </Card>
 
       {/* Socials Section */}
-      <Card className="mb-6 neumorphic bg-white">
+      <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Socials</CardTitle>
           <CardDescription className="text-gray-700">Connect With Us on Social Media</CardDescription>
