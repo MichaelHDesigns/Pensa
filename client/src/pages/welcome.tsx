@@ -4,7 +4,16 @@ import { Button } from "@/components/ui/button";
 
 const Welcome = () => {
   const [_, setLocation] = useLocation();
+  const { walletList } = useWallet();
   
+  // If user has existing wallets, redirect to wallet dashboard
+  useEffect(() => {
+    const activeWalletId = localStorage.getItem("activeWalletId");
+    if (activeWalletId && walletList.length > 0) {
+      setLocation("/wallet");
+    }
+  }, [walletList, setLocation]);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -80,6 +89,19 @@ const Welcome = () => {
             </div>
           </div>
         </div>
+
+        {walletList.length > 0 && (
+          <div className="mt-8 text-center">
+            <h3 className="text-lg font-medium mb-3">Access Existing Wallets</h3>
+            <Button
+              onClick={() => setLocation("/wallet")}
+              className="gradient-bg hover:opacity-90"
+            >
+              Open My Wallet
+              <i className="fas fa-arrow-right ml-2"></i>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
