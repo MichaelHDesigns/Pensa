@@ -10,6 +10,7 @@ import Receive from "@/pages/receive";
 import Swap from "@/pages/swap";
 import Transactions from "@/pages/transactions";
 import Settings from "@/pages/settings";
+import About from "@/pages/about";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { SwapProvider } from "@/contexts/SwapContext";
 
@@ -30,6 +31,7 @@ function App() {
             <Route path="/swap" component={Swap} />
             <Route path="/transactions" component={Transactions} />
             <Route path="/settings" component={Settings} />
+            <Route path="/about" component={About} />
             <Route component={NotFound} />
           </Switch>
         </SwapProvider>
