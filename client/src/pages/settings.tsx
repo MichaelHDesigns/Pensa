@@ -302,6 +302,56 @@ const Settings = () => {
         </CardContent>
       </Card>
 
+      {/* Feedback Section */}
+      <Card className="mb-6 neumorphic-inset bg-white">
+        <CardHeader>
+          <CardTitle className="text-[rgba(169,0,232,1)]">Feedback</CardTitle>
+          <CardDescription className="text-gray-700">Help Us Improve Pensa Wallet</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <a 
+            href="https://www.pensacolacrypto.com/about" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-solid fa-circle-info text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">About App</span>
+          </a>
+          <a 
+            href="https://play.google.com/store/apps/details?id=com.pensawallet.app" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-solid fa-star text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">Rate Us</span>
+          </a>
+          <button 
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: 'Pensa Wallet',
+                  text: 'Check out Pensa Wallet - Your Solana Wallet',
+                  url: 'https://www.pensacolacrypto.com',
+                });
+              }
+            }}
+            className="w-full flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-solid fa-share text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">Tell Friends</span>
+          </button>
+          <a 
+            href="mailto:pensacolacrypto@gmail.com?subject=Pensa Wallet Feedback"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-solid fa-envelope text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">Contact Us</span>
+          </a>
+        </CardContent>
+      </Card>
+
       {/* Socials Section */}
       <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
