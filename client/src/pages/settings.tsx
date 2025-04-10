@@ -283,6 +283,58 @@ const Settings = () => {
           </Dialog>
         </CardContent>
       </Card>
+
+      {/* FAQ Section */}
+      <Card className="mb-6 neumorphic bg-white">
+        <CardHeader>
+          <CardTitle className="text-[rgba(169,0,232,1)]">FAQ</CardTitle>
+          <CardDescription className="text-gray-700">Frequently Asked Questions</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <a 
+            href="https://www.pensacolacrypto.com/faq#gsc.tab=0" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-[rgba(169,0,232,1)] hover:underline flex items-center"
+          >
+            Visit our FAQ page
+          </a>
+        </CardContent>
+      </Card>
+
+      {/* Socials Section */}
+      <Card className="mb-6 neumorphic bg-white">
+        <CardHeader>
+          <CardTitle className="text-[rgba(169,0,232,1)]">Socials</CardTitle>
+          <CardDescription className="text-gray-700">Connect with us on social media</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <a 
+            href="https://t.me/+VMaUYNUdirY4MmM5" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center text-[rgba(169,0,232,1)] hover:underline"
+          >
+            Telegram
+          </a>
+          <a 
+            href="https://www.x.com/pensacoin" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center text-[rgba(169,0,232,1)] hover:underline"
+          >
+            X
+          </a>
+          <a 
+            href="https://facebook.com/pensacolacrypto" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center text-[rgba(169,0,232,1)] hover:underline"
+          >
+            Facebook
+          </a>
+        </CardContent>
+      </Card>
     </div>
   );
 };
