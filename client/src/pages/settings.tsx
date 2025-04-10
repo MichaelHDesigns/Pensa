@@ -313,25 +313,28 @@ const Settings = () => {
             href="https://t.me/+VMaUYNUdirY4MmM5" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center text-[rgba(169,0,232,1)]"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
           >
-            Telegram
+            <i className="fab fa-telegram text-xl"></i>
+            <span>Telegram</span>
           </a>
           <a 
             href="https://www.x.com/pensacoin" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center text-[rgba(169,0,232,1)]"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
           >
-            X
+            <i className="fab fa-x-twitter text-xl"></i>
+            <span>X</span>
           </a>
           <a 
             href="https://facebook.com/pensacolacrypto" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center text-[rgba(169,0,232,1)]"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
           >
-            Facebook
+            <i className="fab fa-facebook text-xl"></i>
+            <span>Facebook</span>
           </a>
         </CardContent>
       </Card>
