@@ -302,6 +302,43 @@ const Settings = () => {
         </CardContent>
       </Card>
 
+      {/* Socials Section */}
+      <Card className="mb-6 neumorphic-inset bg-white">
+        <CardHeader>
+          <CardTitle className="text-[rgba(169,0,232,1)]">Socials</CardTitle>
+          <CardDescription className="text-gray-700">Connect With Us on Social Media</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <a 
+            href="https://t.me/+VMaUYNUdirY4MmM5" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-brands fa-telegram text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">Telegram</span>
+          </a>
+          <a 
+            href="https://www.x.com/pensacoin" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-brands fa-x-twitter text-xl text-[rgba(169,0,232,1)]"></i>
+            <span className="group-hover:text-[rgba(169,0,232,1)]">X</span>
+          </a>
+          <a 
+            href="https://facebook.com/pensacolacrypto" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
+          >
+            <i className="fa-brands fa-facebook text-xl text-[rgba(169,0,232,1)]"></i>
+            <span>Facebook</span>
+          </a>
+        </CardContent>
+      </Card>
+
       {/* Feedback Section */}
       <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
@@ -348,43 +385,6 @@ const Settings = () => {
           >
             <i className="fa-solid fa-envelope text-xl text-[rgba(169,0,232,1)]"></i>
             <span className="group-hover:text-[rgba(169,0,232,1)]">Contact Us</span>
-          </a>
-        </CardContent>
-      </Card>
-
-      {/* Socials Section */}
-      <Card className="mb-6 neumorphic-inset bg-white">
-        <CardHeader>
-          <CardTitle className="text-[rgba(169,0,232,1)]">Socials</CardTitle>
-          <CardDescription className="text-gray-700">Connect With Us on Social Media</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <a 
-            href="https://t.me/+VMaUYNUdirY4MmM5" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
-          >
-            <i className="fa-brands fa-telegram text-xl text-[rgba(169,0,232,1)]"></i>
-            <span className="group-hover:text-[rgba(169,0,232,1)]">Telegram</span>
-          </a>
-          <a 
-            href="https://www.x.com/pensacoin" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
-          >
-            <i className="fa-brands fa-x-twitter text-xl text-[rgba(169,0,232,1)]"></i>
-            <span className="group-hover:text-[rgba(169,0,232,1)]">X</span>
-          </a>
-          <a 
-            href="https://facebook.com/pensacolacrypto" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
-          >
-            <i className="fa-brands fa-facebook text-xl text-[rgba(169,0,232,1)]"></i>
-            <span>Facebook</span>
           </a>
         </CardContent>
       </Card>
