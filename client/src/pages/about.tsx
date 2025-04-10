@@ -24,7 +24,7 @@ export default function About() {
         <section>
           <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">Overview</h2>
           <p className="text-gray-700">
-            Pensa Wallet is your secure gateway to the Solana blockchain, offering a seamless experience for managing your digital assets.
+            Pensa Wallet is your secure gateway to the Solana blockchain, designed to provide a seamless and user-friendly experience for managing digital assets, particularly SOL and PENSA tokens.
           </p>
         </section>
 
@@ -33,11 +33,11 @@ export default function About() {
           <ul className="space-y-3">
             <li className="flex items-start gap-2">
               <div className="w-6 h-6 rounded-full bg-[rgba(169,0,232,0.1)] flex items-center justify-center flex-shrink-0 mt-1">
-                <i className="fa-solid fa-wallet text-sm text-[rgba(169,0,232,1)]"></i>
+                <i className="fa-solid fa-shield-halved text-sm text-[rgba(169,0,232,1)]"></i>
               </div>
               <div>
                 <h3 className="font-medium">Secure Wallet Management</h3>
-                <p className="text-sm text-gray-600">Create and import wallets with industry-standard security</p>
+                <p className="text-sm text-gray-600">Create and import wallets with industry-standard security protocols</p>
               </div>
             </li>
             <li className="flex items-start gap-2">
@@ -46,7 +46,7 @@ export default function About() {
               </div>
               <div>
                 <h3 className="font-medium">Token Swaps</h3>
-                <p className="text-sm text-gray-600">Seamlessly swap between SOL and PENSA tokens</p>
+                <p className="text-sm text-gray-600">Fast and efficient swaps between SOL and PENSA tokens</p>
               </div>
             </li>
             <li className="flex items-start gap-2">
@@ -55,17 +55,47 @@ export default function About() {
               </div>
               <div>
                 <h3 className="font-medium">Transaction History</h3>
-                <p className="text-sm text-gray-600">Track all your transactions in one place</p>
+                <p className="text-sm text-gray-600">Complete history of all your transactions in one place</p>
               </div>
             </li>
             <li className="flex items-start gap-2">
               <div className="w-6 h-6 rounded-full bg-[rgba(169,0,232,0.1)] flex items-center justify-center flex-shrink-0 mt-1">
-                <i className="fa-solid fa-shield-halved text-sm text-[rgba(169,0,232,1)]"></i>
+                <i className="fa-solid fa-network-wired text-sm text-[rgba(169,0,232,1)]"></i>
               </div>
               <div>
                 <h3 className="font-medium">Multi-Network Support</h3>
-                <p className="text-sm text-gray-600">Support for Mainnet, Devnet, and Testnet</p>
+                <p className="text-sm text-gray-600">Support for Mainnet, Devnet, and Testnet networks</p>
               </div>
+            </li>
+            <li className="flex items-start gap-2">
+              <div className="w-6 h-6 rounded-full bg-[rgba(169,0,232,0.1)] flex items-center justify-center flex-shrink-0 mt-1">
+                <i className="fa-solid fa-qrcode text-sm text-[rgba(169,0,232,1)]"></i>
+              </div>
+              <div>
+                <h3 className="font-medium">Easy Transfers</h3>
+                <p className="text-sm text-gray-600">Send and receive tokens with QR code support</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">Security</h2>
+          <p className="text-gray-700">
+            Your security is our top priority. Pensa Wallet implements robust security measures including:
+          </p>
+          <ul className="mt-2 space-y-2 text-gray-700">
+            <li className="flex items-center gap-2">
+              <i className="fa-solid fa-check text-[rgba(169,0,232,1)]"></i>
+              <span>Secure key storage</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <i className="fa-solid fa-check text-[rgba(169,0,232,1)]"></i>
+              <span>Transaction verification</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <i className="fa-solid fa-check text-[rgba(169,0,232,1)]"></i>
+              <span>Backup and recovery options</span>
             </li>
           </ul>
         </section>
