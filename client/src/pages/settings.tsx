@@ -315,7 +315,7 @@ const Settings = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
           >
-            <i className="fab fa-telegram text-xl"></i>
+            <i className="fa-brands fa-telegram text-xl"></i>
             <span>Telegram</span>
           </a>
           <a 
@@ -324,7 +324,7 @@ const Settings = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
           >
-            <i className="fab fa-x-twitter text-xl"></i>
+            <i className="fa-brands fa-x-twitter text-xl"></i>
             <span>X</span>
           </a>
           <a 
@@ -333,7 +333,7 @@ const Settings = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:text-[rgba(169,0,232,1)] transition-colors"
           >
-            <i className="fab fa-facebook text-xl"></i>
+            <i className="fa-brands fa-facebook text-xl"></i>
             <span>Facebook</span>
           </a>
         </CardContent>
