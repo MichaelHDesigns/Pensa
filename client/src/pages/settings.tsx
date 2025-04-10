@@ -92,7 +92,7 @@ const Settings = () => {
         </div>
         <div className="text-center">
           <h1 className="text-2xl font-semibold text-[rgba(169,0,232,1)]">Wallet Settings</h1>
-          <p className="text-gray-600 mt-1">Manage your wallet and account preferences.</p>
+          <p className="text-gray-600 mt-1">Manage Wallet and Account Preferences.</p>
         </div>
       </header>
 
@@ -121,7 +121,7 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Management</CardTitle>
-          <CardDescription className="text-gray-700">Create, import, or remove wallets</CardDescription>
+          <CardDescription className="text-gray-700">Create, Import, Switch or Remove Wallets</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
@@ -228,7 +228,7 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Application Settings</CardTitle>
-          <CardDescription className="text-gray-700">Customize app behavior</CardDescription>
+          <CardDescription className="text-gray-700">Customize App Behavior</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
 
@@ -244,7 +244,7 @@ const Settings = () => {
               <DialogHeader>
                 <DialogTitle>Network Settings</DialogTitle>
                 <DialogDescription>
-                  Select which Solana network to connect to
+                  Select which Solana Network to Connect to
                 </DialogDescription>
               </DialogHeader>
               <div className="py-4">
@@ -253,7 +253,7 @@ const Settings = () => {
                     <RadioGroupItem value="mainnet" id="mainnet" />
                     <Label htmlFor="mainnet" className="flex-1 cursor-pointer">
                       <div className="font-medium">Mainnet</div>
-                      <div className="text-xs text-gray-500">Production Solana network</div>
+                      <div className="text-xs text-gray-500">Production Solana Network</div>
                     </Label>
                   </div>
 
@@ -261,7 +261,7 @@ const Settings = () => {
                     <RadioGroupItem value="devnet" id="devnet" />
                     <Label htmlFor="devnet" className="flex-1 cursor-pointer">
                       <div className="font-medium">Devnet</div>
-                      <div className="text-xs text-gray-500">Development Solana network</div>
+                      <div className="text-xs text-gray-500">Development Solana Network</div>
                     </Label>
                   </div>
 
@@ -269,7 +269,7 @@ const Settings = () => {
                     <RadioGroupItem value="testnet" id="testnet" />
                     <Label htmlFor="testnet" className="flex-1 cursor-pointer">
                       <div className="font-medium">Testnet</div>
-                      <div className="text-xs text-gray-500">Testing Solana network</div>
+                      <div className="text-xs text-gray-500">Testing Solana Network</div>
                     </Label>
                   </div>
                 </RadioGroup>
@@ -288,16 +288,16 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">FAQ</CardTitle>
-          <CardDescription className="text-gray-700">Frequently Asked Questions</CardDescription>
+          <CardDescription className="text-gray-700">For Frequently Asked Questions Please</CardDescription>
         </CardHeader>
         <CardContent>
           <a 
             href="https://www.pensacolacrypto.com/faq#gsc.tab=0" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="text-[rgba(169,0,232,1)] hover:underline flex items-center"
+            className="text-[rgba(169,0,232,1)] flex items-center"
           >
-            Visit our FAQ page
+            Visit Our FAQ page
           </a>
         </CardContent>
       </Card>
@@ -306,14 +306,14 @@ const Settings = () => {
       <Card className="mb-6 neumorphic bg-white">
         <CardHeader>
           <CardTitle className="text-[rgba(169,0,232,1)]">Socials</CardTitle>
-          <CardDescription className="text-gray-700">Connect with us on social media</CardDescription>
+          <CardDescription className="text-gray-700">Connect With Us on Social Media</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <a 
             href="https://t.me/+VMaUYNUdirY4MmM5" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center text-[rgba(169,0,232,1)] hover:underline"
+            className="flex items-center text-[rgba(169,0,232,1)]"
           >
             Telegram
           </a>
@@ -321,7 +321,7 @@ const Settings = () => {
             href="https://www.x.com/pensacoin" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center text-[rgba(169,0,232,1)] hover:underline"
+            className="flex items-center text-[rgba(169,0,232,1)]"
           >
             X
           </a>
@@ -329,7 +329,7 @@ const Settings = () => {
             href="https://facebook.com/pensacolacrypto" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center text-[rgba(169,0,232,1)] hover:underline"
+            className="flex items-center text-[rgba(169,0,232,1)]"
           >
             Facebook
           </a>
