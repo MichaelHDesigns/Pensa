@@ -1,0 +1,61 @@
+Balance fetch attempt 1 failed: 
+ReferenceError {}
+Retry 1: waiting 1000ms before refresh
+PENSA balance (attempt 1): 137700.935562771
+Balance fetch attempt 1 failed: 
+ReferenceError {}
+Retry 1: waiting 1000ms before refresh
+PENSA balance (attempt 1): 137700.935562771
+Balance fetch attempt 1 failed: 
+ReferenceError {}
+Retry 1: waiting 1000ms before refresh
+SOL balance (attempt 2): 2.091
+PENSA balance (attempt 2): 137700.935562771
+Balance fetch attempt 2 failed: 
+ReferenceError {}
+Retry 2: waiting 2000ms before refresh
+PENSA balance (attempt 2): 137700.935562771
+Balance fetch attempt 2 failed: 
+ReferenceError {}
+Retry 2: waiting 2000ms before refresh
+SOL balance (attempt 2): 2.091
+PENSA balance (attempt 2): 137700.935562771
+Balance fetch attempt 2 failed: 
+ReferenceError {}
+Retry 2: waiting 2000ms before refresh
+SOL balance (attempt 3): 2.091
+PENSA balance (attempt 3): 137700.935562771
+Balance fetch attempt 3 failed: 
+ReferenceError {}
+All balance refresh attempts failed
+SOL balance (attempt 3): 2.091
+PENSA balance (attempt 3): 137700.935562771
+Balance fetch attempt 3 failed: 
+ReferenceError {}
+All balance refresh attempts failed
+PENSA balance (attempt 3): 137700.935562771
+Balance fetch attempt 3 failed: 
+ReferenceError {}
+All balance refresh attempts failed
+Failed to derive key: 
+TypeError {}
+
+at t.value (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
+Error importing wallet from mnemonic: 
+Error {}
+message: "Could not derive the correct wallet address"
+stack: "Error: Could not derive the correct wallet address↵ at importWalletFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:51:11)↵ at async importFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/contexts/WalletContext.tsx:184:30)↵ at async handleImport (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/pages/import-wallet.tsx:73:9)"
+get stack: ƒ ()
+set stack: ƒ ()
+[[Prototype]]: Object
+
+Error importing wallet: 
+Error {}
+
+at t.value (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:17465)
+at new t (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:12630)
+at t.value (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:32766)
+at https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/__replco/static/devtools/eruda/3.2.3/eruda.js:2:34400
