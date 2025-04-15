@@ -63,35 +63,22 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   // Convert mnemonic to seed
   const seed = await bip39.mnemonicToSeed(mnemonic);
   
-  // Common Solana derivation paths
-  const paths = [
-    "m/44'/501'/0'/0'",     // Phantom/Solflare
-    "m/44'/501'/0'",        // Alternative Solana path
-    "m/501'/0'/0/0",        // Some hardware wallets
-    "m/44'/501'/0/0",       // Backpack/Unstoppable
-    "m/44'/501'",           // Basic Solana
-    ""                      // Direct seed
-  ];
-  
-  // Try each derivation path
-  for (const path of paths) {
-    try {
-      let seedToUse;
-      
-      if (path) {
-        // Try BIP44 derivation with direct seed first
-        if (path === "m/44'/501'/0/0") {
-          const key = await ed25519.getPublicKey(seed.slice(0, 32));
-          seedToUse = seed.slice(0, 32);
-        } else {
-          // Use ed25519 derivation with path
-          const key = await ed25519.getPublicKey(ed25519.utils.sha512(seed).slice(0, 32));
-          seedToUse = key.slice(0, 32);
-        }
-      } else {
-        // Direct seed derivation
-        seedToUse = seed.slice(0, 32);
-      }
+  // For BIP32 derivation, we'll use the direct seed with SHA512
+  try {
+    // Use the full SHA512 hash of the seed
+    const seedHash = ed25519.utils.sha512(seed);
+    
+    // Use the first 32 bytes as the private key
+    const privateKey = seedHash.slice(0, 32);
+    
+    // Create keypair directly from the private key
+    const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
+    
+    return keypair;
+  } catch (e) {
+    console.error("Failed to derive key:", e);
+    throw new Error("Could not derive the correct wallet address");
+  }
       
       const keypair = solanaWeb3.Keypair.fromSeed(seedToUse);
       console.log("Found wallet with address:", keypair.publicKey.toString());
