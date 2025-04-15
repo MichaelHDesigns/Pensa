@@ -1,0 +1,46 @@
+SOL balance (attempt 3): 2.091
+PENSA balance (attempt 3): 137700.935562771
+Balance fetch attempt 3 failed: 
+ReferenceError {}
+All balance refresh attempts failed
+PENSA balance (attempt 3): 137700.935562771
+Balance fetch attempt 3 failed: 
+ReferenceError {}
+All balance refresh attempts failed
+Error deriving keypair: 
+TypeError {}
+message: "Cannot read properties of undefined (reading 'call')"
+stack: "TypeError: Cannot read properties of undefined (reading 'call')↵ at Hmac.CipherBase (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/ed25519-hd-key.js?v=1aa28e13:329:17)↵ at new Hmac (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/ed25519-hd-key.js?v=1aa28e13:2024:12)↵ at createHmac (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/ed25519-hd-key.js?v=1aa28e13:2063:14)↵ at exports.getMasterKeyFromSeed (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/ed25519-hd-key.js?v=1aa28e13:4339:20)↵ at exports.derivePath (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/ed25519-hd-key.js?v=1aa28e13:4376:42)↵ at deriveSolanaKeypair (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:21:32)↵ at importWalletFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:55:24)↵ at async importFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/contexts/WalletContext.tsx:184:30)↵ at async handleImport (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/pages/import-wallet.tsx:73:9)"
+get stack: ƒ ()
+set stack: ƒ ()
+length: 1
+name: ""
+[[Prototype]]: ƒ ()
+[[Prototype]]: Object
+
+Failed to derive key: 
+Error {}
+message: "Failed to derive wallet key using Solana path"
+stack: "Error: Failed to derive wallet key using Solana path↵ at deriveSolanaKeypair (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:25:11)↵ at importWalletFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:55:24)↵ at async importFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/contexts/WalletContext.tsx:184:30)↵ at async handleImport (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/pages/import-wallet.tsx:73:9)"
+get stack: ƒ ()
+set stack: ƒ ()
+[[Prototype]]: Object
+
+Error importing wallet from mnemonic: 
+Error {}
+message: "Could not derive the correct wallet address"
+stack: "Error: Could not derive the correct wallet address↵ at importWalletFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:60:11)↵ at async importFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/contexts/WalletContext.tsx:184:30)↵ at async handleImport (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/pages/import-wallet.tsx:73:9)"
+get stack: ƒ ()
+set stack: ƒ ()
+[[Prototype]]: Object
+
+Error importing wallet: 
+Error {}
+message: "Could not derive the correct wallet address"
+stack: "Error: Could not derive the correct wallet address↵ at importWalletFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/lib/solana.ts:60:11)↵ at async importFromMnemonic (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/contexts/WalletContext.tsx:184:30)↵ at async handleImport (https://172feac5-f81d-42fd-85ca-d90cc48271b3-00-344xef47qzaqv.janeway.replit.dev/src/pages/import-wallet.tsx:73:9)"
+get stack: ƒ ()
+set stack: ƒ ()
+length: 1
+name: ""
+[[Prototype]]: ƒ ()
+[[Prototype]]: Object
