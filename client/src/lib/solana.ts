@@ -18,10 +18,9 @@ import * as ed25519_hd from 'ed25519-hd-key';
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   try {
     const path = "m/44'/501'/0'/0'";
-    // Convert seed to hex string properly
     const seedHex = seed.toString('hex');
-    // Get master key from seed hex
-    const { key } = ed25519_hd.derivePath(path, seedHex);
+    const masterKey = ed25519_hd.getMasterKeyFromSeed(Buffer.from(seedHex, 'hex'));
+    const { key } = ed25519_hd.derivePath(path, masterKey.key);
     return solanaWeb3.Keypair.fromSeed(key);
   } catch (error) {
     console.error("Error deriving keypair:", error);
@@ -57,18 +56,10 @@ export function updateNetwork(newNetwork: string) {
 
 // Create a new wallet with a random seed phrase
 export async function createNewWallet(): Promise<solanaWeb3.Keypair> {
-  // Generate a random mnemonic (12 words)
   const mnemonic = bip39.generateMnemonic();
-  
-  // Convert mnemonic to seed
   const seed = await bip39.mnemonicToSeed(mnemonic);
-  
-  // Use consistent derivation path with ed25519-hd-key
   const keypair = deriveSolanaKeypair(seed);
-  
-  // Save the mnemonic (In a real app, encrypt this before saving)
   localStorage.setItem("walletMnemonic", mnemonic);
-  
   return keypair;
 }
 
