@@ -74,22 +74,12 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
     // Create keypair directly from the private key
     const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
     
+    console.log("Found wallet with address:", keypair.publicKey.toString());
     return keypair;
   } catch (e) {
     console.error("Failed to derive key:", e);
     throw new Error("Could not derive the correct wallet address");
   }
-      
-      const keypair = solanaWeb3.Keypair.fromSeed(seedToUse);
-      console.log("Found wallet with address:", keypair.publicKey.toString());
-      return keypair;
-    } catch (e) {
-      console.log(`Derivation failed for path ${path}, trying next...`);
-      continue;
-    }
-  }
-  
-  throw new Error("Could not derive the correct wallet address with any known path");
 }
 
 // Import wallet from private key
