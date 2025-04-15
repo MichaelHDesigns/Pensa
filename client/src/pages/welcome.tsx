@@ -1,19 +1,26 @@
-import { useState, useEffect } from "react";
+
+import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useWallet } from "../contexts/WalletContext";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { useWallet } from "@/contexts/WalletContext";
 
 const Welcome = () => {
   const [_, setLocation] = useLocation();
-  const { walletList } = useWallet();
+  const { walletList, isInitializing } = useWallet();
 
   useEffect(() => {
-    const activeWalletId = localStorage.getItem("activeWalletId");
-    if (activeWalletId && walletList?.length > 0) {
-      setLocation("/wallet");
+    if (!isInitializing) {
+      const activeWalletId = localStorage.getItem("activeWalletId");
+      if (activeWalletId && walletList?.length > 0) {
+        setLocation("/wallet");
+      }
     }
-  }, [walletList, setLocation]);
+  }, [isInitializing, walletList, setLocation]);
+
+  if (isInitializing) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -41,14 +48,14 @@ const Welcome = () => {
             </div>
           </CardContent>
           {walletList && walletList.length > 0 && (
-            <CardFooter>
+            <CardContent>
               <Button
                 onClick={() => setLocation("/wallet")}
                 className="w-full gradient-bg hover:opacity-90"
               >
                 Open My Wallet
               </Button>
-            </CardFooter>
+            </CardContent>
           )}
         </Card>
       </div>
