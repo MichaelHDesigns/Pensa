@@ -1,0 +1,76 @@
+When you use a mnemonic seed phrase (usually 12 or 24 words), that phrase is used to deterministically generate private keys for multiple chains using:
+
+BIP39: Mnemonic standard
+
+BIP32/BIP44: Key derivation paths
+
+Each blockchain uses a different derivation path to generate its account from the same seed.
+
+📍 Examples of Derivation Paths:
+Blockchain	Derivation Path Example
+Bitcoin	m/44'/0'/0'/0/0
+Ethereum (EVM)	m/44'/60'/0'/0/0
+BNB Chain	m/44'/714'/0'/0/0
+Solana	m/44'/501'/0'/0'
+Cosmos	m/44'/118'/0'/0/0
+Avalanche	m/44'/9000'/0'/0/0 (C-Chain)
+Polygon	Same as Ethereum: m/44'/60'/0'/0/0
+🧠 So What’s Happening in Your Case?
+Unstoppable Wallet supports multiple blockchains, and derives multiple keys using chain-specific paths from the same mnemonic.
+
+When you import that same mnemonic into Phantom (Solana wallet), Phantom only uses:
+
+matlab
+Copy
+Edit
+m/44'/501'/0'/0'
+So, it correctly shows the Solana account that Unstoppable Wallet also shows for Solana.
+
+But in your wallet, if you’re using only one derivation path (say, Ethereum’s m/44'/60'/0'/0/0), and trying to show all assets or addresses — you'll miss the others unless you explicitly derive them.
+
+✅ What You Should Do in Your Wallet App:
+To support proper multichain imports from mnemonic phrases:
+
+1. Support Multiple Derivation Paths
+When a mnemonic is entered, derive addresses like so:
+
+javascript
+Copy
+Edit
+// pseudocode
+deriveWallet(mnemonic, path) => {
+  const seed = bip39ToSeed(mnemonic)
+  return bip32.derivePath(seed, path).privateKey
+}
+Then try:
+
+Solana → m/44'/501'/0'/0'
+
+Ethereum/Polygon → m/44'/60'/0'/0/0
+
+BNB → m/44'/714'/0'/0/0
+
+Bitcoin → m/44'/0'/0'/0/0
+
+2. Allow Users to Pick Their Derivation Path
+Like Trust Wallet and Unstoppable do. You can auto-detect or give an advanced option.
+
+3. Chain-Specific Libraries
+Make sure you're using chain-specific libraries that can accept custom HD derivation paths:
+
+EVM: ethers.js or web3.js
+
+Solana: @solana/web3.js with ed25519-hd-key
+
+Bitcoin: bitcoinjs-lib
+
+Cosmos: @cosmjs/launchpad or @cosmjs/stargate
+
+🔍 Debug Tip
+If you import an Unstoppable mnemonic into your app and get the wrong address:
+
+Print the derived address for each path you try.
+
+Compare it against Unstoppable’s for that chain.
+
+When it matches, you've got the right path.
