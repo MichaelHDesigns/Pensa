@@ -76,26 +76,55 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const [solPrice, setSolPrice] = useState(0);
   const [pensaPrice, setPensaPrice] = useState(0);
 
-  // Fetch prices on component mount and every 30 seconds
+  // Fetch prices on component mount and every 60 seconds to avoid rate limits
   useEffect(() => {
     const fetchPrices = async () => {
       try {
-        // Get SOL price from CoinGecko
-        const solResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
-        const solData = await solResponse.json();
-        setSolPrice(solData.solana.usd);
+        // Get SOL price with retries and fallback
+        let solPrice = 0;
+        try {
+          const solResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd', {
+            headers: {
+              'Accept': 'application/json',
+              'User-Agent': 'Pensa Wallet'
+            }
+          });
+          if (solResponse.ok) {
+            const solData = await solResponse.json();
+            solPrice = solData.solana.usd;
+          }
+        } catch (e) {
+          console.warn('Primary SOL price fetch failed, using fallback');
+          // Fallback to another API
+          try {
+            const fallbackResponse = await fetch('https://price.jup.ag/v4/price?ids=SOL');
+            const fallbackData = await fallbackResponse.json();
+            solPrice = fallbackData.data.SOL.price;
+          } catch (fallbackError) {
+            console.error('All SOL price fetches failed');
+            // Keep last known price
+            return;
+          }
+        }
+        setSolPrice(solPrice);
 
-        // Get PENSA price from GeckoTerminal
-        const pensaResponse = await fetch('https://api.geckoterminal.com/api/v2/networks/solana/pools/2fdrJjBrx2jXCqVF2zTCeFnVmy58YtnrYYhskXXgti6b');
-        const pensaData = await pensaResponse.json();
-        setPensaPrice(parseFloat(pensaData.data.attributes.base_token_price_usd));
+        // Get PENSA price with fallback value
+        try {
+          const pensaResponse = await fetch('https://api.geckoterminal.com/api/v2/networks/solana/pools/2fdrJjBrx2jXCqVF2zTCeFnVmy58YtnrYYhskXXgti6b');
+          if (pensaResponse.ok) {
+            const pensaData = await pensaResponse.json();
+            setPensaPrice(parseFloat(pensaData.data.attributes.base_token_price_usd));
+          }
+        } catch (error) {
+          console.warn('PENSA price fetch failed, keeping last known price');
+        }
       } catch (error) {
-        console.error('Error fetching prices:', error);
+        console.error('Error in price update loop:', error);
       }
     };
 
     fetchPrices();
-    const interval = setInterval(fetchPrices, 30000);
+    const interval = setInterval(fetchPrices, 60000); // Increased to 60 seconds
     return () => clearInterval(interval);
   }, []);
 
