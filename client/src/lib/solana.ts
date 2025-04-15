@@ -18,11 +18,11 @@ import * as ed25519_hd from 'ed25519-hd-key';
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   try {
     const path = "m/44'/501'/0'/0'";
-    // Get master key from seed
-    const masterKey = ed25519_hd.getMasterKeyFromSeed(seed);
-    // Derive the key using path
-    const derived = ed25519_hd.derivePath(path, masterKey.key);
-    return solanaWeb3.Keypair.fromSeed(derived.key);
+    // Convert seed to hex string properly
+    const seedHex = seed.toString('hex');
+    // Get master key from seed hex
+    const { key } = ed25519_hd.derivePath(path, seedHex);
+    return solanaWeb3.Keypair.fromSeed(key);
   } catch (error) {
     console.error("Error deriving keypair:", error);
     throw new Error("Failed to derive wallet key using Solana path");
