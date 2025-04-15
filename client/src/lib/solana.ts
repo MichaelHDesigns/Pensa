@@ -64,32 +64,8 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
     // Generate seed from mnemonic (no passphrase)
     const seed = await bip39.mnemonicToSeed(mnemonic);
     
-    // Initial HMAC with "ed25519 seed" as key
-    let I = ed25519.utils.sha512Hmac(Buffer.from('ed25519 seed'), seed);
-    let IL = I.slice(0, 32);
-    let IR = I.slice(32);
-    
-    // Derive each hardened level for m/44'/501'/0'/0'
-    const path = [44, 501, 0, 0];
-    
-    for (const index of path) {
-      // Data for hardened derivation (index | 0x80000000)
-      const hardenedIndex = index + 0x80000000;
-      const data = Buffer.concat([
-        Buffer.from([0x00]),
-        IL,
-        Buffer.from([
-          (hardenedIndex >> 24) & 0xff,
-          (hardenedIndex >> 16) & 0xff,
-          (hardenedIndex >> 8) & 0xff,
-          hardenedIndex & 0xff,
-        ])
-      ]);
-      
-      // HMAC-SHA512 with previous IR as key
-      I = ed25519.utils.sha512Hmac(IR, data);
-      IL = I.slice(0, 32);
-      IR = I.slice(32);
+    // For wallets like Unstoppable, just use the first 32 bytes of the seed
+    const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
     }
     
     const keypair = solanaWeb3.Keypair.fromSeed(IL);
