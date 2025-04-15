@@ -19,8 +19,12 @@ function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   try {
     const path = "m/44'/501'/0'/0'";
     const masterKey = ed25519_hd.getMasterKeyFromSeed(seed);
-    const derivedKey = ed25519_hd.derivePath(path, masterKey.key);
-    return solanaWeb3.Keypair.fromSeed(derivedKey.key);
+    if (!masterKey) throw new Error("Could not derive master key");
+    const { key } = ed25519_hd.derivePath(path, masterKey.key);
+    if (!key) throw new Error("Could not derive key from path");
+    const keyPair = solanaWeb3.Keypair.fromSeed(key);
+    console.log("Derived public key:", keyPair.publicKey.toString());
+    return keyPair;
   } catch (error) {
     console.error("Error deriving keypair:", error);
     throw new Error("Failed to derive wallet key using Solana path");
