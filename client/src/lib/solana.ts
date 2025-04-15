@@ -18,8 +18,8 @@ import * as ed25519_hd from 'ed25519-hd-key';
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   try {
     const path = "m/44'/501'/0'/0'";
-    const derivedSeed = ed25519_hd.derivePath(path, seed).key;
-    return solanaWeb3.Keypair.fromSeed(derivedSeed);
+    const derivedKey = ed25519_hd.derivePath(path, seed.toString('hex')).key;
+    return solanaWeb3.Keypair.fromSeed(Uint8Array.from(derivedKey));
   } catch (error) {
     console.error("Error deriving keypair:", error);
     throw new Error("Failed to derive wallet key using Solana path");
@@ -54,30 +54,28 @@ export function updateNetwork(newNetwork: string) {
 
 // Create a new wallet with a random seed phrase
 export async function createNewWallet(): Promise<solanaWeb3.Keypair> {
-  const mnemonic = bip39.generateMnemonic();
+  // Generate a 12-word mnemonic (128 bits)
+  const mnemonic = bip39.generateMnemonic(128);
   const seed = await bip39.mnemonicToSeed(mnemonic);
   const keypair = deriveSolanaKeypair(seed);
   localStorage.setItem("walletMnemonic", mnemonic);
   return keypair;
 }
 
-// Import wallet from mnemonic phrase with derivation path support
-export async function importWalletFromMnemonic(mnemonic: string, derivationPath?: string): Promise<solanaWeb3.Keypair> {
+// Import wallet from mnemonic phrase
+export async function importWalletFromMnemonic(mnemonic: string): Promise<solanaWeb3.Keypair> {
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error("Invalid mnemonic phrase");
   }
-  
+
   try {
-    // Generate seed from mnemonic
     const seed = await bip39.mnemonicToSeed(mnemonic);
-    
-    // Derive key using correct Solana path: m/44'/501'/0'/0'
-    const derivedKey = deriveSolanaKeypair(seed);
-    console.log("Found wallet with address:", derivedKey.publicKey.toString());
-    return derivedKey;
-  } catch (e) {
-    console.error("Failed to derive key:", e);
-    throw new Error("Could not derive the correct wallet address");
+    const keypair = deriveSolanaKeypair(seed);
+    console.log("Imported wallet address:", keypair.publicKey.toString());
+    return keypair;
+  } catch (error) {
+    console.error("Failed to derive key:", error);
+    throw new Error("Invalid recovery phrase");
   }
 }
 
@@ -86,26 +84,26 @@ export async function importWalletFromPrivateKey(privateKeyString: string): Prom
   try {
     // Remove spaces, newlines
     privateKeyString = privateKeyString.trim();
-    
+
     // Method 1: Standard Solana/Phantom wallet import (base58-encoded secret key)
     try {
       console.log("Trying standard Solana/Phantom private key import (base58)");
       // Decode the private key from base58 format
       const decoded = bs58.decode(privateKeyString);
-      
+
       // Phantom wallet always exports the full 64-byte secret key (private + public)
       // But some wallets might export just the 32-byte private portion
       if (decoded.length === 64 || decoded.length === 32) {
         console.log("Valid key length detected:", decoded.length);
-        
+
         let secretKey: Uint8Array;
-        
+
         // If it's just the private portion, derive the public key
         if (decoded.length === 32) {
           console.log("Converting 32-byte private key to full keypair");
           const privateKey = new Uint8Array(decoded);
           const publicKey = ed25519.getPublicKey(privateKey);
-          
+
           // Combine private + public for Solana's format
           secretKey = new Uint8Array(64);
           secretKey.set(privateKey);
@@ -114,10 +112,10 @@ export async function importWalletFromPrivateKey(privateKeyString: string): Prom
           // Already the full keypair format
           secretKey = new Uint8Array(decoded);
         }
-        
+
         // Create a keypair directly from the secret key
         const keypair = solanaWeb3.Keypair.fromSecretKey(secretKey);
-        
+
         console.log("Successfully imported wallet with address:", keypair.publicKey.toBase58());
         return keypair;
       } else {
@@ -126,25 +124,25 @@ export async function importWalletFromPrivateKey(privateKeyString: string): Prom
     } catch (err) {
       console.log("Standard Solana/Phantom key import failed, trying alternative methods");
     }
-    
+
     // Method 2: JSON array format
     if (privateKeyString.startsWith('[') && privateKeyString.endsWith(']')) {
       try {
         console.log("Trying JSON array format");
         const jsonArray = JSON.parse(privateKeyString);
         const secretKey = new Uint8Array(jsonArray);
-        
+
         if (secretKey.length === 64 || secretKey.length === 32) {
           // Handle 32-byte private key
           if (secretKey.length === 32) {
             const privateKey = secretKey;
             const publicKey = ed25519.getPublicKey(privateKey);
-            
+
             // Combine private + public for Solana's format
             const fullSecretKey = new Uint8Array(64);
             fullSecretKey.set(privateKey);
             fullSecretKey.set(publicKey, 32);
-            
+
             const keypair = solanaWeb3.Keypair.fromSecretKey(fullSecretKey);
             console.log("Successfully imported wallet from JSON array (32-byte)");
             return keypair;
@@ -161,24 +159,24 @@ export async function importWalletFromPrivateKey(privateKeyString: string): Prom
         console.log("JSON array format import failed");
       }
     }
-    
+
     // Method 3: Hex string format
     if (privateKeyString.match(/^[0-9a-fA-F]+$/)) {
       try {
         console.log("Trying hex string format");
         const secretKey = hexToUint8Array(privateKeyString);
-        
+
         if (secretKey.length === 64 || secretKey.length === 32) {
           // Handle 32-byte private key
           if (secretKey.length === 32) {
             const privateKey = secretKey;
             const publicKey = ed25519.getPublicKey(privateKey);
-            
+
             // Combine private + public for Solana's format
             const fullSecretKey = new Uint8Array(64);
             fullSecretKey.set(privateKey);
             fullSecretKey.set(publicKey, 32);
-            
+
             const keypair = solanaWeb3.Keypair.fromSecretKey(fullSecretKey);
             console.log("Successfully imported wallet from hex string (32-byte)");
             return keypair;
@@ -195,23 +193,23 @@ export async function importWalletFromPrivateKey(privateKeyString: string): Prom
         console.log("Hex string format import failed");
       }
     }
-    
+
     // Method 4: Base64 format (less common but supported by some wallets)
     try {
       console.log("Trying base64 decode");
       const decoded = Buffer.from(privateKeyString, 'base64');
-      
+
       if (decoded.length === 64 || decoded.length === 32) {
         // Handle 32-byte private key
         if (decoded.length === 32) {
           const privateKey = new Uint8Array(decoded);
           const publicKey = ed25519.getPublicKey(privateKey);
-          
+
           // Combine private + public for Solana's format
           const fullSecretKey = new Uint8Array(64);
           fullSecretKey.set(privateKey);
           fullSecretKey.set(publicKey, 32);
-          
+
           const keypair = solanaWeb3.Keypair.fromSecretKey(fullSecretKey);
           console.log("Successfully imported wallet from base64 (32-byte)");
           return keypair;
@@ -227,7 +225,7 @@ export async function importWalletFromPrivateKey(privateKeyString: string): Prom
     } catch (err) {
       console.log("Base64 format import failed");
     }
-    
+
     // If all of the above methods failed, the format is not recognized
     throw new Error("Could not decode private key with any supported format. Please ensure you're using a valid Solana private key format.");
   } catch (e) {
@@ -241,14 +239,14 @@ function hexToUint8Array(hexString: string): Uint8Array {
   if (hexString.length % 2 !== 0) {
     throw new Error("Invalid hex string");
   }
-  
+
   const arrayBuffer = new Uint8Array(hexString.length / 2);
-  
+
   for (let i = 0; i < hexString.length; i += 2) {
     const byteValue = parseInt(hexString.substr(i, 2), 16);
     arrayBuffer[i/2] = byteValue;
   }
-  
+
   return arrayBuffer;
 }
 
@@ -257,25 +255,25 @@ function bs58Decode(encoded: string): number[] {
   const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
   const BASE = ALPHABET.length;
   const result: number[] = [];
-  
+
   let num = 0;
   let i = 0;
-  
+
   for (const c of encoded) {
     num = num * BASE + ALPHABET.indexOf(c);
     i += 1;
-    
+
     if (i === 4) {
       result.push(num & 0xff);
       num >>= 8;
       i = 1;
     }
   }
-  
+
   if (i > 1) {
     result.push(num);
   }
-  
+
   return result.reverse();
 }
 
@@ -283,7 +281,7 @@ function bs58Decode(encoded: string): number[] {
 export async function getBalance(publicKey: solanaWeb3.PublicKey): Promise<string> {
   let retries = 3;
   let backoff = 500; // Start with 500ms backoff
-  
+
   while (retries > 0) {
     try {
       const balance = await connection.getBalance(publicKey);
@@ -296,19 +294,19 @@ export async function getBalance(publicKey: solanaWeb3.PublicKey): Promise<strin
           console.error("Exhausted retries getting balance:", error);
           return "0";
         }
-        
+
         console.warn(`Server responded with 429. Retrying after ${backoff}ms delay...`);
         await new Promise(resolve => setTimeout(resolve, backoff));
         backoff *= 2; // Exponential backoff
         continue;
       }
-      
+
       // If not a rate limit error, just return 0
       console.error("Error getting balance:", error);
       return "0";
     }
   }
-  
+
   return "0"; // Fallback return in case loop exits abnormally
 }
 
@@ -319,7 +317,7 @@ export async function getTokenBalance(
 ): Promise<string> {
   let retries = 3;
   let backoff = 500; // Start with 500ms backoff
-  
+
   while (retries > 0) {
     try {
       // First try to get associated token account address
@@ -327,24 +325,24 @@ export async function getTokenBalance(
         tokenMint,
         owner
       );
-      
+
       // Get account info directly
       const accountInfo = await connection.getAccountInfo(associatedAddress);
-      
+
       // If no account exists, return 0
       if (!accountInfo) {
         return "0";
       }
-      
+
       // If account exists, get parsed token info
       const tokenAmount = await connection.getTokenAccountBalance(associatedAddress);
       return tokenAmount.value.uiAmount?.toString() || "0";
-      
+
       // If no token account exists, return 0
       if (tokenAccounts.value.length === 0) {
         return "0";
       }
-      
+
       // Get balance from the first token account
       const balance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
       return balance.toString();
@@ -356,19 +354,19 @@ export async function getTokenBalance(
           console.error("Exhausted retries getting token balance:", error);
           return "0";
         }
-        
+
         console.warn(`Server responded with 429. Retrying after ${backoff}ms delay...`);
         await new Promise(resolve => setTimeout(resolve, backoff));
         backoff *= 2; // Exponential backoff
         continue;
       }
-      
+
       // If not a rate limit error, just return 0
       console.error("Error getting token balance:", error);
       return "0";
     }
   }
-  
+
   return "0"; // Fallback return in case loop exits abnormally
 }
 
@@ -380,16 +378,16 @@ export async function swapSolToPensacoin(
   try {
     // Create a transaction
     const transaction = new solanaWeb3.Transaction();
-    
+
     // Find the associated token account for Pensacoin
     const associatedTokenAccount = await getAssociatedTokenAddress(
       PENSACOIN_MINT_ADDRESS,
       wallet.publicKey
     );
-    
+
     // Check if the associated token account exists
     const accountInfo = await connection.getAccountInfo(associatedTokenAccount);
-    
+
     // If the account doesn't exist, create it
     if (!accountInfo) {
       console.log("Creating associated token account for Pensacoin");
@@ -402,16 +400,16 @@ export async function swapSolToPensacoin(
         )
       );
     }
-    
+
     // For a real swap, we would interact with a DEX like Jupiter or a swap pool
     // This is a simplified implementation that:
     // 1. Wraps SOL into wSOL (which is what swap pools use)
     // 2. Simulates a swap by transferring SOL to the swap pair address
-    
+
     // First, let's simulate the SOL wrapping by simply transferring it
     // In a real implementation, we'd use proper wrapping instructions
     const amountInLamports = amount * solanaWeb3.LAMPORTS_PER_SOL;
-    
+
     // Transfer SOL to the swap pair address (simulates the first part of the swap)
     transaction.add(
       solanaWeb3.SystemProgram.transfer({
@@ -420,21 +418,21 @@ export async function swapSolToPensacoin(
         lamports: amountInLamports,
       })
     );
-    
+
     // In a real implementation, the swap pool would now mint the corresponding Pensacoin tokens
     // to the user's associated token account based on the pool's exchange rate
-    
+
     // Set recent blockhash and fee payer
     transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     transaction.feePayer = wallet.publicKey;
-    
+
     // Sign and send the transaction
     const signedTransaction = await solanaWeb3.sendAndConfirmTransaction(
       connection,
       transaction,
       [wallet]
     );
-    
+
     console.log("Swap transaction signature:", signedTransaction);
     return signedTransaction;
   } catch (error) {
@@ -451,27 +449,27 @@ export async function swapPensacoinToSol(
   try {
     // Create a transaction
     const transaction = new solanaWeb3.Transaction();
-    
+
     // Find the associated token account for Pensacoin
     const associatedTokenAccount = await getAssociatedTokenAddress(
       PENSACOIN_MINT_ADDRESS,
       wallet.publicKey
     );
-    
+
     // Check if the associated token account exists
     const accountInfo = await connection.getAccountInfo(associatedTokenAccount);
     if (!accountInfo) {
       throw new Error("Pensacoin token account does not exist");
     }
-    
+
     // For a real swap, we would interact with a DEX or swap pool
     // This is a simplified implementation that:
     // 1. Transfers the Pensacoin tokens to the swap pair address
     // 2. The swap pair would then transfer SOL back (we simulate this part)
-    
+
     // Calculate the token amount based on decimals (assuming 9 decimals for Pensacoin)
     const tokenAmount = Math.floor(amount * 1e9);
-    
+
     // Transfer Pensacoin tokens to the swap pair address
     transaction.add(
       createTransferInstruction(
@@ -485,18 +483,18 @@ export async function swapPensacoinToSol(
         tokenAmount
       )
     );
-    
+
     // Set recent blockhash and fee payer
     transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
     transaction.feePayer = wallet.publicKey;
-    
+
     // Sign and send the transaction
     const signedTransaction = await solanaWeb3.sendAndConfirmTransaction(
       connection,
       transaction,
       [wallet]
     );
-    
+
     console.log("Swap transaction signature:", signedTransaction);
     return signedTransaction;
   } catch (error) {
@@ -509,7 +507,7 @@ export async function swapPensacoinToSol(
 export async function getTokenMetadata(mintAddress: string): Promise<any> {
   try {
     const mintPublicKey = new solanaWeb3.PublicKey(mintAddress);
-    
+
     // Find the metadata account for this mint
     const [metadataAddress] = solanaWeb3.PublicKey.findProgramAddressSync(
       [
@@ -519,43 +517,43 @@ export async function getTokenMetadata(mintAddress: string): Promise<any> {
       ],
       TOKEN_METADATA_PROGRAM_ID
     );
-    
+
     // Get the account info
     const accountInfo = await connection.getAccountInfo(metadataAddress);
-    
+
     if (!accountInfo) {
       console.log("No metadata found for mint", mintAddress);
       return null;
     }
-    
+
     // Metadata account data structure (simplified)
     // Adapted from the metaplex-program-library format
     try {
       const metadataData = accountInfo.data;
       let offset = 0;
-      
+
       // Skip the key, updateAuthority (32), mint (32), name string length (4)
       offset += 1 + 32 + 32 + 4;
-      
+
       const nameLength = metadataData.readUInt32LE(offset - 4);
       const name = metadataData.slice(offset, offset + nameLength).toString('utf8');
       offset += nameLength;
-      
+
       // Read symbol length (4)
       const symbolLength = metadataData.readUInt32LE(offset);
       offset += 4;
-      
+
       // Read symbol
       const symbol = metadataData.slice(offset, offset + symbolLength).toString('utf8');
       offset += symbolLength;
-      
+
       // Read uri length (4)
       const uriLength = metadataData.readUInt32LE(offset);
       offset += 4;
-      
+
       // Read uri
       const uri = metadataData.slice(offset, offset + uriLength).toString('utf8');
-      
+
       // Try to fetch the actual metadata from the IPFS URI if possible
       try {
         // For Pensacoin specifically, we know the exact image URL
@@ -568,7 +566,7 @@ export async function getTokenMetadata(mintAddress: string): Promise<any> {
             image: "https://ipfs.io/ipfs/QmSAxMm9T3KYwBofPn1u5hsy4Y2VjGLuhcLwNPijMcttGi"
           };
         }
-        
+
         return {
           name,
           symbol,
@@ -609,21 +607,21 @@ export async function getTransactionHistory(
         publicKey,
         { limit }
       );
-      
+
       if (signatures.length === 0) {
         return [];
       }
-      
+
       // Fetch transactions one at a time to avoid rate limits
       const transactions: (solanaWeb3.ParsedTransactionWithMeta | null)[] = [];
-      
+
       for (const sig of signatures) {
         try {
           const tx = await connection.getParsedTransaction(sig.signature, {
             maxSupportedTransactionVersion: 0
           });
           transactions.push(tx);
-          
+
           // Small delay between requests to avoid rate limits
           await new Promise(resolve => setTimeout(resolve, 100));
         } catch (err: any) {
@@ -635,11 +633,11 @@ export async function getTransactionHistory(
           transactions.push(null);
         }
       }
-      
+
       return transactions.filter(tx => tx !== null) as solanaWeb3.ParsedTransactionWithMeta[];
     } catch (error: any) {
       console.error("Error getting transaction history:", error);
-      
+
       // Check if it's a rate limit error
       if (error?.code === -32015 || error?.code === 429) {
         console.log(`Server responded with ${error.code || 429}. Retrying after ${backoff}ms delay...`);
@@ -652,7 +650,7 @@ export async function getTransactionHistory(
       }
     }
   }
-  
+
   console.error("Failed to fetch transaction history after retries");
   return [];
 }
