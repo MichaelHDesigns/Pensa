@@ -11,10 +11,10 @@ import {
 import * as bs58 from 'bs58';
 
 
-// Network constants
-export const SOLANA_MAINNET = "https://spring-sly-borough.solana-mainnet.quiknode.pro/0c769fa44a1b90db2c87300ad1e94968c9320164";
-export const SOLANA_DEVNET = "https://spring-sly-borough.solana-devnet.quiknode.pro/0c769fa44a1b90db2c87300ad1e94968c9320164";
-export const SOLANA_TESTNET = "https://spring-sly-borough.solana-testnet.quiknode.pro/0c769fa44a1b90db2c87300ad1e94968c9320164";
+// Network constants - using public RPC endpoints
+export const SOLANA_MAINNET = "https://api.mainnet-beta.solana.com";
+export const SOLANA_DEVNET = "https://api.devnet.solana.com";
+export const SOLANA_TESTNET = "https://api.testnet.solana.com";
 
 // Get the active network from localStorage or default to mainnet
 export let SOLANA_NETWORK = localStorage.getItem("solanaNetwork") || SOLANA_MAINNET;
@@ -310,10 +310,23 @@ export async function getTokenBalance(
   
   while (retries > 0) {
     try {
-      // Find the token account for this token owned by the user
-      const tokenAccounts = await connection.getParsedTokenAccountsByOwner(owner, {
-        mint: tokenMint,
-      });
+      // First try to get associated token account address
+      const associatedAddress = await getAssociatedTokenAddress(
+        tokenMint,
+        owner
+      );
+      
+      // Get account info directly
+      const accountInfo = await connection.getAccountInfo(associatedAddress);
+      
+      // If no account exists, return 0
+      if (!accountInfo) {
+        return "0";
+      }
+      
+      // If account exists, get parsed token info
+      const tokenAmount = await connection.getTokenAccountBalance(associatedAddress);
+      return tokenAmount.value.uiAmount?.toString() || "0";
       
       // If no token account exists, return 0
       if (tokenAccounts.value.length === 0) {
