@@ -18,9 +18,7 @@ import * as ed25519_hd from 'ed25519-hd-key';
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   try {
     const path = "m/44'/501'/0'/0'";
-    // Convert seed to hex string properly
-    const seedHex = Buffer.from(seed).toString('hex');
-    const derived = ed25519_hd.derivePath(path, seedHex);
+    const derived = ed25519_hd.derivePath(path, seed);
     return solanaWeb3.Keypair.fromSeed(derived.key);
   } catch (error) {
     console.error("Error deriving keypair:", error);
