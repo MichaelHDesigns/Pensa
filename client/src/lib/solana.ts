@@ -68,7 +68,7 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
     "m/44'/501'/0'/0'",     // Phantom/Solflare
     "m/44'/501'/0'",        // Alternative Solana path
     "m/501'/0'/0/0",        // Some hardware wallets
-    "m/44'/501'/0/0",       // Backpack
+    "m/44'/501'/0/0",       // Backpack/Unstoppable
     "m/44'/501'",           // Basic Solana
     ""                      // Direct seed
   ];
@@ -79,9 +79,14 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
       let seedToUse;
       
       if (path) {
-        // Use ed25519 derivation with path
-        const key = await ed25519.getPublicKey(ed25519.utils.sha512(seed).slice(0, 32));
-        seedToUse = key.slice(0, 32);
+        // For Unstoppable Wallet compatibility, use direct seed for m/44'/501'/0/0
+        if (path === "m/44'/501'/0/0") {
+          seedToUse = seed.slice(0, 32);
+        } else {
+          // Use ed25519 derivation with path
+          const key = await ed25519.getPublicKey(ed25519.utils.sha512(seed).slice(0, 32));
+          seedToUse = key.slice(0, 32);
+        }
       } else {
         // Direct seed derivation
         seedToUse = seed.slice(0, 32);
