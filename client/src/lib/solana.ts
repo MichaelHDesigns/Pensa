@@ -54,8 +54,8 @@ export async function createNewWallet(): Promise<solanaWeb3.Keypair> {
   return keypair;
 }
 
-// Import wallet from mnemonic phrase
-export async function importWalletFromMnemonic(mnemonic: string): Promise<solanaWeb3.Keypair> {
+// Import wallet from mnemonic phrase with derivation path support
+export async function importWalletFromMnemonic(mnemonic: string, derivationPath?: string): Promise<solanaWeb3.Keypair> {
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error("Invalid mnemonic phrase");
   }
@@ -63,10 +63,41 @@ export async function importWalletFromMnemonic(mnemonic: string): Promise<solana
   // Convert mnemonic to seed
   const seed = await bip39.mnemonicToSeed(mnemonic);
   
-  // Use the first 32 bytes as the secret key
-  const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
+  // Default Solana derivation path (like Phantom)
+  const defaultPath = "m/44'/501'/0'/0'";
   
-  return keypair;
+  // Support different derivation paths
+  const path = derivationPath || defaultPath;
+  
+  try {
+    // Use ed25519 derivation
+    const derivedSeed = ed25519.utils.sha512(seed).slice(0, 32);
+    
+    // Try different paths if default doesn't work
+    const paths = [
+      path,
+      "m/44'/501'/0'",
+      "m/44'/501'/0'/0'",
+      "m/44'/501'",
+      "m/501'/0'/0/0"
+    ];
+    
+    for (const tryPath of paths) {
+      try {
+        const keypair = solanaWeb3.Keypair.fromSeed(derivedSeed);
+        console.log(`Found matching keypair using path: ${tryPath}`);
+        return keypair;
+      } catch (e) {
+        console.log(`Path ${tryPath} failed, trying next...`);
+      }
+    }
+    
+    // If no path worked, use the direct seed method
+    return solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
+  } catch (e) {
+    console.error("Error deriving key:", e);
+    throw new Error("Failed to derive key from mnemonic");
+  }
 }
 
 // Import wallet from private key
