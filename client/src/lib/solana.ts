@@ -61,9 +61,9 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   }
   
   try {
-    const seed = await bip39.mnemonicToSeed(mnemonic);
-    const derivedSeed = seed.slice(0, 32);
-    const keypair = solanaWeb3.Keypair.fromSeed(derivedSeed);
+    // For Unstoppable Wallet compatibility, just use BIP39 without derivation
+    const seed = await bip39.mnemonicToSeed(mnemonic, "");
+    const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
     console.log("Found wallet with address:", keypair.publicKey.toString());
     return keypair;
   } catch (e) {
