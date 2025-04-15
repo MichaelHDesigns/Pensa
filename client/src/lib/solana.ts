@@ -11,8 +11,8 @@ import {
 import * as bs58 from 'bs58';
 
 
-// Network constants - using Ankr RPC endpoint
-export const SOLANA_MAINNET = "https://rpc.ankr.com/solana";
+// Network constants - using official Solana RPC endpoints
+export const SOLANA_MAINNET = "https://api.mainnet-beta.solana.com";
 export const SOLANA_DEVNET = "https://api.devnet.solana.com";
 export const SOLANA_TESTNET = "https://api.testnet.solana.com";
 
