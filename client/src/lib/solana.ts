@@ -13,10 +13,12 @@ import * as bs58 from 'bs58';
 
 // Network constants - using public node RPC endpoint
 
+import * as ed25519_hd from 'ed25519-hd-key';
+
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   const path = "m/44'/501'/0'/0'";
-  const key = ed25519.utils.derivePath(path, seed);
-  return solanaWeb3.Keypair.fromSeed(key.key);
+  const derived = ed25519_hd.derivePath(path, seed.toString('hex'));
+  return solanaWeb3.Keypair.fromSeed(derived.key);
 }
 
 
