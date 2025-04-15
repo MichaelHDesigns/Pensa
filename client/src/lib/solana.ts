@@ -79,8 +79,9 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
       let seedToUse;
       
       if (path) {
-        // For Unstoppable Wallet compatibility, use direct seed for m/44'/501'/0/0
+        // Try BIP44 derivation with direct seed first
         if (path === "m/44'/501'/0/0") {
+          const key = await ed25519.getPublicKey(seed.slice(0, 32));
           seedToUse = seed.slice(0, 32);
         } else {
           // Use ed25519 derivation with path
