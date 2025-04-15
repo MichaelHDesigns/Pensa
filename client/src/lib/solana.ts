@@ -63,15 +63,12 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   // Convert mnemonic to seed
   const seed = await bip39.mnemonicToSeed(mnemonic);
   
-  // For BIP32 derivation, we'll use the direct seed with SHA512
+  // For BIP32 derivation, we'll use the seed directly
   try {
-    // Use the full SHA512 hash of the seed
-    const seedHash = ed25519.utils.sha512(seed);
+    // Take first 32 bytes of seed as private key
+    const privateKey = seed.slice(0, 32);
     
-    // Use the first 32 bytes as the private key
-    const privateKey = seedHash.slice(0, 32);
-    
-    // Create keypair directly from the private key
+    // Create keypair from the private key
     const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
     
     console.log("Found wallet with address:", keypair.publicKey.toString());
