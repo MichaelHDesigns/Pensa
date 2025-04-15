@@ -8,7 +8,35 @@
   }
 
   body {
-    @apply font-sans antialiased bg-white text-black;
+    @apply font-sans antialiased bg-white text-black transition-colors duration-200;
+  }
+
+  body.dark {
+    @apply bg-[#131419] text-white;
+  }
+
+  body.dark .neumorphic {
+    @apply shadow-[5px_5px_15px_rgba(0,0,0,0.5),-5px_-5px_15px_rgba(255,255,255,0.1)] bg-[#1a1b21];
+  }
+
+  body.dark .neumorphic-inset {
+    @apply shadow-[inset_5px_5px_15px_rgba(0,0,0,0.5),inset_-5px_-5px_15px_rgba(255,255,255,0.1)] bg-[#1a1b21];
+  }
+
+  body.dark .text-black {
+    @apply text-white;
+  }
+
+  body.dark .text-gray-700 {
+    @apply text-gray-300;
+  }
+
+  body.dark .text-gray-600 {
+    @apply text-gray-400;
+  }
+
+  body.dark .bg-white {
+    @apply bg-[#1a1b21];
   }
 }
 

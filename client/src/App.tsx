@@ -14,11 +14,14 @@ import About from "@/pages/about";
 import { WalletProvider } from "@/contexts/WalletContext";
 import { SwapProvider } from "@/contexts/SwapContext";
 
+import { ThemeProvider } from "@/contexts/ThemeContext";
+
 function App() {
   return (
     <>
-      <WalletProvider>
-        <SwapProvider>
+      <ThemeProvider>
+        <WalletProvider>
+          <SwapProvider>
           <Switch>
             <Route path="/" component={Welcome} />
             <Route path="/welcome" component={Welcome} />
@@ -35,8 +38,9 @@ function App() {
             <Route component={NotFound} />
           </Switch>
         </SwapProvider>
-      </WalletProvider>
-      <Toaster />
+        </WalletProvider>
+        <Toaster />
+      </ThemeProvider>
     </>
   );
 }

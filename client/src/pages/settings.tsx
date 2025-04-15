@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useWallet } from "@/contexts/WalletContext";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
@@ -231,6 +233,15 @@ const Settings = () => {
           <CardDescription className="text-gray-700">Customize App Behavior</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
+          <div className="flex items-center justify-between p-3 rounded-lg neumorphic bg-white">
+            <div className="flex items-center gap-3">
+              {theme === 'light' ? <Sun className="text-[rgba(169,0,232,1)]" /> : <Moon className="text-[rgba(169,0,232,1)]" />}
+              <span>Theme Mode</span>
+            </div>
+            <Button variant="ghost" onClick={toggleTheme}>
+              {theme === 'light' ? 'Dark' : 'Light'}
+            </Button>
+          </div>
 
           {/* Network Dialog */}
           <Dialog open={showNetworkDialog} onOpenChange={setShowNetworkDialog}>
