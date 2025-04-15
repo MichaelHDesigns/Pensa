@@ -1,9 +1,8 @@
-
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { useWallet } from "@/contexts/WalletContext";
+import { useWallet } from "../contexts/WalletContext";
 
 const Welcome = () => {
   const [_, setLocation] = useLocation();
