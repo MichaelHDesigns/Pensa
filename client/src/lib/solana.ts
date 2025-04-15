@@ -11,8 +11,8 @@ import {
 import * as bs58 from 'bs58';
 
 
-// Network constants - using official mainnet-beta endpoint
-export const SOLANA_MAINNET = "https://api.mainnet-beta.solana.com";
+// Network constants - using public node RPC endpoint
+export const SOLANA_MAINNET = "https://solana-rpc.publicnode.com";
 export const SOLANA_DEVNET = "https://api.devnet.solana.com";
 export const SOLANA_TESTNET = "https://api.testnet.solana.com";
 
