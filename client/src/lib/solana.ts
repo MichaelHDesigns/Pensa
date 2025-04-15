@@ -11,8 +11,8 @@ import {
 import * as bs58 from 'bs58';
 
 
-// Network constants - using QuickNode RPC endpoint
-export const SOLANA_MAINNET = "https://spring-sly-borough.solana-mainnet.quiknode.pro/0c769fa44a1b90db2c87300ad1e94968c9320164/";
+// Network constants - using official mainnet-beta endpoint
+export const SOLANA_MAINNET = "https://api.mainnet-beta.solana.com";
 export const SOLANA_DEVNET = "https://api.devnet.solana.com";
 export const SOLANA_TESTNET = "https://api.testnet.solana.com";
 
