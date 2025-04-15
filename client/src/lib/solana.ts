@@ -17,8 +17,11 @@ import * as ed25519_hd from 'ed25519-hd-key';
 
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
   try {
-    const derivedSeed = Buffer.from(seed).slice(0, 32);
-    const keypair = solanaWeb3.Keypair.fromSeed(derivedSeed);
+    // Use standard BIP44 derivation path for Solana
+    const path = "m/44'/501'/0'/0'";
+    const masterSeed = ed25519_hd.getMasterKeyFromSeed(seed);
+    const derivedKey = ed25519_hd.derivePath(path, masterSeed.key);
+    const keypair = solanaWeb3.Keypair.fromSeed(Uint8Array.from(derivedKey.key));
     console.log("Derived public key:", keypair.publicKey.toString());
     return keypair;
   } catch (error) {
