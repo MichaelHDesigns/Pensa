@@ -15,6 +15,7 @@ import { Link, useLocation } from "wouter";
 import { ChevronLeft, AlertTriangle } from "lucide-react";
 
 const Settings = () => {
+  const { theme, toggleTheme } = useTheme();
   const { 
     wallet, removeWallet, disconnect, switchWallet, setNetwork,
     solBalance, pensacoinBalance, publicKey, walletList, activeWalletId,
