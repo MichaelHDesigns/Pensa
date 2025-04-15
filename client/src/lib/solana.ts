@@ -61,19 +61,30 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   }
   
   try {
-    // Convert mnemonic to seed with empty passphrase
-    const seed = await bip39.mnemonicToSeed(mnemonic, '');
+    // Generate seed from mnemonic (no passphrase)
+    const seed = await bip39.mnemonicToSeed(mnemonic);
     
-    // Derive using proper BIP44/39 path for Solana: m/44'/501'/0'/0'
-    const path = `m/44'/501'/0'/0'`;
-    const derivedSeed = ed25519.utils.sha512(
-      Buffer.concat([
-        Buffer.from('ed25519 seed'),  
-        seed
-      ])
-    ).slice(0, 32);
+    // Derive using BIP44 for Solana: m/44'/501'/0'/0'
+    let path = "m/44'/501'/0'/0'";
+    let masterKey = seed;
     
-    const keypair = solanaWeb3.Keypair.fromSeed(derivedSeed);
+    // Derive each level
+    for (const segment of path.split('/').slice(1)) {
+      const hardened = segment.endsWith("'");
+      const index = parseInt(segment.replace("'", ""));
+      
+      // Data to derive from
+      const data = new Uint8Array([
+        ...(hardened ? new Uint8Array([0x80 + index]) : Buffer.alloc(1)),
+        ...masterKey,
+        ...Buffer.alloc(4)
+      ]);
+      
+      // HMAC-SHA512 derivation
+      masterKey = ed25519.utils.sha512(data).slice(0, 32);
+    }
+    
+    const keypair = solanaWeb3.Keypair.fromSeed(masterKey);
     console.log("Found wallet with address:", keypair.publicKey.toString());
     return keypair;
   } catch (e) {
