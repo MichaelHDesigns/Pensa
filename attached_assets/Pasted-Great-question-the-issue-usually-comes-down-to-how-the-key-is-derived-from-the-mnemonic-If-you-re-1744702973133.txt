@@ -1,0 +1,54 @@
+Great question — the issue usually comes down to how the key is derived from the mnemonic. If you’re not getting the same wallet address after importing a mnemonic phrase, it’s typically because of one (or more) of the following:
+
+🔑 1. Derivation Path Mismatch
+Solana uses the BIP44 path:
+
+matlab
+Copy
+Edit
+m/44'/501'/0'/0'
+If your createNewWallet() method uses one derivation method (like slicing the first 32 bytes from the seed) and your importWalletFromMnemonic() uses the correct BIP44 path (via ed25519-hd-key), you'll get two different addresses.
+
+➡️ Fix: Ensure both wallet creation and import use the same derivation logic.
+
+In your code:
+
+ts
+Copy
+Edit
+// Creation method (incorrect)
+const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
+That doesn't use the derivation path — it just takes the first 32 bytes.
+
+But importing uses:
+
+ts
+Copy
+Edit
+const derivedKey = deriveSolanaKeypair(seed); // using m/44'/501'/0'/0'
+Solution: Update your createNewWallet function to match the import logic:
+
+ts
+Copy
+Edit
+export async function createNewWallet(): Promise<solanaWeb3.Keypair> {
+  const mnemonic = bip39.generateMnemonic();
+  const seed = await bip39.mnemonicToSeed(mnemonic);
+  const keypair = deriveSolanaKeypair(seed); // <--- consistent with import
+  localStorage.setItem("walletMnemonic", mnemonic);
+  return keypair;
+}
+🧪 2. Different Word Lists / Language
+Uncommon, but if the mnemonic phrase was generated using a non-English wordlist, it might not validate or decode properly. Always ensure you use the same wordlist (English by default in bip39).
+
+📦 3. Library Differences (e.g., Phantom vs Your App)
+Wallets like Phantom use the standard Solana derivation path (m/44'/501'/0'/0'). If your app doesn't use that same path, it’ll derive a different address from the same mnemonic.
+
+✅ TL;DR – Fix the Core Issue
+Update createNewWallet() to:
+
+ts
+Copy
+Edit
+const keypair = deriveSolanaKeypair(seed);
+to match the import logic and ensure deterministic results from the mnemonic.
