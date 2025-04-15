@@ -60,13 +60,20 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
     throw new Error("Invalid mnemonic phrase");
   }
   
-  // Convert mnemonic to seed
   try {
-    // For Solana BIP39 derivation
-    const seed = await bip39.mnemonicToSeed(mnemonic);
-    const seedBuffer = Buffer.from(seed).slice(0, 32);
-    const keypair = solanaWeb3.Keypair.fromSeed(seedBuffer);
+    // Convert mnemonic to seed with empty passphrase
+    const seed = await bip39.mnemonicToSeed(mnemonic, '');
     
+    // Derive using proper BIP44/39 path for Solana: m/44'/501'/0'/0'
+    const path = `m/44'/501'/0'/0'`;
+    const derivedSeed = ed25519.utils.sha512(
+      Buffer.concat([
+        Buffer.from('ed25519 seed'),  
+        seed
+      ])
+    ).slice(0, 32);
+    
+    const keypair = solanaWeb3.Keypair.fromSeed(derivedSeed);
     console.log("Found wallet with address:", keypair.publicKey.toString());
     return keypair;
   } catch (e) {
