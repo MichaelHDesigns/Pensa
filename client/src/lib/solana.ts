@@ -97,13 +97,6 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   }
   
   throw new Error("Could not derive the correct wallet address with any known path");
-    
-    // If no path worked, use the direct seed method
-    return solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
-  } catch (e) {
-    console.error("Error deriving key:", e);
-    throw new Error("Failed to derive key from mnemonic");
-  }
 }
 
 // Import wallet from private key
