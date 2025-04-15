@@ -12,6 +12,14 @@ import * as bs58 from 'bs58';
 
 
 // Network constants - using public node RPC endpoint
+
+function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
+  const path = "m/44'/501'/0'/0'";
+  const key = ed25519.utils.derivePath(path, seed);
+  return solanaWeb3.Keypair.fromSeed(key.key);
+}
+
+
 export const SOLANA_MAINNET = "https://solana-rpc.publicnode.com";
 export const SOLANA_DEVNET = "https://api.devnet.solana.com";
 export const SOLANA_TESTNET = "https://api.testnet.solana.com";
@@ -61,11 +69,13 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   }
   
   try {
-    // For Unstoppable Wallet compatibility, just use BIP39 without derivation
-    const seed = await bip39.mnemonicToSeed(mnemonic, "");
-    const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
-    console.log("Found wallet with address:", keypair.publicKey.toString());
-    return keypair;
+    // Generate seed from mnemonic
+    const seed = await bip39.mnemonicToSeed(mnemonic);
+    
+    // Derive key using correct Solana path: m/44'/501'/0'/0'
+    const derivedKey = deriveSolanaKeypair(seed);
+    console.log("Found wallet with address:", derivedKey.publicKey.toString());
+    return derivedKey;
   } catch (e) {
     console.error("Failed to derive key:", e);
     throw new Error("Could not derive the correct wallet address");
