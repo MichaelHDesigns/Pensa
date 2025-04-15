@@ -70,25 +70,20 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   const path = derivationPath || defaultPath;
   
   try {
-    // Use ed25519 derivation
-    const derivedSeed = ed25519.utils.sha512(seed).slice(0, 32);
-    
-    // Try different paths if default doesn't work
-    const paths = [
-      path,
-      "m/44'/501'/0'",
-      "m/44'/501'/0'/0'",
-      "m/44'/501'",
-      "m/501'/0'/0/0"
-    ];
-    
-    for (const tryPath of paths) {
+    try {
+      // First try direct seed derivation (Phantom wallet compatible)
+      const seedBuffer = Buffer.from(seed).slice(0, 32);
+      return solanaWeb3.Keypair.fromSeed(seedBuffer);
+    } catch (e) {
+      console.log("Direct seed derivation failed, trying ed25519...");
+      
+      // Try ed25519 derivation as fallback
       try {
-        const keypair = solanaWeb3.Keypair.fromSeed(derivedSeed);
-        console.log(`Found matching keypair using path: ${tryPath}`);
-        return keypair;
+        const derivedSeed = ed25519.utils.sha512(seed).slice(0, 32);
+        return solanaWeb3.Keypair.fromSeed(derivedSeed);
       } catch (e) {
-        console.log(`Path ${tryPath} failed, trying next...`);
+        console.log("Ed25519 derivation failed");
+        throw new Error("Could not derive key from mnemonic");
       }
     }
     
