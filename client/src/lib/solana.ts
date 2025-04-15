@@ -63,29 +63,40 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
   // Convert mnemonic to seed
   const seed = await bip39.mnemonicToSeed(mnemonic);
   
-  // Default Solana derivation path (like Phantom)
-  const defaultPath = "m/44'/501'/0'/0'";
+  // Common Solana derivation paths
+  const paths = [
+    "m/44'/501'/0'/0'",     // Phantom/Solflare
+    "m/44'/501'/0'",        // Alternative Solana path
+    "m/501'/0'/0/0",        // Some hardware wallets
+    "m/44'/501'/0/0",       // Backpack
+    "m/44'/501'",           // Basic Solana
+    ""                      // Direct seed
+  ];
   
-  // Support different derivation paths
-  const path = derivationPath || defaultPath;
-  
-  try {
+  // Try each derivation path
+  for (const path of paths) {
     try {
-      // First try direct seed derivation (Phantom wallet compatible)
-      const seedBuffer = Buffer.from(seed).slice(0, 32);
-      return solanaWeb3.Keypair.fromSeed(seedBuffer);
-    } catch (e) {
-      console.log("Direct seed derivation failed, trying ed25519...");
+      let seedToUse;
       
-      // Try ed25519 derivation as fallback
-      try {
-        const derivedSeed = ed25519.utils.sha512(seed).slice(0, 32);
-        return solanaWeb3.Keypair.fromSeed(derivedSeed);
-      } catch (e) {
-        console.log("Ed25519 derivation failed");
-        throw new Error("Could not derive key from mnemonic");
+      if (path) {
+        // Use ed25519 derivation with path
+        const key = await ed25519.getPublicKey(ed25519.utils.sha512(seed).slice(0, 32));
+        seedToUse = key.slice(0, 32);
+      } else {
+        // Direct seed derivation
+        seedToUse = seed.slice(0, 32);
       }
+      
+      const keypair = solanaWeb3.Keypair.fromSeed(seedToUse);
+      console.log("Found wallet with address:", keypair.publicKey.toString());
+      return keypair;
+    } catch (e) {
+      console.log(`Derivation failed for path ${path}, trying next...`);
+      continue;
     }
+  }
+  
+  throw new Error("Could not derive the correct wallet address with any known path");
     
     // If no path worked, use the direct seed method
     return solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
