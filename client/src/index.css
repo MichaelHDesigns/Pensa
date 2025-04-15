@@ -16,7 +16,7 @@
   }
 
   body.dark .neumorphic {
-    @apply shadow-[5px_5px_15px_rgba(0,0,0,0.5),-5px_-5px_15px_rgba(255,255,255,0.1)] bg-[#1a1b21];
+    @apply shadow-[5px_5px_15px_rgba(0,0,0,0.5),-5px_-5px_15px_rgba(169,0,232,0.2)] bg-[#1a1b21];
   }
 
   body.dark .neumorphic-inset {

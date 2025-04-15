@@ -1,15 +1,15 @@
 import { Link } from "wouter";
-import { 
-  QrCode, 
-  Send, 
-  ArrowLeftRight, 
-  History, 
-  Settings, 
-  Wallet, 
+import {
+  QrCode,
+  Send,
+  ArrowLeftRight,
+  History,
+  Settings,
+  Wallet,
   BarChart3,
   DollarSign,
   Landmark,
-  PiggyBank
+  PiggyBank,
 } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -20,35 +20,40 @@ interface QuickActionButtonProps {
   color: string;
 }
 
-const QuickActionButton = ({ icon, label, path, color }: QuickActionButtonProps) => {
+const QuickActionButton = ({
+  icon,
+  label,
+  path,
+  color,
+}: QuickActionButtonProps) => {
   // Define color classes based on the color prop
   const getColorClasses = (color: string) => {
     // Purple background with white text
-    return 'bg-[rgba(169,0,232,1)] text-white';
+    return "bg-[rgba(169,0,232,1)] text-white";
   };
-  
+
   // Map icon string to Lucide React components
   const getIcon = (iconName: string): ReactNode => {
     switch (iconName) {
-      case 'qrcode':
+      case "qrcode":
         return <QrCode size={20} />;
-      case 'paper-plane':
+      case "paper-plane":
         return <Send size={20} />;
-      case 'exchange-alt':
+      case "exchange-alt":
         return <ArrowLeftRight size={20} />;
-      case 'history':
+      case "history":
         return <History size={20} />;
-      case 'cog':
+      case "cog":
         return <Settings size={20} />;
-      case 'wallet':
+      case "wallet":
         return <Wallet size={20} />;
-      case 'chart':
+      case "chart":
         return <BarChart3 size={20} />;
-      case 'dollar':
+      case "dollar":
         return <DollarSign size={20} />;
-      case 'bank':
+      case "bank":
         return <Landmark size={20} />;
-      case 'savings':
+      case "savings":
         return <PiggyBank size={20} />;
       default:
         return <Wallet size={20} />;
@@ -60,7 +65,9 @@ const QuickActionButton = ({ icon, label, path, color }: QuickActionButtonProps)
   return (
     <Link href={path}>
       <div className="flex flex-col items-center cursor-pointer group">
-        <div className={`w-12 h-12 rounded-lg ${colorClasses} flex items-center justify-center mb-2 group-hover:opacity-90 transition-opacity neumorphic`}>
+        <div
+          className={`w-12 h-12 rounded-lg ${colorClasses} flex items-center justify-center mb-2 group-hover:opacity-90 transition-opacity neumorphic`}
+        >
           {getIcon(icon)}
         </div>
         <span className="text-sm text-black font-medium">{label}</span>
