@@ -66,25 +66,32 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
     
     // Derive using BIP44 for Solana: m/44'/501'/0'/0'
     let path = "m/44'/501'/0'/0'";
-    let masterKey = seed;
     
-    // Derive each level
+    // Start with master key derivation
+    let masterKey = ed25519.utils.sha512(
+      Buffer.concat([
+        Buffer.from('ed25519 seed'),
+        seed
+      ])
+    );
+    
+    // Derive for each path segment
     for (const segment of path.split('/').slice(1)) {
       const hardened = segment.endsWith("'");
       const index = parseInt(segment.replace("'", ""));
       
-      // Data to derive from
-      const data = new Uint8Array([
-        ...(hardened ? new Uint8Array([0x80 + index]) : Buffer.alloc(1)),
-        ...masterKey,
-        ...Buffer.alloc(4)
+      // Prepare derivation data
+      const data = Buffer.concat([
+        Buffer.from([0]),
+        Buffer.from(masterKey.slice(0, 32)),
+        Buffer.from([(hardened ? 0x80 : 0) + (index >> 24), (index >> 16) & 0xff, (index >> 8) & 0xff, index & 0xff])
       ]);
       
       // HMAC-SHA512 derivation
-      masterKey = ed25519.utils.sha512(data).slice(0, 32);
+      masterKey = ed25519.utils.sha512(data);
     }
     
-    const keypair = solanaWeb3.Keypair.fromSeed(masterKey);
+    const keypair = solanaWeb3.Keypair.fromSeed(Buffer.from(masterKey.slice(0, 32)));
     console.log("Found wallet with address:", keypair.publicKey.toString());
     return keypair;
   } catch (e) {
