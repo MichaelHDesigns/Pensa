@@ -177,11 +177,8 @@ const TokenCard = ({
                 </>
               )}
             </div>
-            <div className="flex gap-2"> {/* Added div for better spacing */}
-              <Link href="/send" className={`bg-[rgba(169,0,232,1)] hover:bg-[rgba(169,0,232,0.9)] transition-colors text-white px-3 py-1 rounded-lg text-sm ${theme === 'dark' ? 'dark:bg-purple-700 dark:text-white' : ''}`}> {/* Added dark mode class */}
-                <i className="fas fa-paper-plane mr-1"></i> Send
-              </Link>
-              <ThemeToggleButton /> {/* Added Theme Toggle Button */}
+            <div className="flex gap-2">
+              <ThemeToggleButton />
             </div>
           </div>
         </div>
