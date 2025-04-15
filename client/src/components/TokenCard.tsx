@@ -6,8 +6,9 @@ import { Label } from "@/components/ui/label";
 import { useWallet } from "@/contexts/WalletContext";
 import { getTokenMetadata, PENSACOIN_MINT_ADDRESS } from "@/lib/solana";
 import pensacoinLogo from "../assets/pensacoin-logo.png";
-import { Copy, Wallet, Sun, Moon } from "lucide-react"; // Added import for Wallet and theme icons
-import { useTheme } from "@/contexts/ThemeContext"; // Added theme context import
+import { Copy, Wallet, Sun, Moon } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
+import { Button } from "@/components/ui/button";
 
 
 interface TokenCardProps {
