@@ -64,11 +64,10 @@ export async function importWalletFromMnemonic(mnemonic: string, derivationPath?
     // Generate seed from mnemonic (no passphrase)
     const seed = await bip39.mnemonicToSeed(mnemonic);
     
-    // For wallets like Unstoppable, just use the first 32 bytes of the seed
+    // Just use first 32 bytes of the seed as private key
     const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
-    }
-    
-    const keypair = solanaWeb3.Keypair.fromSeed(IL);
+    console.log("Found wallet with address:", keypair.publicKey.toString());
+    return keypair;
     console.log("Found wallet with address:", keypair.publicKey.toString());
     return keypair;
   } catch (e) {
