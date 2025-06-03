@@ -15,32 +15,26 @@ import * as bs58 from 'bs58';
 
 async function deriveSolanaKeypair(seed: Buffer): Promise<solanaWeb3.Keypair> {
   try {
-    console.log("Using Unstoppable Wallet derivation method with ed25519-hd-key");
+    console.log("Using ed25519-hd-key derivation method");
     
-    // Import the derivePath function - we'll use dynamic import since it might not be available at build time
+    // Import the derivePath function
     const { derivePath } = await import('ed25519-hd-key');
     
-    // Use the exact same path as Unstoppable Wallet
+    // Use the exact same path and method as your working script
     const path = `m/44'/501'/0'/0'`;
     
-    // Derive the key using the same method as your working script
+    // Convert seed to hex string exactly like in your working script
     const derived = derivePath(path, seed.toString('hex'));
     const keypair = solanaWeb3.Keypair.fromSeed(derived.key);
     
-    const address = keypair.publicKey.toString();
-    console.log("Unstoppable Wallet derived address:", address);
+    const address = keypair.publicKey.toBase58();
+    console.log("Derived address:", address);
     
     return keypair;
 
   } catch (error) {
-    console.error("Unstoppable derivation failed, falling back to direct seed derivation:", error);
-    
-    // Fallback to direct seed derivation if the ed25519-hd-key import fails
-    const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
-    console.log("Fallback derived address:", keypair.publicKey.toString());
-    console.log("⚠️  WARNING: Using fallback derivation method");
-    
-    return keypair;
+    console.error("ed25519-hd-key derivation failed:", error);
+    throw new Error("Failed to derive wallet using ed25519-hd-key method");
   }
 }
 
