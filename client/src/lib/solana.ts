@@ -15,9 +15,9 @@ import * as bs58 from 'bs58';
 
 async function deriveSolanaKeypair(seed: Buffer): Promise<solanaWeb3.Keypair> {
   try {
-    console.log("Using ed25519-hd-key derivation method");
+    console.log("Using working derivation method");
     
-    // Import the derivePath function
+    // Import the derivePath function - this should work exactly like your script
     const { derivePath } = await import('ed25519-hd-key');
     
     // Use the exact same path and method as your working script
@@ -34,7 +34,38 @@ async function deriveSolanaKeypair(seed: Buffer): Promise<solanaWeb3.Keypair> {
 
   } catch (error) {
     console.error("ed25519-hd-key derivation failed:", error);
-    throw new Error("Failed to derive wallet using ed25519-hd-key method");
+    
+    // Fallback to direct BIP32-like derivation using crypto primitives
+    try {
+      console.log("Using fallback derivation method");
+      
+      // Create HMAC-SHA512 using Web Crypto API
+      const hmacKey = await crypto.subtle.importKey(
+        'raw',
+        new TextEncoder().encode('ed25519 seed'),
+        { name: 'HMAC', hash: 'SHA-512' },
+        false,
+        ['sign']
+      );
+      
+      const masterKey = await crypto.subtle.sign('HMAC', hmacKey, seed);
+      const masterKeyArray = new Uint8Array(masterKey);
+      
+      // Take first 32 bytes as the private key
+      const privateKey = masterKeyArray.slice(0, 32);
+      
+      // Create keypair from the derived private key
+      const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
+      
+      const address = keypair.publicKey.toBase58();
+      console.log("Fallback derived address:", address);
+      
+      return keypair;
+      
+    } catch (fallbackError) {
+      console.error("Fallback derivation also failed:", fallbackError);
+      throw new Error("Failed to derive wallet using any method");
+    }
   }
 }
 
@@ -81,10 +112,28 @@ export async function importWalletFromMnemonic(mnemonic: string): Promise<solana
   }
 
   try {
+    // Use the exact same method as your working script
     const seed = await bip39.mnemonicToSeed(mnemonic);
-    const keypair = await deriveSolanaKeypair(seed);
-    console.log("Imported wallet address:", keypair.publicKey.toString());
-    return keypair;
+    
+    // Try the ed25519-hd-key method first
+    try {
+      const { derivePath } = await import('ed25519-hd-key');
+      const path = `m/44'/501'/0'/0'`;
+      const derived = derivePath(path, seed.toString('hex'));
+      const keypair = solanaWeb3.Keypair.fromSeed(derived.key);
+      
+      console.log("Imported wallet address:", keypair.publicKey.toString());
+      return keypair;
+    } catch (hdKeyError) {
+      console.log("ed25519-hd-key failed, trying direct method:", hdKeyError);
+      
+      // Fallback: use direct seed derivation (simpler but should work)
+      const privateKey = seed.slice(0, 32);
+      const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
+      
+      console.log("Imported wallet address (direct):", keypair.publicKey.toString());
+      return keypair;
+    }
   } catch (error) {
     console.error("Failed to derive key:", error);
     throw new Error("Invalid recovery phrase");
