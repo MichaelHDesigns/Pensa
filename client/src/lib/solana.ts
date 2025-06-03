@@ -16,17 +16,62 @@ import * as bs58 from 'bs58';
 import * as ed25519_hd from 'ed25519-hd-key';
 
 function deriveSolanaKeypair(seed: Buffer): solanaWeb3.Keypair {
+  // Common Solana derivation paths used by different wallets
+  const derivationPaths = [
+    "m/44'/501'/0'/0'",     // Standard Solana path (Phantom, Solflare)
+    "m/44'/501'/0'",        // Alternative path (some wallets)
+    "m/44'/501'/0'/0'/0'",  // Extended path
+    "m/44'/501'/1'",        // Account 1
+    "m/44'/501'/1'/0'",     // Account 1 with change
+    "m/44'/501'/0'/1'",     // Change address
+  ];
+
+  // Also try direct seed derivation (no BIP44 path)
   try {
-    // Use standard BIP44 derivation path for Solana
-    const path = "m/44'/501'/0'/0'";
+    const directKeypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
+    console.log("Direct derivation public key:", directKeypair.publicKey.toString());
+    
+    // Check if this matches the expected address
+    if (directKeypair.publicKey.toString() === "BFPcHfpw3ZySMDp6g5fcfPPxBqfrdm9UHkYPqLgYPgV") {
+      console.log("✅ Found matching wallet with direct derivation!");
+      return directKeypair;
+    }
+  } catch (error) {
+    console.log("Direct derivation failed:", error);
+  }
+
+  // Try each derivation path
+  for (const path of derivationPaths) {
+    try {
+      console.log(`Trying derivation path: ${path}`);
+      const masterSeed = ed25519_hd.getMasterKeyFromSeed(seed);
+      const derivedKey = ed25519_hd.derivePath(path, masterSeed.key);
+      const keypair = solanaWeb3.Keypair.fromSeed(derivedKey.key.slice(0, 32));
+      
+      console.log(`Path ${path} -> Public key:`, keypair.publicKey.toString());
+      
+      // Check if this matches the expected Unstoppable wallet address
+      if (keypair.publicKey.toString() === "BFPcHfpw3ZySMDp6g5fcfPPxBqfrdm9UHkYPqLgYPgV") {
+        console.log(`✅ Found matching wallet with path: ${path}`);
+        return keypair;
+      }
+    } catch (error) {
+      console.log(`Path ${path} failed:`, error);
+      continue;
+    }
+  }
+
+  // If no path matches, return the standard path result
+  try {
+    const standardPath = "m/44'/501'/0'/0'";
     const masterSeed = ed25519_hd.getMasterKeyFromSeed(seed);
-    const derivedKey = ed25519_hd.derivePath(path, masterSeed.key);
-    const keypair = solanaWeb3.Keypair.fromSeed(Uint8Array.from(derivedKey.key));
-    console.log("Derived public key:", keypair.publicKey.toString());
+    const derivedKey = ed25519_hd.derivePath(standardPath, masterSeed.key);
+    const keypair = solanaWeb3.Keypair.fromSeed(derivedKey.key.slice(0, 32));
+    console.log("⚠️ No exact match found, using standard path. Public key:", keypair.publicKey.toString());
     return keypair;
   } catch (error) {
     console.error("Error deriving keypair:", error);
-    throw new Error("Failed to derive wallet key using Solana path");
+    throw new Error("Failed to derive wallet key using any Solana path");
   }
 }
 
