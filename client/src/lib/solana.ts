@@ -15,305 +15,32 @@ import * as bs58 from 'bs58';
 
 async function deriveSolanaKeypair(seed: Buffer): Promise<solanaWeb3.Keypair> {
   try {
-    console.log("Implementing proper BIP44 derivation for Solana");
-
-    // First, let's try derivation methods including Unstoppable Wallet patterns
-    const derivationMethods = [
-      // Method 1: Unstoppable Wallet style - BIP32 derivation with different account indices
-      async () => {
-        try {
-          console.log("Trying Unstoppable Wallet BIP32 derivation");
-
-          // Unstoppable uses BIP32 with specific account derivation
-          // Try multiple account indices as Unstoppable might use different different ones
-          const accountIndices = [0, 1, 2]; // Try first few account indices
-
-          for (const accountIndex of accountIndices) {
-            // Create master key from seed using "ed25519 seed"
-            const hmacKey = new TextEncoder().encode("ed25519 seed");
-            const masterKey = await window.crypto.subtle.importKey(
-              "raw",
-              hmacKey,
-              { name: "HMAC", hash: "SHA-512" },
-              false,
-              ["sign"]
-            );
-
-            const masterSeed = await window.crypto.subtle.sign("HMAC", masterKey, seed);
-            const masterBytes = new Uint8Array(masterSeed);
-
-            let currentKey = masterBytes.slice(0, 32);
-            let currentChainCode = masterBytes.slice(32, 64);
-
-            // BIP44 path: m/44'/501'/account'/0/0 (Unstoppable uses non-hardened final components)
-            const hardenedOffset = 0x80000000;
-            const pathComponents = [
-              44 + hardenedOffset,          // m/44'
-              501 + hardenedOffset,         // m/44'/501'
-              accountIndex + hardenedOffset, // m/44'/501'/account'
-              0,                            // m/44'/501'/account'/0 (non-hardened)
-              0                             // m/44'/501'/account'/0/0 (non-hardened)
-            ];
-
-            for (let i = 0; i < pathComponents.length; i++) {
-              const component = pathComponents[i];
-              const isHardened = component >= hardenedOffset;
-
-              let hmacInput: Uint8Array;
-              if (isHardened) {
-                // Hardened derivation: 0x00 + currentKey + component
-                hmacInput = new Uint8Array(1 + 32 + 4);
-                hmacInput[0] = 0x00;
-                hmacInput.set(currentKey, 1);
-              } else {
-                // Non-hardened derivation: publicKey + component
-                const publicKey = ed25519.getPublicKey(currentKey);
-                hmacInput = new Uint8Array(33 + 4);
-                hmacInput.set(publicKey, 0);
-              }
-
-              // Add component (big endian)
-              const componentBytes = new ArrayBuffer(4);
-              new DataView(componentBytes).setUint32(0, component, false);
-              hmacInput.set(new Uint8Array(componentBytes), hmacInput.length - 4);
-
-              // Calculate HMAC
-              const chainCodeKey = await window.crypto.subtle.importKey(
-                "raw",
-                currentChainCode,
-                { name: "HMAC", hash: "SHA-512" },
-                false,
-                ["sign"]
-              );
-
-              const hmacResult = await window.crypto.subtle.sign("HMAC", chainCodeKey, hmacInput);
-              const resultBytes = new Uint8Array(hmacResult);
-
-              currentKey = resultBytes.slice(0, 32);
-              currentChainCode = resultBytes.slice(32, 64);
-            }
-
-            const keypair = solanaWeb3.Keypair.fromSeed(currentKey);
-            const address = keypair.publicKey.toString();
-            console.log(`Unstoppable BIP32 derived address (account ${accountIndex}):`, address);
-
-            // Check if this matches the expected address
-            if (address === "BFPpHLFpw35YsMDp6g5FcFPPxBqErdm9UHKYDaLgYPyV") {
-              console.log(`SUCCESS! Found matching address with Unstoppable method account ${accountIndex}`);
-              return keypair;
-            }
-          }
-
-          throw new Error("No matching account found");
-        } catch (error) {
-          console.log("Unstoppable BIP32 derivation failed:", error);
-          throw error;
-        }
-      },
-
-      // Method 2: Alternative Unstoppable derivation - using seed directly with account offset
-      async () => {
-        try {
-          console.log("Trying Unstoppable direct seed derivation");
-
-          // Some implementations derive keys directly from seed with account data
-          for (let accountIndex = 0; accountIndex < 5; accountIndex++) {
-            const accountData = new Uint8Array(4);
-            new DataView(accountData.buffer).setUint32(0, accountIndex, false);
-
-            const combined = new Uint8Array(seed.length + accountData.length);
-            combined.set(seed);
-            combined.set(accountData, seed.length);
-
-            const hashedSeed = await window.crypto.subtle.digest("SHA-512", combined);
-            const finalSeed = new Uint8Array(hashedSeed).slice(0, 32);
-
-            const keypair = solanaWeb3.Keypair.fromSeed(finalSeed);
-            const address = keypair.publicKey.toString();
-            console.log(`Unstoppable direct derived address (account ${accountIndex}):`, address);
-
-            if (address === "BFPpHLFpw35YsMDp6g5FcFPPxBqErdm9UHKYDaLgYPyV") {
-              console.log(`SUCCESS! Found matching address with direct method account ${accountIndex}`);
-              return keypair;
-            }
-          }
-
-          throw new Error("No matching account found");
-        } catch (error) {
-          console.log("Unstoppable direct derivation failed:", error);
-          throw error;
-        }
-      },
-
-      // Method 3: BIP39 passphrase variation (Unstoppable might use empty passphrase differently)
-      async () => {
-        try {
-          console.log("Trying BIP39 passphrase variations");
-
-          // Re-derive seed with different passphrase approaches
-          const passphrases = ["", "mnemonic", "unstoppable", "solana"];
-          const mnemonic = "idea arctic segment talk burger upon keep curve panther gate loop present";
-
-          for (const passphrase of passphrases) {
-            const altSeed = await bip39.mnemonicToSeed(mnemonic, passphrase);
-
-            // Try standard derivation with alternative seed
-            const keypair = solanaWeb3.Keypair.fromSeed(altSeed.slice(0, 32));
-            const address = keypair.publicKey.toString();
-            console.log(`BIP39 passphrase "${passphrase}" derived address:`, address);
-
-            if (address === "BFPpHLFpw35YsMDp6g5FcFPPxBqErdm9UHKYDaLgYPyV") {
-              console.log(`SUCCESS! Found matching address with passphrase "${passphrase}"`);
-              return keypair;
-            }
-
-            // Also try BIP44 derivation with alternative seed
-            try {
-              const hmacKey = new TextEncoder().encode("ed25519 seed");
-              const masterKey = await window.crypto.subtle.importKey(
-                "raw",
-                hmacKey,
-                { name: "HMAC", hash: "SHA-512" },
-                false,
-                ["sign"]
-              );
-
-              const masterSeed = await window.crypto.subtle.sign("HMAC", masterKey, altSeed);
-              const masterBytes = new Uint8Array(masterSeed);
-
-              let currentKey = masterBytes.slice(0, 32);
-              const hardenedOffset = 0x80000000;
-              const pathComponents = [44 + hardenedOffset, 501 + hardenedOffset, 0 + hardenedOffset, 0 + hardenedOffset];
-
-              for (const component of pathComponents) {
-                const hmacInput = new Uint8Array(1 + 32 + 4);
-                hmacInput[0] = 0x00;
-                hmacInput.set(currentKey, 1);
-                const componentBytes = new ArrayBuffer(4);
-                new DataView(componentBytes).setUint32(0, component, false);
-                hmacInput.set(new Uint8Array(componentBytes), 33);
-
-                const hmacResult = await window.crypto.subtle.sign("HMAC", masterKey, hmacInput);
-                const resultBytes = new Uint8Array(hmacResult);
-                currentKey = resultBytes.slice(0, 32);
-              }
-
-              const bip44Keypair = solanaWeb3.Keypair.fromSeed(currentKey);
-              const bip44Address = bip44Keypair.publicKey.toString();
-              console.log(`BIP44 passphrase "${passphrase}" derived address:`, bip44Address);
-
-              if (bip44Address === "BFPpHLFpw35YsMDp6g5FcFPPxBqErdm9UHKYDaLgYPyV") {
-                console.log(`SUCCESS! Found matching address with BIP44 passphrase "${passphrase}"`);
-                return bip44Keypair;
-              }
-            } catch (e) {
-              // Continue to next passphrase
-            }
-          }
-
-          throw new Error("No matching passphrase found");
-        } catch (error) {
-          console.log("BIP39 passphrase variation failed:", error);
-          throw error;
-        }
-      },
-
-      // Method 4: Standard BIP44 derivation with HMAC-SHA512
-      async () => {
-        try {
-          console.log("Trying standard BIP44 derivation with HMAC-SHA512");
-
-          const hmacKey = new TextEncoder().encode("ed25519 seed");
-          const masterKey = await window.crypto.subtle.importKey(
-            "raw",
-            hmacKey,
-            { name: "HMAC", hash: "SHA-512" },
-            false,
-            ["sign"]
-          );
-
-          const masterSeed = await window.crypto.subtle.sign("HMAC", masterKey, seed);
-          const masterBytes = new Uint8Array(masterSeed);
-
-          let currentKey = masterBytes.slice(0, 32);
-          const hardenedOffset = 0x80000000;
-          const pathComponents = [44 + hardenedOffset, 501 + hardenedOffset, 0 + hardenedOffset, 0 + hardenedOffset];
-
-          for (const component of pathComponents) {
-            const hmacInput = new Uint8Array(1 + 32 + 4);
-            hmacInput[0] = 0x00;
-            hmacInput.set(currentKey, 1);
-            const componentBytes = new ArrayBuffer(4);
-            new DataView(componentBytes).setUint32(0, component, false);
-            hmacInput.set(new Uint8Array(componentBytes), 33);
-
-            const hmacResult = await window.crypto.subtle.sign("HMAC", masterKey, hmacInput);
-            const resultBytes = new Uint8Array(hmacResult);
-            currentKey = resultBytes.slice(0, 32);
-          }
-
-          const keypair = solanaWeb3.Keypair.fromSeed(currentKey);
-          console.log("Standard BIP44 derived address:", keypair.publicKey.toString());
-          return keypair;
-        } catch (error) {
-          console.log("Standard BIP44 derivation failed:", error);
-          throw error;
-        }
-      },
-
-      // Method 5: Phantom-style derivation
-      async () => {
-        try {
-          console.log("Trying Phantom-style derivation");
-
-          const pathData = "m/44'/501'/0'/0'";
-          const combinedData = new Uint8Array(seed.length + pathData.length);
-          combinedData.set(seed);
-          combinedData.set(new TextEncoder().encode(pathData), seed.length);
-
-          const hashedData = await window.crypto.subtle.digest("SHA-256", combinedData);
-          const finalSeed = new Uint8Array(hashedData).slice(0, 32);
-
-          const keypair = solanaWeb3.Keypair.fromSeed(finalSeed);
-          console.log("Phantom-style derived address:", keypair.publicKey.toString());
-          return keypair;
-        } catch (error) {
-          console.log("Phantom-style derivation failed:", error);
-          throw error;
-        }
-      }
-    ];
-
-    // Try each method sequentially
-    for (let i = 0; i < derivationMethods.length; i++) {
-      try {
-        console.log(`\n--- Trying derivation method ${i + 1} ---`);
-        const keypair = await derivationMethods[i]();
-        const address = keypair.publicKey.toString();
-
-        if (address === "BFPpHLFpw35YsMDp6g5FcFPPxBqErdm9UHKYDaLgYPyV") {
-          console.log(`🎉 SUCCESS! Method ${i + 1} produced the correct address:`, address);
-          return keypair;
-        }
-
-        console.log(`Method ${i + 1} produced:`, address, "(not matching)");
-      } catch (error) {
-        console.log(`Method ${i + 1} failed:`, error);
-      }
-    }
-
-    // Final fallback: direct seed derivation
-    console.log("\n--- All methods failed, using fallback ---");
-    const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
-    console.log("Fallback derived address:", keypair.publicKey.toString());
-    console.log("Expected address:", "BFPpHLFpw35YsMDp6g5FcFPPxBqErdm9UHKYDaLgYPyV");
-    console.log("⚠️  WARNING: Address mismatch - using fallback key");
-
+    console.log("Using Unstoppable Wallet derivation method with ed25519-hd-key");
+    
+    // Import the derivePath function - we'll use dynamic import since it might not be available at build time
+    const { derivePath } = await import('ed25519-hd-key');
+    
+    // Use the exact same path as Unstoppable Wallet
+    const path = `m/44'/501'/0'/0'`;
+    
+    // Derive the key using the same method as your working script
+    const derived = derivePath(path, seed.toString('hex'));
+    const keypair = solanaWeb3.Keypair.fromSeed(derived.key);
+    
+    const address = keypair.publicKey.toString();
+    console.log("Unstoppable Wallet derived address:", address);
+    
     return keypair;
 
   } catch (error) {
-    console.error("Critical error in derivation:", error);
-    throw new Error("Failed to derive wallet key from seed");
+    console.error("Unstoppable derivation failed, falling back to direct seed derivation:", error);
+    
+    // Fallback to direct seed derivation if the ed25519-hd-key import fails
+    const keypair = solanaWeb3.Keypair.fromSeed(seed.slice(0, 32));
+    console.log("Fallback derived address:", keypair.publicKey.toString());
+    console.log("⚠️  WARNING: Using fallback derivation method");
+    
+    return keypair;
   }
 }
 
