@@ -91,84 +91,94 @@ export async function importWalletFromMnemonic(mnemonic: string): Promise<solana
   }
 }
 
-// Simplified derivation that uses the exact same method as the working script
+// Exact implementation of ed25519-hd-key derivePath for browser compatibility
 async function deriveBIP44Keypair(seed: Buffer, account: number = 0, change: number = 0): Promise<solanaWeb3.Keypair> {
   try {
-    console.log("Attempting various derivation methods for Solana");
+    console.log("Using exact ed25519-hd-key derivation logic");
     
-    // Method 1: Try different offsets from the seed (most common approach)
-    const offsets = [0, 32, 44, 501];
-    for (const offset of offsets) {
-      try {
-        const privateKey = seed.slice(offset, offset + 32);
-        const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
-        const address = keypair.publicKey.toBase58();
-        console.log(`Offset ${offset} derived address:`, address);
-      } catch (e) {
-        // Continue to next method
-      }
-    }
+    // Convert seed to hex string exactly like the working script
+    const seedHex = seed.toString('hex');
+    const path = `m/44'/501'/${account}'/${change}'`;
     
-    // Method 2: Try different slice starting points
-    const sliceStarts = [0, 4, 8, 16, 32];
-    for (const start of sliceStarts) {
-      try {
-        const privateKey = seed.slice(start, start + 32);
-        const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
-        const address = keypair.publicKey.toBase58();
-        console.log(`Slice start ${start} derived address:`, address);
-      } catch (e) {
-        // Continue to next method
-      }
-    }
+    console.log("Seed hex:", seedHex);
+    console.log("Derivation path:", path);
     
-    // Method 3: BIP44 path simulation with XOR
-    try {
-      const path = [44, 501, 0, 0];
-      let derivedSeed = new Uint8Array(seed);
-      
-      for (const pathComponent of path) {
-        for (let i = 0; i < derivedSeed.length; i++) {
-          derivedSeed[i] ^= pathComponent & 0xFF;
-        }
-      }
-      
-      const privateKey = derivedSeed.slice(0, 32);
-      const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
-      const address = keypair.publicKey.toBase58();
-      console.log("BIP44 XOR derived address:", address);
-    } catch (e) {
-      // Continue to next method
-    }
+    // Implement the ed25519-hd-key derivePath logic
+    const derived = await derivePathBrowser(path, seedHex);
+    const keypair = solanaWeb3.Keypair.fromSeed(derived.key);
     
-    // Method 4: SHA256 hash of seed + path
-    try {
-      const pathStr = "m/44'/501'/0'/0'";
-      const combined = new Uint8Array(seed.length + pathStr.length);
-      combined.set(seed, 0);
-      combined.set(new TextEncoder().encode(pathStr), seed.length);
-      
-      const hash = await crypto.subtle.digest('SHA-256', combined);
-      const privateKey = new Uint8Array(hash);
-      const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
-      const address = keypair.publicKey.toBase58();
-      console.log("SHA256 path derived address:", address);
-    } catch (e) {
-      // Continue to fallback
-    }
-    
-    // Fallback: Direct seed derivation (what the working script likely does)
-    console.log("All methods failed, using direct seed derivation");
-    const privateKey = seed.slice(0, 32);
-    const keypair = solanaWeb3.Keypair.fromSeed(privateKey);
     const address = keypair.publicKey.toBase58();
-    console.log("Direct derivation public key:", address);
+    console.log("ed25519-hd-key derived address:", address);
+    
     return keypair;
     
   } catch (error) {
-    console.error("All derivation methods failed:", error);
+    console.error("ed25519-hd-key derivation failed:", error);
     throw error;
   }
+}
+
+// Browser implementation of ed25519-hd-key's derivePath function
+async function derivePathBrowser(path: string, seedHex: string): Promise<{ key: Uint8Array }> {
+  // Parse the path (e.g., "m/44'/501'/0'/0'")
+  const segments = path.split('/').slice(1); // Remove 'm'
+  
+  // Convert hex seed to buffer
+  const seedBuffer = hexToBuffer(seedHex);
+  
+  // Get master key from seed using HMAC-SHA512 with "ed25519 seed"
+  const masterKey = await hmacSha512(new TextEncoder().encode("ed25519 seed"), seedBuffer);
+  
+  let currentKey = masterKey.slice(0, 32);
+  let currentChainCode = masterKey.slice(32, 64);
+  
+  // Derive each level
+  for (const segment of segments) {
+    const isHardened = segment.endsWith("'");
+    const index = parseInt(segment.replace("'", ""));
+    const hardenedIndex = isHardened ? index + 0x80000000 : index;
+    
+    // Create data to hash: 0x00 + current_key + index (for hardened derivation)
+    const data = new Uint8Array(1 + 32 + 4);
+    data[0] = 0x00;
+    data.set(currentKey, 1);
+    
+    // Convert index to big-endian bytes
+    const indexBytes = new ArrayBuffer(4);
+    new DataView(indexBytes).setUint32(0, hardenedIndex, false);
+    data.set(new Uint8Array(indexBytes), 33);
+    
+    // HMAC-SHA512 with current chain code
+    const derived = await hmacSha512(currentChainCode, data);
+    
+    currentKey = derived.slice(0, 32);
+    currentChainCode = derived.slice(32, 64);
+  }
+  
+  return { key: currentKey };
+}
+
+// HMAC-SHA512 implementation using Web Crypto API
+async function hmacSha512(key: Uint8Array, data: Uint8Array): Promise<Uint8Array> {
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    key,
+    { name: 'HMAC', hash: 'SHA-512' },
+    false,
+    ['sign']
+  );
+  
+  const signature = await crypto.subtle.sign('HMAC', cryptoKey, data);
+  return new Uint8Array(signature);
+}
+
+// Helper to convert hex string to buffer
+function hexToBuffer(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+  }
+  return bytes;
 }
 
 // Import wallet from private key
