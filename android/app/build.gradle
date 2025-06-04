@@ -17,7 +17,7 @@ android {
     
     signingConfigs {
         release {
-            storeFile file("../pensakeystore.jks") 
+            storeFile file("C:/Users/Devilking6105/Desktop/Notes/pensakeystore.jks") 
             storePassword "1223@Cale" 
             keyAlias "mykey"
             keyPassword "1223@Cale" 
