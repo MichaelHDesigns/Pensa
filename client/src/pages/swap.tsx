@@ -15,17 +15,7 @@ const Swap = () => {
   }, [refreshBalances]);
 
   return (
-    <div className="max-w-md mx-auto pb-8">
-      <header className="mb-6">
-        <div className="flex items-center mb-4">
-          <Link href="/wallet-dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
-              <ChevronLeft size={16} /> Back
-            </Button>
-          </Link>
-        </div>
-      </header>
-      
+    <div className="max-w-md mx-auto mt-6 pb-8">
       {/* Swap Form */}
       <SwapForm />
       

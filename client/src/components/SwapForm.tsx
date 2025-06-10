@@ -7,6 +7,7 @@ import { useSwap } from "@/contexts/SwapContext";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowUpDown, RefreshCw, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Link from 'next/link';
 
 const SwapForm = () => {
   const { wallet, solBalance, pensacoinBalance, refreshBalances } = useWallet();
@@ -19,26 +20,26 @@ const SwapForm = () => {
     isSwapLoading
   } = useSwap();
   const { toast } = useToast();
-  
+
   const [fromToken, setFromToken] = useState<'SOL' | 'PENSA'>('SOL');
   const [toToken, setToToken] = useState<'SOL' | 'PENSA'>('PENSA');
   const [amount, setAmount] = useState("");
   const [estimatedOutput, setEstimatedOutput] = useState("");
   const [isLoadingRoute, setIsLoadingRoute] = useState(false);
-  
+
   // Handle output calculation with proper formatting 
   useEffect(() => {
     const calculateOutput = () => {
       // Remove any commas from the input for calculation
       const cleanAmount = amount.replace(/,/g, '');
-      
+
       if (cleanAmount && !isNaN(parseFloat(cleanAmount)) && parseFloat(cleanAmount) > 0) {
         setIsLoadingRoute(true);
-        
+
         try {
           // Calculate the estimated output using our local calculation with the clean amount
           const output = calculateSwapOutput(fromToken, toToken, parseFloat(cleanAmount));
-          
+
           // Format the output appropriately based on token type with better formatting
           if (fromToken === 'PENSA' && toToken === 'SOL') {
             // For SOL output, show up to 10 decimal places
@@ -60,22 +61,22 @@ const SwapForm = () => {
         setEstimatedOutput("0");
       }
     };
-    
+
     calculateOutput();
   }, [amount, fromToken, toToken, calculateSwapOutput]);
-  
+
   // Switch from/to tokens
   const switchTokens = () => {
     setFromToken(toToken);
     setToToken(fromToken);
     setAmount(""); // Reset amount when switching
   };
-  
+
   // Validate amount based on token balances
   const validateAmount = (): boolean => {
     // Remove any commas from the amount for validation
     const cleanAmount = amount.replace(/,/g, '');
-    
+
     if (!cleanAmount || isNaN(parseFloat(cleanAmount)) || parseFloat(cleanAmount) <= 0) {
       toast({
         title: "Invalid Amount",
@@ -84,13 +85,13 @@ const SwapForm = () => {
       });
       return false;
     }
-    
+
     // Use the clean amount with no commas for numeric comparison
     const inputAmount = parseFloat(cleanAmount);
     const availableBalance = fromToken === 'SOL' 
       ? parseFloat(solBalance)
       : parseFloat(pensacoinBalance);
-    
+
     if (inputAmount > availableBalance) {
       toast({
         title: "Insufficient Balance",
@@ -99,10 +100,10 @@ const SwapForm = () => {
       });
       return false;
     }
-    
+
     return true;
   };
-  
+
   // Get maximum available balance for the selected token
   const getMaxBalance = () => {
     if (fromToken === 'SOL') {
@@ -113,12 +114,12 @@ const SwapForm = () => {
       return pensacoinBalance;
     }
   };
-  
+
   // Handle using maximum available balance
   const handleMaxBalance = () => {
     setAmount(getMaxBalance());
   };
-  
+
   // Handle swap via Raydium
   const handleSwap = async () => {
     if (!wallet) {
@@ -129,22 +130,22 @@ const SwapForm = () => {
       });
       return;
     }
-    
+
     if (!validateAmount()) return;
-    
+
     // Simple clean-up to remove commas for internal calculations
     const rawAmount = amount.replace(/,/g, '');
-    
+
     toast({
       title: "Initiating Token Swap",
       description: `Preparing to swap ${amount} ${fromToken} for approximately ${estimatedOutput} ${toToken}. Please approve the transaction.`,
     });
-    
+
     try {
       // Use the RAW user input exactly as they typed it
       // This preserves the user intent - when they type 5000 they mean 5,000 tokens
       console.log(`🚀 FINAL SWAP AMOUNT: "${amount}" tokens, (${parseFloat(rawAmount).toLocaleString()} tokens)`);
-      
+
       // CRITICAL FIX: We need to pass the exact string value to avoid floating point precision issues
       await swapTokens(
         wallet,
@@ -153,11 +154,11 @@ const SwapForm = () => {
         toToken,
         amount // Pass user's EXACT input
       );
-      
+
       // Reset input after successful swap
       setAmount("");
       setEstimatedOutput("0");
-      
+
       toast({
         title: "Swap Complete",
         description: `Successfully swapped ${amount} ${fromToken} for ${toToken}. Your balances will update shortly.`,
@@ -165,7 +166,7 @@ const SwapForm = () => {
       });
     } catch (error) {
       console.error("Swap error:", error);
-      
+
       // Show a helpful error message
       toast({
         title: "Transaction Failed",
@@ -176,18 +177,20 @@ const SwapForm = () => {
       });
     }
   };
-  
+
   return (
     <Card className="w-full max-w-md mx-auto neumorphic bg-white">
       <CardHeader>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between mb-2">
           <CardTitle className="text-2xl text-[rgba(169,0,232,1)]">Swap</CardTitle>
-          <Badge variant="outline" className="bg-white text-[rgba(169,0,232,1)] border-[rgba(169,0,232,0.3)] neumorphic">
-            Raydium Powered
-          </Badge>
+          <Link href="/wallet-dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
+              <i className="fas fa-chevron-left"></i> Back
+            </Button>
+          </Link>
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         <div className="bg-white p-4 rounded-xl neumorphic text-sm">
           <p className="font-medium mb-1 text-[rgba(169,0,232,1)]">Raydium Trading API</p>
@@ -201,7 +204,7 @@ const SwapForm = () => {
               Balance: {fromToken === 'SOL' ? solBalance : pensacoinBalance} {fromToken}
             </span>
           </div>
-          
+
           <div className="flex space-x-2">
             <div className="relative flex-grow">
               <Input
@@ -212,7 +215,7 @@ const SwapForm = () => {
                 onChange={(e) => {
                   // Store raw input without commas for calculation
                   const rawValue = e.target.value.replace(/,/g, '');
-                  
+
                   // Validate that it's a valid number
                   if (rawValue === '' || (!isNaN(Number(rawValue)) && !rawValue.includes('e'))) {
                     // Store the raw value to ensure exact amount is used in transaction
@@ -230,7 +233,7 @@ const SwapForm = () => {
                 MAX
               </button>
             </div>
-            
+
             <div className="flex-shrink-0">
               <Button 
                 variant="outline" 
@@ -243,7 +246,7 @@ const SwapForm = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Switch Button */}
         <div className="flex justify-center">
           <Button
@@ -256,7 +259,7 @@ const SwapForm = () => {
             <ArrowUpDown size={16} className="text-gray-700" />
           </Button>
         </div>
-        
+
         {/* To Token */}
         <div className="space-y-2">
           <div className="flex justify-between">
@@ -265,7 +268,7 @@ const SwapForm = () => {
               Balance: {toToken === 'SOL' ? solBalance : pensacoinBalance} {toToken}
             </span>
           </div>
-          
+
           <div className="flex space-x-2">
             <div className="relative flex-grow">
               <Input
@@ -281,7 +284,7 @@ const SwapForm = () => {
                 </div>
               )}
             </div>
-            
+
             <Button 
               variant="outline" 
               className="flex-shrink-0 h-full min-w-[80px] font-medium neumorphic bg-white text-gray-700"
@@ -292,7 +295,7 @@ const SwapForm = () => {
             </Button>
           </div>
         </div>
-        
+
         {/* Swap Details */}
         <div className="bg-white p-4 rounded-xl neumorphic space-y-3">
           <div className="flex justify-between text-sm">
@@ -303,19 +306,19 @@ const SwapForm = () => {
                 : `1 PENSA = ${swapRate.pensaToSol.toFixed(14)} SOL`}
             </span>
           </div>
-          
+
           <div className="flex justify-between text-sm">
             <span className="text-gray-700">Expected Fee</span>
             <span className="font-medium text-black">{swapFeePercent}%</span>
           </div>
-          
+
           <div className="flex justify-between text-sm">
             <span className="text-gray-700">Network Fee</span>
             <span className="font-medium text-black">{getNetworkFee()}</span>
           </div>
         </div>
       </CardContent>
-      
+
       <CardFooter className="pt-4">
         <Button 
           className="w-full bg-[rgba(169,0,232,1)] text-white hover:bg-[rgba(169,0,232,0.9)] neumorphic"
