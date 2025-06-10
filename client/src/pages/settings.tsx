@@ -475,7 +475,7 @@ const Settings = () => {
             </span>
           </Link>
           <a
-            href="https://play.google.com/store/apps/details?id=com.pensawallet.app"
+            href="https://play.google.com/store/apps/details?id=com.pensacolacrypto.app"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 p-3 rounded-lg neumorphic bg-white text-gray-700 hover:bg-[rgba(169,0,232,0.1)] group"
