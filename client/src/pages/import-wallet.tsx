@@ -182,6 +182,16 @@ const ImportWallet = () => {
             )}
           </Button>
         </CardFooter>
+
+        {/* Back Button at Bottom */}
+        <div className="mt-4 flex justify-center">
+          <Link href="/welcome">
+            <Button variant="outline" className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8">
+              <i className="fas fa-arrow-left mr-2"></i>
+              Back to Welcome
+            </Button>
+          </Link>
+        </div>
       </Card>
     </div>
   );

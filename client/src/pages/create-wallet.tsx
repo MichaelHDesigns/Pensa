@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useWallet } from "@/contexts/WalletContext";
+import Link from 'next/link';
 
 const CreateWallet = () => {
   const { createWallet } = useWallet();
@@ -211,6 +212,16 @@ const CreateWallet = () => {
               )}
             </Button>
           </CardFooter>
+
+          {/* Back Button at Bottom */}
+          <div className="mt-4 flex justify-center">
+            <Link href="/welcome">
+              <Button variant="outline" className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8">
+                <i className="fas fa-arrow-left mr-2"></i>
+                Back to Welcome
+              </Button>
+            </Link>
+          </div>
         </Card>
       </div>
     );
@@ -269,6 +280,18 @@ const CreateWallet = () => {
               Skip Verification (Not Recommended)
             </Button>
           </CardFooter>
+
+          {/* Back Button at Bottom */}
+          <div className="mt-4 flex justify-center">
+            <Button 
+              variant="outline" 
+              className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8"
+              onClick={() => setStep("creating")}
+            >
+              <i className="fas fa-arrow-left mr-2"></i>
+              Back
+            </Button>
+          </div>
         </Card>
       </div>
     );
@@ -336,6 +359,18 @@ const CreateWallet = () => {
               Verify & Create Wallet
             </Button>
           </CardFooter>
+
+          {/* Back Button at Bottom */}
+          <div className="mt-4 flex justify-center">
+            <Button 
+              variant="outline" 
+              className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8"
+              onClick={() => setStep("backup")}
+            >
+              <i className="fas fa-arrow-left mr-2"></i>
+              Back to Backup
+            </Button>
+          </div>
         </Card>
       </div>
     );
