@@ -155,15 +155,18 @@ const Send = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto relative py-6">
-      <Link href="/wallet-dashboard">
-        <Button variant="ghost" size="sm" className="absolute -left-2 top-8 flex items-center gap-1 text-[rgba(169,0,232,1)] z-10">
-          <i className="fas fa-chevron-left"></i> Back
-        </Button>
-      </Link>
+    <div className="max-w-md mx-auto">
+      <header className="mb-6">
+        <div className="flex items-center mb-4">
+          <Link href="/wallet-dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
+              <ChevronLeft size={16} /> Back
+            </Button>
+          </Link>
+        </div>
+      </header>
       
-      <div className="mt-12">
-        <Card className="neumorphic bg-white">
+      <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
             <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Send</h1>
@@ -309,8 +312,7 @@ const Send = () => {
             )}
           </Button>
         </CardFooter>
-        </Card>
-      </div>
+      </Card>
     </div>
   );
 };

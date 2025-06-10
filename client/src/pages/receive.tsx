@@ -42,14 +42,19 @@ const Receive = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto py-6">
-      <Card className="neumorphic bg-white">
-        <CardContent className="pt-6">
+    <div className="max-w-md mx-auto">
+      <header className="mb-6">
+        <div className="flex items-center mb-4">
           <Link href="/wallet-dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)] mb-6">
-              <i className="fas fa-chevron-left"></i> Back
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
+              <ChevronLeft size={16} /> Back
             </Button>
           </Link>
+        </div>
+      </header>
+      
+      <Card className="neumorphic bg-white">
+        <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
             <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Receive</h1>
             <TabsList className="grid w-full grid-cols-2 mb-4 bg-gray-100">
