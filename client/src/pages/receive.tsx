@@ -42,16 +42,12 @@ const Receive = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto">
-      <header className="mb-6">
-        <div className="flex items-center mb-4">
-          <Link href="/wallet-dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
-              <i className="fas fa-chevron-left"></i> Back
-            </Button>
-          </Link>
-        </div>
-      </header>
+    <div className="max-w-md mx-auto relative py-6">
+      <Link href="/wallet-dashboard">
+        <Button variant="ghost" size="sm" className="absolute -left-2 top-8 flex items-center gap-1 text-[rgba(169,0,232,1)] z-10">
+          <i className="fas fa-chevron-left"></i> Back
+        </Button>
+      </Link>
       
       <Card className="neumorphic bg-white">
         <CardContent className="pt-6">

@@ -90,17 +90,15 @@ const ImportWallet = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto py-12 px-4">
-      <div className="flex items-center mb-6">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="flex items-center gap-1 text-[rgba(169,0,232,1)]"
-          onClick={goBack}
-        >
-          <i className="fas fa-chevron-left"></i> Back
-        </Button>
-      </div>
+    <div className="max-w-md mx-auto py-12 px-4 relative">
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        className="absolute -left-2 top-16 flex items-center gap-1 text-[rgba(169,0,232,1)] z-10"
+        onClick={goBack}
+      >
+        <i className="fas fa-chevron-left"></i> Back
+      </Button>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Import Wallet</CardTitle>
