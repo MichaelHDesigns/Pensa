@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
-import { AlertTriangle, Copy } from "lucide-react";
+import { ChevronLeft, AlertTriangle, Copy } from "lucide-react";
 
 // QR Code SVG generator (simplified version)
 const generateQRCode = (text: string, size = 200): string => {
@@ -18,10 +18,10 @@ const Receive = () => {
   const { wallet, shortenAddress } = useWallet();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"sol" | "pensacoin">("sol");
-
+  
   const walletAddress = wallet ? wallet.publicKey.toString() : "";
   const shortAddress = shortenAddress(walletAddress);
-
+  
   // Copy address to clipboard
   const copyToClipboard = () => {
     navigator.clipboard.writeText(walletAddress)
@@ -40,11 +40,19 @@ const Receive = () => {
         });
       });
   };
-
+  
   return (
     <div className="max-w-md mx-auto">
+      <header className="mb-6">
+        <div className="flex items-center mb-4">
+          <Link href="/wallet-dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
+              <ChevronLeft size={16} /> Back
+            </Button>
+          </Link>
+        </div>
+      </header>
       
-
       <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
@@ -53,7 +61,7 @@ const Receive = () => {
               <TabsTrigger value="sol" className="data-[state=active]:bg-[rgba(169,0,232,1)] data-[state=active]:text-white">Receive SOL</TabsTrigger>
               <TabsTrigger value="pensacoin" className="data-[state=active]:bg-[rgba(169,0,232,1)] data-[state=active]:text-white">Receive PENSA</TabsTrigger>
             </TabsList>
-
+            
             <TabsContent value="sol" className="flex flex-col items-center">
               <div className="neumorphic-inset p-6 rounded-xl bg-white mb-6">
                 {walletAddress && (
@@ -66,7 +74,7 @@ const Receive = () => {
                   />
                 )}
               </div>
-
+              
               <div className="w-full p-4 bg-white rounded-xl neumorphic-inset mb-5 flex items-center justify-between">
                 <div className="truncate font-mono text-sm mr-2 text-black">
                   {walletAddress}
@@ -80,13 +88,13 @@ const Receive = () => {
                   <Copy size={16} />
                 </Button>
               </div>
-
+              
               <div className="text-center text-sm text-gray-700 bg-white p-4 rounded-xl neumorphic w-full">
                 <p className="mb-1">Send only <span className="font-medium text-[rgba(169,0,232,1)]">SOL</span> to this address.</p>
                 <p>Your SOL will appear in your wallet after network confirmation.</p>
               </div>
             </TabsContent>
-
+            
             <TabsContent value="pensacoin" className="flex flex-col items-center">
               <div className="neumorphic-inset p-6 rounded-xl bg-white mb-6">
                 {walletAddress && (
@@ -99,7 +107,7 @@ const Receive = () => {
                   />
                 )}
               </div>
-
+              
               <div className="w-full p-4 bg-white rounded-xl neumorphic-inset mb-5 flex items-center justify-between">
                 <div className="truncate font-mono text-sm mr-2 text-black">
                   {walletAddress}
@@ -113,7 +121,7 @@ const Receive = () => {
                   <Copy size={16} />
                 </Button>
               </div>
-
+              
               <div className="text-center text-sm text-gray-700 bg-white p-4 rounded-xl neumorphic w-full">
                 <p className="mb-1">Send only <span className="font-medium text-[rgba(169,0,232,1)]">PENSA</span> to this address.</p>
                 <p className="mb-1">Make sure the sender supports SPL tokens.</p>
@@ -121,25 +129,13 @@ const Receive = () => {
               </div>
             </TabsContent>
           </Tabs>
-
+          
           <div className="mt-6 bg-white p-4 rounded-xl neumorphic text-sm">
             <div className="flex items-start">
               <AlertTriangle className="text-[rgba(169,0,232,1)] mr-2 flex-shrink-0" size={18} />
               <p className="text-gray-700">Always verify your address before sharing. Only share with trusted sources.</p>
             </div>
           </div>
-
-          {/* Floating Back Button */}
-          <Link href="/wallet-dashboard">
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="fixed top-4 left-4 neumorphic bg-white/90 backdrop-blur-sm text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] border-0 shadow-lg z-10"
-            >
-              <i className="fas fa-arrow-left mr-2"></i>
-              Back
-            </Button>
-          </Link>
         </CardContent>
       </Card>
     </div>
