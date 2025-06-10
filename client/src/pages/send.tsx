@@ -155,7 +155,7 @@ const Send = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4 relative">
       <Card className="w-full max-w-md">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
@@ -303,15 +303,17 @@ const Send = () => {
           </Button>
         </CardFooter>
 
-        {/* Back Button at Bottom */}
-        <div className="mt-4 flex justify-center">
-          <Link href="/wallet-dashboard">
-            <Button variant="outline" className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8">
-              <i className="fas fa-arrow-left mr-2"></i>
-              Back to Dashboard
-            </Button>
-          </Link>
-        </div>
+        {/* Floating Back Button */}
+        <Link href="/wallet-dashboard">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="absolute top-4 left-4 neumorphic bg-white/90 backdrop-blur-sm text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] border-0 shadow-lg z-10"
+          >
+            <i className="fas fa-arrow-left mr-2"></i>
+            Back
+          </Button>
+        </Link>
       </Card>
     </div>
   );

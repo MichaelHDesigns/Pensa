@@ -162,7 +162,7 @@ const CreateWallet = () => {
   // Creating step - initial screen
   if (step === "creating") {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4 relative">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl">Create New Wallet</CardTitle>
@@ -212,16 +212,6 @@ const CreateWallet = () => {
               )}
             </Button>
           </CardFooter>
-
-          {/* Back Button at Bottom */}
-          <div className="mt-4 flex justify-center">
-            <Link href="/welcome">
-              <Button variant="outline" className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8">
-                <i className="fas fa-arrow-left mr-2"></i>
-                Back to Welcome
-              </Button>
-            </Link>
-          </div>
         </Card>
       </div>
     );
@@ -232,7 +222,7 @@ const CreateWallet = () => {
     const words = mnemonic.split(" ");
 
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4 relative">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Backup Recovery Phrase</CardTitle>
@@ -280,18 +270,6 @@ const CreateWallet = () => {
               Skip Verification (Not Recommended)
             </Button>
           </CardFooter>
-
-          {/* Back Button at Bottom */}
-          <div className="mt-4 flex justify-center">
-            <Button 
-              variant="outline" 
-              className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8"
-              onClick={() => setStep("creating")}
-            >
-              <i className="fas fa-arrow-left mr-2"></i>
-              Back
-            </Button>
-          </div>
         </Card>
       </div>
     );
@@ -302,7 +280,7 @@ const CreateWallet = () => {
     const mnemonicWords = mnemonic.split(" ");
 
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4 relative">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Verify Recovery Phrase</CardTitle>
@@ -359,18 +337,6 @@ const CreateWallet = () => {
               Verify & Create Wallet
             </Button>
           </CardFooter>
-
-          {/* Back Button at Bottom */}
-          <div className="mt-4 flex justify-center">
-            <Button 
-              variant="outline" 
-              className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8"
-              onClick={() => setStep("backup")}
-            >
-              <i className="fas fa-arrow-left mr-2"></i>
-              Back to Backup
-            </Button>
-          </div>
         </Card>
       </div>
     );

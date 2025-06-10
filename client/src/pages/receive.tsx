@@ -129,15 +129,17 @@ const Receive = () => {
             </div>
           </div>
 
-          {/* Back Button at Bottom */}
-          <div className="mt-6 flex justify-center">
-            <Link href="/wallet-dashboard">
-              <Button variant="outline" className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8">
-                <i className="fas fa-arrow-left mr-2"></i>
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
+          {/* Floating Back Button */}
+          <Link href="/wallet-dashboard">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="fixed top-4 left-4 neumorphic bg-white/90 backdrop-blur-sm text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] border-0 shadow-lg z-10"
+            >
+              <i className="fas fa-arrow-left mr-2"></i>
+              Back
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

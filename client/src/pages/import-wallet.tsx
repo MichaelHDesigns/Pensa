@@ -90,7 +90,7 @@ const ImportWallet = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto py-12 px-4">
+    <div className="max-w-md mx-auto py-12 px-4 relative">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Import Wallet</CardTitle>
@@ -183,15 +183,17 @@ const ImportWallet = () => {
           </Button>
         </CardFooter>
 
-        {/* Back Button at Bottom */}
-        <div className="mt-4 flex justify-center">
-          <Link href="/welcome">
-            <Button variant="outline" className="neumorphic bg-white text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] px-8">
-              <i className="fas fa-arrow-left mr-2"></i>
-              Back to Welcome
-            </Button>
-          </Link>
-        </div>
+        {/* Floating Back Button */}
+        <Link href="/welcome">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="absolute top-4 left-4 neumorphic bg-white/90 backdrop-blur-sm text-[rgba(169,0,232,1)] hover:text-[rgba(169,0,232,0.8)] border-0 shadow-lg"
+          >
+            <i className="fas fa-arrow-left mr-2"></i>
+            Back
+          </Button>
+        </Link>
       </Card>
     </div>
   );
