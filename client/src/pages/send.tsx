@@ -160,7 +160,7 @@ const Send = () => {
         <div className="flex items-center mb-4">
           <Link href="/wallet-dashboard">
             <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
-              <ChevronLeft size={16} /> Back
+              <i className="fas fa-chevron-left"></i> Back
             </Button>
           </Link>
         </div>

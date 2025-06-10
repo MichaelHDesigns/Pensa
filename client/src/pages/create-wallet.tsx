@@ -162,6 +162,16 @@ const CreateWallet = () => {
   if (step === "creating") {
     return (
       <div className="max-w-md mx-auto py-12 px-4">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1 text-[rgba(169,0,232,1)]"
+            onClick={goBack}
+          >
+            <i className="fas fa-chevron-left"></i> Back
+          </Button>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Create New Wallet</CardTitle>
@@ -210,14 +220,7 @@ const CreateWallet = () => {
                 "Create Wallet"
               )}
             </Button>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={goBack}
-            >
-              Back
-            </Button>
-          </CardFooter>
+            </CardFooter>
         </Card>
       </div>
     );
@@ -229,6 +232,16 @@ const CreateWallet = () => {
     
     return (
       <div className="max-w-md mx-auto py-12 px-4">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1 text-[rgba(169,0,232,1)]"
+            onClick={() => setStep("creating")}
+          >
+            <i className="fas fa-chevron-left"></i> Back
+          </Button>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Backup Recovery Phrase</CardTitle>
@@ -287,6 +300,16 @@ const CreateWallet = () => {
     
     return (
       <div className="max-w-md mx-auto py-12 px-4">
+        <div className="flex items-center mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="flex items-center gap-1 text-[rgba(169,0,232,1)]"
+            onClick={() => setStep("backup")}
+          >
+            <i className="fas fa-chevron-left"></i> Back
+          </Button>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl">Verify Recovery Phrase</CardTitle>
@@ -342,14 +365,7 @@ const CreateWallet = () => {
             >
               Verify & Create Wallet
             </Button>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => setStep("backup")}
-            >
-              Back
-            </Button>
-          </CardFooter>
+            </CardFooter>
         </Card>
       </div>
     );
