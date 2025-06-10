@@ -21,10 +21,9 @@ const Receive = () => {
  const walletAddress = wallet ? wallet.publicKey.toString() : "";
   const shortAddress = shortenAddress(walletAddress);
 
- / Copy address to clipboard
+  // Copy address to clipboard
   const copyToClipboard = () => {
-    navigator.clipboard.wri
-      teText(walletAddress)
+    navigator.clipboard.writeText(walletAddress)
       .then(() => {
         toast({
           title: "Address Copied",
