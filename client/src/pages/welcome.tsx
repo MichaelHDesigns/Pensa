@@ -3,6 +3,7 @@ import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useWallet } from "../contexts/WalletContext";
+import pensacoinLogo from "../assets/pensacoin.png";
 
 const Welcome = () => {
   const [_, setLocation] = useLocation();
@@ -49,10 +50,14 @@ const Welcome = () => {
               
               <div className="text-center p-4">
                 <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <i className="fas fa-coins text-2xl text-white"></i>
+                  <img 
+                    src={pensacoinLogo}
+                    alt="Pensacoin" 
+                    className="h-8 w-8 rounded-full"
+                  />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Multi-Token Support</h3>
-                <p className="text-sm text-gray-600">Manage SOL, PENSA, and other SPL tokens seamlessly</p>
+                <h3 className="font-semibold text-gray-900 mb-2">Pensacoin & Solana</h3>
+                <p className="text-sm text-gray-600">Manage SOL and PENSA tokens with dedicated support</p>
               </div>
               
               <div className="text-center p-4">
