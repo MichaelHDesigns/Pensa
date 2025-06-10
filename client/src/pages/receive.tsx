@@ -42,7 +42,7 @@ const Receive = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto mt-6">
       
 
       <Card className="neumorphic bg-white">
