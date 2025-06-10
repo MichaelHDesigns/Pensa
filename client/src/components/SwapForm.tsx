@@ -7,7 +7,7 @@ import { useSwap } from "@/contexts/SwapContext";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowUpDown, RefreshCw, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import Link from 'next/link';
+import { Link } from "wouter";
 
 const SwapForm = () => {
   const { wallet, solBalance, pensacoinBalance, refreshBalances } = useWallet();
