@@ -20,7 +20,7 @@ const Send = () => {
   const [isSending, setIsSending] = useState(false);
   const [recipientError, setRecipientError] = useState("");
   const [amountError, setAmountError] = useState("");
-  
+
   // Reset form errors when tab changes
   useEffect(() => {
     setRecipient("");
@@ -28,7 +28,7 @@ const Send = () => {
     setRecipientError("");
     setAmountError("");
   }, [activeTab]);
-  
+
   // Validate Solana address
   const isValidSolanaAddress = (address: string): boolean => {
     try {
@@ -38,11 +38,11 @@ const Send = () => {
       return false;
     }
   };
-  
+
   // Validate form inputs
   const validateForm = (): boolean => {
     let isValid = true;
-    
+
     // Validate recipient address
     if (!recipient.trim()) {
       setRecipientError("Recipient address is required");
@@ -53,7 +53,7 @@ const Send = () => {
     } else {
       setRecipientError("");
     }
-    
+
     // Validate amount
     if (!amount.trim()) {
       setAmountError("Amount is required");
@@ -64,7 +64,7 @@ const Send = () => {
     } else {
       const parsedAmount = parseFloat(amount);
       const maxAmount = activeTab === "sol" ? parseFloat(solBalance) : parseFloat(pensacoinBalance);
-      
+
       if (parsedAmount > maxAmount) {
         setAmountError(`Insufficient balance. You have ${maxAmount} ${activeTab === "sol" ? "SOL" : "PENSA"}`);
         isValid = false;
@@ -72,10 +72,10 @@ const Send = () => {
         setAmountError("");
       }
     }
-    
+
     return isValid;
   };
-  
+
   // Handle the send transaction
   const handleSend = async () => {
     if (!wallet) {
@@ -86,18 +86,18 @@ const Send = () => {
       });
       return;
     }
-    
+
     // Validate form
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSending(true);
-    
+
     try {
       const recipientPublicKey = new solanaWeb3.PublicKey(recipient);
       const amountToSend = parseFloat(amount);
-      
+
       if (activeTab === "sol") {
         // Send SOL
         const transaction = new solanaWeb3.Transaction().add(
@@ -107,37 +107,37 @@ const Send = () => {
             lamports: amountToSend * solanaWeb3.LAMPORTS_PER_SOL,
           })
         );
-        
+
         transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
         transaction.feePayer = wallet.publicKey;
-        
+
         const signature = await solanaWeb3.sendAndConfirmTransaction(
           connection,
           transaction,
           [wallet]
         );
-        
+
         toast({
           title: "SOL Sent Successfully",
           description: `${amountToSend} SOL has been sent to ${recipient.slice(0, 6)}...${recipient.slice(-4)}`,
         });
-        
+
         console.log("Transaction signature:", signature);
       } else {
         // Send PENSA (SPL token)
         // In a real implementation, we would use the SPL token program to send tokens
         // This is a simplified version that just shows a success toast
-        
+
         toast({
           title: "PENSA Sent Successfully",
           description: `${amountToSend} PENSA has been sent to ${recipient.slice(0, 6)}...${recipient.slice(-4)}`,
         });
       }
-      
+
       // Reset form
       setRecipient("");
       setAmount("");
-      
+
       // Refresh balances
       setTimeout(() => {
         refreshBalances();
@@ -153,20 +153,10 @@ const Send = () => {
       setIsSending(false);
     }
   };
-  
+
   return (
-    <div className="max-w-md mx-auto">
-      <header className="mb-6">
-        <div className="flex items-center mb-4">
-          <Link href="/wallet-dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
-              <ChevronLeft size={16} /> Back
-            </Button>
-          </Link>
-        </div>
-      </header>
-      
-      <Card className="neumorphic bg-white">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 pt-20 md:pt-4">
+      <Card className="w-full max-w-md">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
             <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Send</h1>
@@ -174,14 +164,14 @@ const Send = () => {
               <TabsTrigger value="sol" className="data-[state=active]:bg-[rgba(169,0,232,1)] data-[state=active]:text-white">Send SOL</TabsTrigger>
               <TabsTrigger value="pensacoin" className="data-[state=active]:bg-[rgba(169,0,232,1)] data-[state=active]:text-white">Send PENSA</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="sol">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
                   <Label>Available Balance</Label>
                   <span className="font-medium">{solBalance} SOL</span>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="sol-recipient">Recipient Address</Label>
                   <Input
@@ -193,7 +183,7 @@ const Send = () => {
                   />
                   {recipientError && <p className="text-red-500 text-sm">{recipientError}</p>}
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <Label htmlFor="sol-amount">Amount</Label>
@@ -222,14 +212,14 @@ const Send = () => {
                 </div>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="pensacoin">
               <div className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
                   <Label>Available Balance</Label>
                   <span className="font-medium">{pensacoinBalance} PENSA</span>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="pensa-recipient">Recipient Address</Label>
                   <Input
@@ -241,7 +231,7 @@ const Send = () => {
                   />
                   {recipientError && <p className="text-red-500 text-sm">{recipientError}</p>}
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <Label htmlFor="pensa-amount">Amount</Label>
@@ -271,7 +261,7 @@ const Send = () => {
               </div>
             </TabsContent>
           </Tabs>
-          
+
           <div className="mt-6 bg-white p-4 rounded-xl neumorphic text-sm">
             <div className="flex items-start">
               <AlertTriangle className="text-[rgba(169,0,232,1)] mr-2 flex-shrink-0" size={18} />

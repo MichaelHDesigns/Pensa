@@ -18,7 +18,7 @@ const ImportWallet = () => {
   const [privateKey, setPrivateKey] = useState("");
   const [walletName, setWalletName] = useState("My Imported Wallet");
   const [isImporting, setIsImporting] = useState(false);
-  
+
   // Handle import wallet
   const handleImport = async () => {
     if (!walletName.trim()) {
@@ -29,7 +29,7 @@ const ImportWallet = () => {
       });
       return;
     }
-    
+
     if (importType === "mnemonic" && !mnemonic.trim()) {
       toast({
         title: "Missing Recovery Phrase",
@@ -38,7 +38,7 @@ const ImportWallet = () => {
       });
       return;
     }
-    
+
     if (importType === "privateKey" && !privateKey.trim()) {
       toast({
         title: "Missing Private Key",
@@ -47,33 +47,33 @@ const ImportWallet = () => {
       });
       return;
     }
-    
+
     setIsImporting(true);
-    
+
     try {
       if (importType === "mnemonic") {
         await importFromMnemonic(mnemonic.trim(), walletName.trim());
       } else {
         await importFromPrivateKey(privateKey.trim(), walletName.trim());
       }
-      
+
       toast({
         title: "Wallet Imported",
         description: `Wallet "${walletName}" has been imported successfully`,
       });
-      
+
       // Navigate to wallet dashboard
       setLocation("/wallet");
     } catch (error) {
       console.error("Error importing wallet:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to import wallet";
-      
+
       // More helpful message for private key errors
       let errorDescription = errorMessage;
       if (importType === "privateKey" && errorMessage.includes("Invalid private key")) {
         errorDescription = "The private key format could not be recognized. Please check your key and try again. Supported formats include Base58, Base64, and JSON.";
       }
-      
+
       toast({
         title: "Import Failed",
         description: errorDescription,
@@ -83,12 +83,12 @@ const ImportWallet = () => {
       setIsImporting(false);
     }
   };
-  
+
   // Go back to Welcome page
   const goBack = () => {
     setLocation("/welcome");
   };
-  
+
   return (
     <div className="max-w-md mx-auto py-12 px-4">
       <Card>
@@ -110,13 +110,13 @@ const ImportWallet = () => {
               />
             </div>
           </div>
-        
+
           <Tabs value={importType} onValueChange={(v) => setImportType(v as "mnemonic" | "privateKey")}>
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="mnemonic">Recovery Phrase</TabsTrigger>
               <TabsTrigger value="privateKey">Private Key</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="mnemonic">
               <div className="space-y-4">
                 <div>
@@ -137,7 +137,7 @@ const ImportWallet = () => {
                 </div>
               </div>
             </TabsContent>
-            
+
             <TabsContent value="privateKey">
               <div className="space-y-4">
                 <div>
