@@ -84,27 +84,22 @@ const Settings = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <header className="mb-6">
-        <div className="flex justify-center mb-1">
-          <Link href="/wallet-dashboard" className="absolute left-4">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
-              <ChevronLeft size={16} /> Back
-            </Button>
-          </Link>
-        </div>
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold text-[rgba(169,0,232,1)]">Wallet Settings</h1>
-          <p className="text-gray-600 mt-1">Manage Wallet and Account Preferences.</p>
-        </div>
-      </header>
-
+    <div className="max-w-md mx-auto mt-6">
       {/* Wallet Info */}
       <Card className="mb-6 neumorphic-inset bg-white">
         <CardHeader>
-          <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Information</CardTitle>
+          <div className="flex items-center justify-between mb-2">
+            <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Settings</CardTitle>
+            <Link href="/wallet-dashboard">
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
+                <i className="fas fa-chevron-left"></i> Back
+              </Button>
+            </Link>
+          </div>
+          <p className="text-gray-600 text-sm">Manage Wallet and Account Preferences.</p>
         </CardHeader>
         <CardContent className="space-y-4">
+          <h3 className="text-lg font-semibold text-[rgba(169,0,232,1)] mb-3">Wallet Information</h3>
           <div className="flex justify-between items-center">
             <span className="text-gray-700">Wallet Address</span>
             <span className="font-mono text-sm truncate max-w-[200px] text-black">{publicKey}</span>
@@ -126,6 +121,7 @@ const Settings = () => {
           <CardTitle className="text-[rgba(169,0,232,1)]">Wallet Management</CardTitle>
           <CardDescription className="text-gray-700">Create, Import, Switch or Remove Wallets</CardDescription>
         </CardHeader>
+        
         <CardContent className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <Link href="/create-wallet">
