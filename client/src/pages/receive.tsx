@@ -49,7 +49,8 @@ const Receive = () => {
         </Button>
       </Link>
       
-      <Card className="neumorphic bg-white">
+      <div className="mt-12">
+        <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
             <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Receive</h1>
@@ -133,7 +134,8 @@ const Receive = () => {
             </div>
           </div>
         </CardContent>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };

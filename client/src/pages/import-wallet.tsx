@@ -99,7 +99,8 @@ const ImportWallet = () => {
       >
         <i className="fas fa-chevron-left"></i> Back
       </Button>
-      <Card>
+      <div className="mt-12">
+        <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Import Wallet</CardTitle>
           <CardDescription>
@@ -190,7 +191,8 @@ const ImportWallet = () => {
             )}
           </Button>
           </CardFooter>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };

@@ -19,7 +19,7 @@ const CreateWallet = () => {
   const [confirmed, setConfirmed] = useState(false);
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [shuffledWords, setShuffledWords] = useState<string[]>([]);
-  
+
   // Generate a new wallet
   const handleCreateWallet = async () => {
     if (!walletName.trim()) {
@@ -30,14 +30,14 @@ const CreateWallet = () => {
       });
       return;
     }
-    
+
     setIsCreating(true);
-    
+
     try {
       // Create wallet with name
       await createWallet(walletName);
       const savedMnemonic = localStorage.getItem("walletMnemonic");
-      
+
       if (savedMnemonic) {
         setMnemonic(savedMnemonic);
         // Move to backup step
@@ -56,17 +56,17 @@ const CreateWallet = () => {
       setIsCreating(false);
     }
   };
-  
+
   // Prepare verification step
   const goToVerify = () => {
     const words = mnemonic.split(" ");
     const shuffled = [...words].sort(() => Math.random() - 0.5);
-    
+
     setShuffledWords(shuffled);
     setSelectedWords([]);
     setStep("verify");
   };
-  
+
   // Select/deselect a word during verification
   const toggleWord = (word: string) => {
     if (selectedWords.includes(word)) {
@@ -75,12 +75,12 @@ const CreateWallet = () => {
       setSelectedWords([...selectedWords, word]);
     }
   };
-  
+
   // Verify the mnemonic phrase
   const verifyMnemonic = () => {
     const originalWords = mnemonic.split(" ");
     const isCorrectOrder = selectedWords.every((word, index) => word === originalWords[index]);
-    
+
     if (isCorrectOrder && selectedWords.length === originalWords.length) {
       // Successfully verified
       finalizeWalletCreation();
@@ -90,22 +90,22 @@ const CreateWallet = () => {
         description: "The order of words doesn't match your recovery phrase. Please try again.",
         variant: "destructive",
       });
-      
+
       // Reset selection
       setSelectedWords([]);
     }
   };
-  
+
   // Finalize wallet creation after verification
   const finalizeWalletCreation = async () => {
     setIsCreating(true);
-    
+
     try {
       toast({
         title: "Wallet Verified!",
         description: "Your wallet has been created and verified successfully.",
       });
-      
+
       // Navigate to wallet dashboard
       setLocation("/wallet");
     } catch (error) {
@@ -119,7 +119,7 @@ const CreateWallet = () => {
       setIsCreating(false);
     }
   };
-  
+
   // Skip verification (not recommended in production)
   const skipVerification = async () => {
     if (!confirmed) {
@@ -130,15 +130,15 @@ const CreateWallet = () => {
       });
       return;
     }
-    
+
     setIsCreating(true);
-    
+
     try {      
       toast({
         title: "Wallet Created!",
         description: "Your new wallet has been created successfully.",
       });
-      
+
       // Navigate to wallet dashboard
       setLocation("/wallet");
     } catch (error) {
@@ -152,12 +152,12 @@ const CreateWallet = () => {
       setIsCreating(false);
     }
   };
-  
+
   // Go back to Welcome page
   const goBack = () => {
     setLocation("/welcome");
   };
-  
+
   // Creating step - initial screen
   if (step === "creating") {
     return (
@@ -187,7 +187,7 @@ const CreateWallet = () => {
                 Never share it with anyone!
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="wallet-name">Wallet Name</Label>
@@ -218,16 +218,17 @@ const CreateWallet = () => {
                 "Create Wallet"
               )}
             </Button>
-            </CardFooter>
-        </Card>
+</CardFooter>
+          </Card>
+        </div>
       </div>
     );
   }
-  
+
   // Backup step - show recovery phrase
   if (step === "backup") {
     const words = mnemonic.split(" ");
-    
+
     return (
       <div className="max-w-md mx-auto py-12 px-4 relative">
         <Button 
@@ -256,7 +257,7 @@ const CreateWallet = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className="flex items-start space-x-3 my-4">
               <Checkbox 
                 id="confirm-backup" 
@@ -284,16 +285,17 @@ const CreateWallet = () => {
             >
               Skip Verification (Not Recommended)
             </Button>
-          </CardFooter>
-        </Card>
+</CardFooter>
+          </Card>
+        </div>
       </div>
     );
   }
-  
+
   // Verify step - verify recovery phrase
   if (step === "verify") {
     const mnemonicWords = mnemonic.split(" ");
-    
+
     return (
       <div className="max-w-md mx-auto py-12 px-4 relative">
         <Button 
@@ -332,7 +334,7 @@ const CreateWallet = () => {
                 )}
               </div>
             </div>
-            
+
             {/* Word options */}
             <div className="flex flex-wrap gap-2">
               {shuffledWords.map((word, index) => (
@@ -359,12 +361,13 @@ const CreateWallet = () => {
             >
               Verify & Create Wallet
             </Button>
-            </CardFooter>
-        </Card>
+</CardFooter>
+          </Card>
+        </div>
       </div>
     );
   }
-  
+
   return null; // Should never reach here
 };
 

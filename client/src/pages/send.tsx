@@ -162,7 +162,8 @@ const Send = () => {
         </Button>
       </Link>
       
-      <Card className="neumorphic bg-white">
+      <div className="mt-12">
+        <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
             <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Send</h1>
@@ -308,7 +309,8 @@ const Send = () => {
             )}
           </Button>
         </CardFooter>
-      </Card>
+        </Card>
+      </div>
     </div>
   );
 };
