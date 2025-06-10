@@ -49,11 +49,11 @@ const Welcome = () => {
               </div>
               
               <div className="text-center p-4">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
                   <img 
                     src={pensacoinLogo}
                     alt="Pensacoin" 
-                    className="h-8 w-8 rounded-full"
+                    className="h-16 w-16 rounded-full"
                   />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Pensacoin & Solana</h3>
