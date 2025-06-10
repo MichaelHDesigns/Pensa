@@ -13,7 +13,7 @@ const Welcome = () => {
     if (!isInitializing) {
       const activeWalletId = localStorage.getItem("activeWalletId");
       if (activeWalletId && walletList?.length > 0) {
-        setLocation("/wallet");
+        setLocation("/wallet-dashboard");
       }
     }
   }, [isInitializing, walletList, setLocation]);
@@ -91,7 +91,7 @@ const Welcome = () => {
               
               {walletList && walletList.length > 0 && (
                 <Button
-                  onClick={() => setLocation("/wallet")}
+                  onClick={() => setLocation("/wallet-dashboard")}
                   className="w-full gradient-bg hover:opacity-90 h-14 text-lg font-medium"
                 >
                   <i className="fas fa-wallet mr-2"></i>
