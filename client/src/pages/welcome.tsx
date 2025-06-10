@@ -22,40 +22,97 @@ const Welcome = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <Card className="bg-white shadow-lg rounded-lg">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-gray-900">Welcome to PensaWallet</CardTitle>
-            <CardDescription className="text-center text-gray-600">Get started with your crypto journey</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Button
-                onClick={() => setLocation("/create-wallet")}
-                className="gradient-bg hover:opacity-90 w-full"
-              >
-                Create New Wallet
-              </Button>
-              <Button
-                onClick={() => setLocation("/import-wallet")}
-                variant="outline"
-                className="w-full"
-              >
-                Import Existing Wallet
-              </Button>
+    <div className="min-h-screen bg-gray-50 flex flex-col py-12 px-4">
+      {/* Main Title */}
+      <div className="text-center mb-12">
+        <h1 className="text-4xl md:text-5xl font-bold text-[rgba(169,0,232,1)] mb-4">
+          Welcome to PensaWallet
+        </h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Your secure gateway to the Solana ecosystem. Manage your SOL, PENSA tokens, and explore DeFi with confidence.
+        </p>
+      </div>
+
+      {/* Main Content Card */}
+      <div className="max-w-4xl mx-auto w-full">
+        <Card className="bg-white shadow-xl rounded-2xl overflow-hidden">
+          <CardContent className="p-8">
+            {/* Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="text-center p-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fas fa-shield-alt text-2xl text-white"></i>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Secure & Safe</h3>
+                <p className="text-sm text-gray-600">Advanced encryption protects your assets and private keys</p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fas fa-coins text-2xl text-white"></i>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Multi-Token Support</h3>
+                <p className="text-sm text-gray-600">Manage SOL, PENSA, and other SPL tokens seamlessly</p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i className="fas fa-exchange-alt text-2xl text-white"></i>
+                </div>
+                <h3 className="font-semibold text-gray-900 mb-2">Easy Trading</h3>
+                <p className="text-sm text-gray-600">Swap tokens and access DeFi directly from your wallet</p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Button
+                  onClick={() => setLocation("/create-wallet")}
+                  className="gradient-bg hover:opacity-90 w-full h-14 text-lg font-medium"
+                >
+                  <i className="fas fa-plus mr-2"></i>
+                  Create New Wallet
+                </Button>
+                <Button
+                  onClick={() => setLocation("/import-wallet")}
+                  variant="outline"
+                  className="w-full h-14 text-lg font-medium border-2 hover:bg-gray-50"
+                >
+                  <i className="fas fa-download mr-2"></i>
+                  Import Existing Wallet
+                </Button>
+              </div>
+              
+              {walletList && walletList.length > 0 && (
+                <Button
+                  onClick={() => setLocation("/wallet")}
+                  className="w-full gradient-bg hover:opacity-90 h-14 text-lg font-medium"
+                >
+                  <i className="fas fa-wallet mr-2"></i>
+                  Open My Wallet
+                </Button>
+              )}
+            </div>
+
+            {/* Additional Info */}
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-lock text-[rgba(169,0,232,1)]"></i>
+                  <span>Bank-level security</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-mobile-alt text-[rgba(169,0,232,1)]"></i>
+                  <span>Mobile optimized</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <i className="fas fa-rocket text-[rgba(169,0,232,1)]"></i>
+                  <span>Lightning fast</span>
+                </div>
+              </div>
             </div>
           </CardContent>
-          {walletList && walletList.length > 0 && (
-            <CardContent>
-              <Button
-                onClick={() => setLocation("/wallet")}
-                className="w-full gradient-bg hover:opacity-90"
-              >
-                Open My Wallet
-              </Button>
-            </CardContent>
-          )}
         </Card>
       </div>
     </div>
