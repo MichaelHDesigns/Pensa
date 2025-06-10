@@ -224,20 +224,17 @@ const Transactions = () => {
   const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
 
   return (
-    <div className="max-w-4xl mx-auto pt-12">
-      <header className="mb-6">
-        <div className="flex justify-start mb-1">
-          <Link href="/wallet-dashboard">
-            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
-              <ChevronLeft size={16} /> Back
-            </Button>
-          </Link>
-        </div>
-      </header>
-
+    <div className="max-w-4xl mx-auto mt-6">
       <Card className="mb-6 neumorphic bg-white">
         <CardContent className="pt-4">
-          <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Transactions</h1>
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)]">Transactions</h1>
+            <Link href="/wallet-dashboard">
+              <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)]">
+                <i className="fas fa-chevron-left"></i> Back
+              </Button>
+            </Link>
+          </div>
           {/* Filters */}
           <div className="flex flex-wrap gap-3 mb-4 justify-center">
             <Button 
