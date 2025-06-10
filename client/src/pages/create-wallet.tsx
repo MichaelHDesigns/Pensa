@@ -218,9 +218,8 @@ const CreateWallet = () => {
                 "Create Wallet"
               )}
             </Button>
-</CardFooter>
-          </Card>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
@@ -285,9 +284,8 @@ const CreateWallet = () => {
             >
               Skip Verification (Not Recommended)
             </Button>
-</CardFooter>
-          </Card>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
@@ -361,9 +359,8 @@ const CreateWallet = () => {
             >
               Verify & Create Wallet
             </Button>
-</CardFooter>
-          </Card>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     );
   }
