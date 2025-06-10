@@ -42,21 +42,14 @@ const Receive = () => {
   };
   
   return (
-    <div className="max-w-md mx-auto relative py-6">
-      <Link href="/wallet-dashboard">
-        <Button variant="ghost" size="sm" className="absolute -left-2 top-8 flex items-center gap-1 text-[rgba(169,0,232,1)] z-10">
-          <i className="fas fa-chevron-left"></i> Back
-        </Button>
-      </Link>
-      
-      <div className="mt-12">
-        <Link href="/wallet-dashboard">
-          <Button variant="ghost" size="sm" className="absolute -left-2 top-8 flex items-center gap-1 text-[rgba(169,0,232,1)] z-10">
-            <i className="fas fa-chevron-left"></i> Back
-          </Button>
-        </Link>
-        <Card className="neumorphic bg-white">
+    <div className="max-w-md mx-auto py-6">
+      <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
+          <Link href="/wallet-dashboard">
+            <Button variant="ghost" size="sm" className="flex items-center gap-1 text-[rgba(169,0,232,1)] mb-6">
+              <i className="fas fa-chevron-left"></i> Back
+            </Button>
+          </Link>
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
             <h1 className="text-2xl font-bold text-[rgba(169,0,232,1)] mb-4">Receive</h1>
             <TabsList className="grid w-full grid-cols-2 mb-4 bg-gray-100">
@@ -139,8 +132,7 @@ const Receive = () => {
             </div>
           </div>
         </CardContent>
-        </Card>
-      </div>
+      </Card>
     </div>
   );
 };
