@@ -50,6 +50,11 @@ const Receive = () => {
       </Link>
       
       <div className="mt-12">
+        <Link href="/wallet-dashboard">
+          <Button variant="ghost" size="sm" className="absolute -left-2 top-8 flex items-center gap-1 text-[rgba(169,0,232,1)] z-10">
+            <i className="fas fa-chevron-left"></i> Back
+          </Button>
+        </Link>
         <Card className="neumorphic bg-white">
         <CardContent className="pt-6">
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "sol" | "pensacoin")}>
