@@ -15,7 +15,7 @@ export default function About() {
           </Link>
         </div>
         <div className="text-center">
-          <h1 className="text-2xl font-semibold text-[rgba(169,0,232,1)]">About Pensa Wallet</h1>
+          <h1 className="text-2xl font-semibold text-[rgba(169,0,232,1)]">About Pensacola Crypto Wallet</h1>
           <p className="text-gray-600 mt-1">Version 0.0.1</p>
         </div>
       </header>
@@ -24,7 +24,7 @@ export default function About() {
         <div className="neumorphic-inset bg-white p-6 rounded-xl">
           <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">Overview</h2>
           <p className="text-gray-700">
-            Pensa Wallet, developed by Pensacola Crypto, is your secure gateway to the Solana blockchain. Our wallet provides a seamless and user-friendly experience for managing digital assets, particularly SOL and PENSA tokens.
+            Pensacola Crypto Wallet, developed by Pensacola Crypto, is your secure gateway to the Solana blockchain. Our wallet provides a seamless and user-friendly experience for managing digital assets, particularly SOL and PENSA tokens.
           </p>
         </div>
 
@@ -72,7 +72,7 @@ export default function About() {
 
         <div className="neumorphic-inset bg-white p-6 rounded-xl">
           <h2 className="text-lg font-semibold mb-3 text-[rgba(169,0,232,1)]">Security</h2>
-          <p className="text-gray-700">Your security is our top priority. Pensa Wallet implements:</p>
+          <p className="text-gray-700">Your security is our top priority. Pensacola Crypto Wallet implements:</p>
           <ul className="mt-2 space-y-2 text-gray-700">
             <li className="flex items-center gap-2">
               <i className="fa-solid fa-check text-[rgba(169,0,232,1)]"></i>

@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { useWallet } from "../contexts/WalletContext";
 import pensacoinLogo from "../assets/pensacoin.png";
 
@@ -27,10 +33,11 @@ const Welcome = () => {
       {/* Main Title */}
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-bold text-[rgba(169,0,232,1)] mb-4">
-          Welcome to PensaWallet
+          Welcome to Pensacola Crypto Wallet
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Your secure gateway to the Solana ecosystem. Manage your SOL, PENSA tokens, and explore DeFi with confidence.
+          Your secure gateway to the Solana ecosystem. Manage your SOL, PENSA
+          tokens, and explore DeFi with confidence.
         </p>
       </div>
 
@@ -44,28 +51,40 @@ const Welcome = () => {
                 <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="fas fa-shield-alt text-2xl text-white"></i>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Secure & Safe</h3>
-                <p className="text-sm text-gray-600">Advanced encryption protects your assets and private keys</p>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  Secure & Safe
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Advanced encryption protects your assets and private keys
+                </p>
               </div>
-              
+
               <div className="text-center p-4">
                 <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <img 
+                  <img
                     src={pensacoinLogo}
-                    alt="Pensacoin" 
+                    alt="Pensacoin"
                     className="h-16 w-16 rounded-full"
                   />
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Pensacoin & Solana</h3>
-                <p className="text-sm text-gray-600">Manage SOL and PENSA tokens with dedicated support</p>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  Pensacoin & Solana
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Manage SOL and PENSA tokens with dedicated support
+                </p>
               </div>
-              
+
               <div className="text-center p-4">
                 <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <i className="fas fa-exchange-alt text-2xl text-white"></i>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Easy Trading</h3>
-                <p className="text-sm text-gray-600">Swap tokens and access DeFi directly from your wallet</p>
+                <h3 className="font-semibold text-gray-900 mb-2">
+                  Easy Trading
+                </h3>
+                <p className="text-sm text-gray-600">
+                  Swap tokens and access DeFi directly from your wallet
+                </p>
               </div>
             </div>
 
@@ -88,7 +107,7 @@ const Welcome = () => {
                   Import Existing Wallet
                 </Button>
               </div>
-              
+
               {walletList && walletList.length > 0 && (
                 <Button
                   onClick={() => setLocation("/wallet-dashboard")}

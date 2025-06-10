@@ -3,7 +3,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.pensawallet.app',
-  appName: 'Pensa Wallet',
+  appName: 'Pensacola Crypto Wallet',
   webDir: 'dist/public',
   server: {
     androidScheme: 'https'
