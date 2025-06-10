@@ -2,7 +2,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.pensacolacrypto.app',
+  appId: 'com.pensacolacrypto.core',
   appName: 'Pensacola Crypto Wallet',
   webDir: 'dist/public',
   server: {
