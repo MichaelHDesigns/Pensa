@@ -181,13 +181,6 @@ const ImportWallet = () => {
               "Import Wallet"
             )}
           </Button>
-          <Button 
-            variant="outline" 
-            className="w-full"
-            onClick={goBack}
-          >
-            Back
-          </Button>
         </CardFooter>
       </Card>
     </div>

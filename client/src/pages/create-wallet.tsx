@@ -210,13 +210,6 @@ const CreateWallet = () => {
                 "Create Wallet"
               )}
             </Button>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={goBack}
-            >
-              Back
-            </Button>
           </CardFooter>
         </Card>
       </div>
@@ -341,13 +334,6 @@ const CreateWallet = () => {
               disabled={selectedWords.length < mnemonicWords.length}
             >
               Verify & Create Wallet
-            </Button>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={() => setStep("backup")}
-            >
-              Back
             </Button>
           </CardFooter>
         </Card>

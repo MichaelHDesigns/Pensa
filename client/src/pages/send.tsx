@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import * as solanaWeb3 from "@solana/web3.js";
 import { connection } from "@/lib/solana";
 import { Link } from "wouter";
-import { ChevronLeft, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 
 const Send = () => {
   const { wallet, solBalance, pensacoinBalance, refreshBalances } = useWallet();
